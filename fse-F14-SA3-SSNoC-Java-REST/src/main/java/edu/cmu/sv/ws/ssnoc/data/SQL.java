@@ -12,7 +12,7 @@ public class SQL {
 	 * here.
 	 */
 	public static final String SSN_USERS = "SSN_USERS";
-    public static final String SSN_STATUS_CRUMB="STATUS_CRUMB";
+    public static final String SSN_STATUS_CRUMB="SSN_STATUS_CRUMB";
 
 	/**
 	 * Query to check if a given table exists in the H2 database.
@@ -31,20 +31,20 @@ public class SQL {
 			+ SSN_USERS + " ( user_id IDENTITY PRIMARY KEY,"
 			+ " user_name VARCHAR(100)," + " password VARCHAR(512),"
             +" createdAt VARCHAR(100)," + " modifiedAt VARCHAR(100),"
-            +" last_status_code VARCHAR(100),"
+            +" last_status_code VARCHAR(100),"+" last_status_date VARCHAR(100),"
 			+ " salt VARCHAR(512) )";
 
 	/**
 	 * Query to load all users in the system.
 	 */
-	public static final String FIND_ALL_USERS = "select user_id, user_name, password, last_status_code, "
+	public static final String FIND_ALL_USERS = "select user_id, user_name, password, last_status_code, last_status_date, "
 			+ " salt " + " from " + SSN_USERS + " order by user_name";
 
 	/**
 	 * Query to find a user details depending on his name. Note that this query
 	 * does a case insensitive search with the user name.
 	 */
-	public static final String FIND_USER_BY_NAME = "select user_id, user_name, password, last_status_code,"
+	public static final String FIND_USER_BY_NAME = "select user_id, user_name, password, last_status_code, last_status_date, "
 			+ " salt "
 			+ " from "
 			+ SSN_USERS
@@ -60,7 +60,7 @@ public class SQL {
      * Query to update status of a user in User table.
      */
     public static final String UPDATE_STATUS = "update "+SSN_USERS+
-            " SET last_status_code = ? where UPPER(user_name) = UPPER(?)";
+            " SET last_status_code = ? , last_status_date =? where UPPER(user_name) = UPPER(?)";
 
     //***********************************************************************
     // All queries related to USERS STATUS

@@ -14,6 +14,7 @@ public class UserPO {
 	private String userName;
 	private String password;
     private String statusCode;
+    private String statusDate;
 	//private String createdAt;
     private String salt;
 
@@ -48,6 +49,10 @@ public class UserPO {
     public void setStatusCode(String statusCode){this.statusCode = statusCode;}
 
     public String getStatusCode() {return statusCode;}
+
+    public String getStatusDate() {return statusDate;}
+
+    public void  setStatusDate(String statusDate){this.statusDate = statusDate;}
 
 	public String getSalt() {
 		return salt;

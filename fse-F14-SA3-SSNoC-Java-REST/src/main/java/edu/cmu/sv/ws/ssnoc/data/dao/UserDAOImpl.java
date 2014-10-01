@@ -61,7 +61,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 				po.setUserName(rs.getString(2));
 				po.setPassword(rs.getString(3));
                 po.setStatusCode(rs.getString(4));
-				po.setSalt(rs.getString(5));
+                po.setStatusDate(rs.getString(5));
+				po.setSalt(rs.getString(6));
 
 				users.add(po);
 			}
@@ -184,6 +185,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     @Override
     public void loadLastStatusCode(UserPO userPO,StatusPO statusPO){
         Log.enter(statusPO);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
         if (statusPO == null) {
             Log.warn("Inside save method with userPO == NULL");
             return;
@@ -191,7 +194,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_STATUS)) {
              stmt.setString(1, statusPO.getStatusCode());
-             stmt.setString(2, userPO.getUserName());
+            stmt.setString(2,df.format(dateobj));
+             stmt.setString(3, userPO.getUserName());
+
           //  stmt.setTimestamp(3, statusPO.getCreatedAt());
           //  stmt.setString(4, statusPO.getCrumbID());
             int rowCount = stmt.executeUpdate();

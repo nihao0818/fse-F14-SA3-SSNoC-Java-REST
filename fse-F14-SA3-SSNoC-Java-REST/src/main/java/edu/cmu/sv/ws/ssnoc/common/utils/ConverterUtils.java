@@ -29,6 +29,7 @@ public class ConverterUtils {
 		User dto = new User();
 		dto.setUserName(po.getUserName());
         dto.setStatusCode(po.getStatusCode());
+        dto.setStatusDate(po.getStatusDate());
        // dto.setCreatedAt(po.getCreatedAt());
 
 		return dto;
