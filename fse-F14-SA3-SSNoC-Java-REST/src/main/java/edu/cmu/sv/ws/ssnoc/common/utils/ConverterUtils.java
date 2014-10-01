@@ -30,7 +30,6 @@ public class ConverterUtils {
 		dto.setUserName(po.getUserName());
         dto.setStatusCode(po.getStatusCode());
         dto.setStatusDate(po.getStatusDate());
-       // dto.setCreatedAt(po.getCreatedAt());
 
 		return dto;
 	}
@@ -70,7 +69,7 @@ public class ConverterUtils {
         Status sdto = new Status();
         sdto.setUserName(spo.getUserName());
         sdto.setStatusCode(spo.getStatusCode());
-        sdto.setCreatedAt(spo.getCreatedAt());
+        sdto.setCreatedDate(spo.getCreatedDate());
 
         return sdto;
     }
@@ -91,7 +90,7 @@ public class ConverterUtils {
         StatusPO spo = new StatusPO();
         spo.setUserName(sdto.getUserName());
         spo.setStatusCode(sdto.getStatusCode());
-        spo.setCreatedAt(sdto.getCreatedAt());
+        spo.setCreatedDate(sdto.getCreatedDate());
 
         return spo;
     }

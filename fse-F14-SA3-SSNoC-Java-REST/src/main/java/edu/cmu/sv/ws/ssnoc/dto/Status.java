@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Status {
     private String userName;
     private String statusCode;
-    private String createdAt;
+    private String createdDate;
 
     public String getUserName() {
         return userName;
@@ -34,10 +34,10 @@ public class Status {
         this.statusCode = statusCode;
     }
 
-    public String getCreatedAt(){ return createdAt;}
+    public String getCreatedDate(){ return createdDate;}
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override

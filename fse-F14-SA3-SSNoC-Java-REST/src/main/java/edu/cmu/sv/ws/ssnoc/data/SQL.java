@@ -30,7 +30,7 @@ public class SQL {
 	public static final String CREATE_USERS = "create table IF NOT EXISTS "
 			+ SSN_USERS + " ( user_id IDENTITY PRIMARY KEY,"
 			+ " user_name VARCHAR(100)," + " password VARCHAR(512),"
-            +" createdAt VARCHAR(100)," + " modifiedAt VARCHAR(100),"
+            +" created_date VARCHAR(100)," + " modifiedAt VARCHAR(100),"
             +" last_status_code VARCHAR(100),"+" last_status_date VARCHAR(100),"
 			+ " salt VARCHAR(512) )";
 
@@ -54,7 +54,7 @@ public class SQL {
 	 * Query to insert a row into the users table.
 	 */
 	public static final String INSERT_USER = "insert into " + SSN_USERS
-			+ " (user_name, password , createdAt, salt) values (?, ?, ?, ?)";
+			+ " (user_name, password , created_date, salt) values (?, ?, ?, ?)";
 
     /**
      * Query to update status of a user in User table.
@@ -70,13 +70,13 @@ public class SQL {
      */
     public static final String CREATE_STATUS_CRUMB = "create table IF NOT EXISTS "
             + SSN_STATUS_CRUMB +" ( user_name VARCHAR(100) REFERENCES SSN_USERS(user_name),"
-            +" status_code VARCHAR(15),"+" created_at VARCHAR(100),"
+            +" status_code VARCHAR(15),"+" created_date VARCHAR(100),"
             +" crumb_ID IDENTITY PRIMARY KEY)";
     /**
      * Query to get user STATUS depending on his name. Note that this query
      * does a case insensitive search with the user name
      */
-    public static final String FIND_STATUS_BY_CRUMB = "select user_name, status_code, created_at"
+    public static final String FIND_STATUS_BY_CRUMB = "select user_name, status_code, created_date"
             +" from "
             + SSN_STATUS_CRUMB
             +" where UPPER(crumb_ID) = UPPER(?)";
@@ -84,11 +84,11 @@ public class SQL {
      * Query to insert a row into the STATUS_CRUMB table
      */
     public static final String INSERT_STATUS = "insert into "+ SSN_STATUS_CRUMB
-            +" (user_name,status_code,created_at) values (?,?,?)";
+            +" (user_name,status_code,created_Date) values (?,?,?)";
 
 
-    public static final String FIND_ALL_USER_STATUSES = "select user_name, status_code, created_at,crumb_ID "
+    public static final String FIND_ALL_USER_STATUSES = "select user_name, status_code, created_date,crumb_ID "
             + " from " + SSN_STATUS_CRUMB
             +" where UPPER(user_name) = UPPER(?)"
-            + " order by created_at";
+            + " order by created_date";
 }

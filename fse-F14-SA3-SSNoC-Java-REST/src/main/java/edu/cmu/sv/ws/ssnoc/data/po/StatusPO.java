@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 public class StatusPO {
     private String userName;
     private String statusCode;
-    private String createdAt;
+    private String createdDate;
     private String crumbID;
 
     public String getUserName() {
@@ -38,10 +38,10 @@ public class StatusPO {
         this.statusCode = statusCode;
     }
 
-    public String getCreatedAt() { return createdAt; }
+    public String getCreatedDate() { return createdDate; }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getCrumbID() {

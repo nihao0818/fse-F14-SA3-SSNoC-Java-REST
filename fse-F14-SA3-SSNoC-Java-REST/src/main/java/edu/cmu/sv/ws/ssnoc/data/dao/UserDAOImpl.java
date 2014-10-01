@@ -156,8 +156,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     @Override
     public void saveStatus(UserPO userPO,StatusPO statusPO){
         Log.enter(statusPO);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dateobj = new Date();
+
         if (statusPO == null) {
             Log.warn("Inside save method with userPO == NULL");
             return;
@@ -166,7 +165,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_STATUS)) {
             stmt.setString(1, userPO.getUserName());
             stmt.setString(2, statusPO.getStatusCode());
-            stmt.setString(3, df.format(dateobj));
+            stmt.setString(3, statusPO.getCreatedDate());
             //stmt.setString(4, statusPO.getCrumbID());
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");
@@ -185,8 +184,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     @Override
     public void loadLastStatusCode(UserPO userPO,StatusPO statusPO){
         Log.enter(statusPO);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dateobj = new Date();
+
         if (statusPO == null) {
             Log.warn("Inside save method with userPO == NULL");
             return;
@@ -194,10 +192,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_STATUS)) {
              stmt.setString(1, statusPO.getStatusCode());
-            stmt.setString(2,df.format(dateobj));
+            stmt.setString(2,statusPO.getCreatedDate());
              stmt.setString(3, userPO.getUserName());
-
-          //  stmt.setTimestamp(3, statusPO.getCreatedAt());
           //  stmt.setString(4, statusPO.getCrumbID());
             int rowCount = stmt.executeUpdate();
             conn.commit();
@@ -214,8 +210,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 
     public List<StatusPO> loadStatuses(String userName) {
         Log.enter();
-
-        //String query = SQL.FIND_ALL_USER_STATUSES;
 
         List<StatusPO> statuses = new ArrayList<StatusPO>();
         try (Connection conn = getConnection();
@@ -247,7 +241,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 StatusPO spo = new StatusPO();
                 spo.setUserName(rs.getString(1));
                 spo.setStatusCode(rs.getString(2));
-                spo.setCreatedAt(rs.getString(3));
+                spo.setCreatedDate(rs.getString(3));
                 spo.setCrumbID(rs.getString(4));
 
                 statuses.add(spo);
@@ -306,7 +300,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 
                 spo.setUserName(rs.getString(1));
                 spo.setStatusCode(rs.getString(2));
-                spo.setCreatedAt(rs.getString(3));
+                spo.setCreatedDate(rs.getString(3));
 
             }
         } catch (SQLException e) {

@@ -12,7 +12,6 @@ public class User {
 	private String password;
     private String statusCode;
     private String statusDate;
-    //private String createdAt;
 
 	public String getUserName() {
 		return userName;
@@ -37,10 +36,6 @@ public class User {
     public String getStatusDate(){return statusDate;}
 
     public void setStatusDate(String statusDate){this.statusDate = statusDate;}
-
-    //public String getCreatedAt(){return createdAt;}
-
-    //public void setCreatedAt(String createdAt){this.createdAt = createdAt;}
 
     @Override
 	public String toString() {

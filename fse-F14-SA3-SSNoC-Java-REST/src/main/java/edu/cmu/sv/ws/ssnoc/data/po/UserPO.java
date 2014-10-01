@@ -15,7 +15,6 @@ public class UserPO {
 	private String password;
     private String statusCode;
     private String statusDate;
-	//private String createdAt;
     private String salt;
 
 	public long getUserId() {
@@ -33,10 +32,6 @@ public class UserPO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-	//public String getCreatedAt(){return createdAt;}
-
-    //public void setCreatedAt(String createdAt){this.createdAt = createdAt;}
 
     public String getPassword() {
 		return password;
