@@ -2,6 +2,7 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 
+
 /**
  * Singleton Factory pattern class to fetch all DAO implementations.
  */
@@ -31,5 +32,7 @@ public class DAOFactory {
 	public IUserDAO getUserDAO() {
 		return new UserDAOImpl();
 	}
+
+    public IMessageDAO getMessageDAO() {return new MessageDAOImpl(); }
 
 }

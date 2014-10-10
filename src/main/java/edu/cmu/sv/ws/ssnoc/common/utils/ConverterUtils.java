@@ -1,6 +1,10 @@
 package edu.cmu.sv.ws.ssnoc.common.utils;
 
+import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
+import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
+import edu.cmu.sv.ws.ssnoc.dto.Status;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 
 /**
@@ -26,6 +30,8 @@ public class ConverterUtils {
 
 		User dto = new User();
 		dto.setUserName(po.getUserName());
+        dto.setStatusCode(po.getStatusCode());
+        dto.setStatusDate(po.getStatusDate());
 
 		return dto;
 	}
@@ -49,4 +55,73 @@ public class ConverterUtils {
 
 		return po;
 	}
+
+    /** Convert StatusPO to Status DTO object.
+    *
+    * @param spo
+    *            - User PO object
+    *
+    * @return - User DTO Object
+    */
+    public static final Status convert(StatusPO spo) {
+        if (spo == null) {
+            return null;
+        }
+
+        Status sdto = new Status();
+        sdto.setUserName(spo.getUserName());
+        sdto.setStatusCode(spo.getStatusCode());
+        sdto.setCreatedDate(spo.getCreatedDate());
+
+        return sdto;
+    }
+
+    /**
+     * Convert Status DTO to StatusPO object
+     *
+     * @param sdto
+     *            - User DTO object
+     *
+     * @return - StatusPO object
+     */
+    public static final StatusPO convert(Status sdto){
+        if (sdto == null){
+            return null;
+        }
+
+        StatusPO spo = new StatusPO();
+        spo.setUserName(sdto.getUserName());
+        spo.setStatusCode(sdto.getStatusCode());
+        spo.setCreatedDate(sdto.getCreatedDate());
+
+        return spo;
+    }
+
+    public static final ExchangeInfo convert(ExchangeInfoPO einfopo){
+        if (einfopo == null){
+            return null;
+        }
+
+        ExchangeInfo einfodto = new ExchangeInfo();
+        einfodto.setAuthor(einfopo.getAuthor());
+        einfodto.setTarget(einfopo.getTarget());
+        einfodto.setPostedAt(einfopo.getPostedAt());
+        einfodto.setContent(einfopo.getContent());
+
+        return einfodto;
+    }
+
+    public static final ExchangeInfoPO convert(ExchangeInfo einfodto){
+        if (einfodto == null){
+            return null;
+        }
+
+        ExchangeInfoPO einfopo = new ExchangeInfoPO();
+      //  einfopo.setAuthor(einfodto.getAuthor());
+      //  einfopo.setTarget(einfodto.getTarget());
+        einfopo.setPostedAt(einfodto.getPostedAt());
+        einfopo.setContent(einfodto.getContent());
+
+        return einfopo;
+    }
 }

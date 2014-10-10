@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
+import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 
 /**
@@ -52,11 +56,12 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 		try (ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
 				UserPO po = new UserPO();
-				po = new UserPO();
 				po.setUserId(rs.getLong(1));
 				po.setUserName(rs.getString(2));
 				po.setPassword(rs.getString(3));
-				po.setSalt(rs.getString(4));
+                po.setStatusCode(rs.getString(4));
+                po.setStatusDate(rs.getString(5));
+				po.setSalt(rs.getString(6));
 
 				users.add(po);
 			}
@@ -118,6 +123,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 	@Override
 	public void save(UserPO userPO) {
 		Log.enter(userPO);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
 		if (userPO == null) {
 			Log.warn("Inside save method with userPO == NULL");
 			return;
@@ -127,7 +134,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 				PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_USER)) {
 			stmt.setString(1, userPO.getUserName());
 			stmt.setString(2, userPO.getPassword());
-			stmt.setString(3, userPO.getSalt());
+            stmt.setString(3,df.format(dateobj));
+			stmt.setString(4, userPO.getSalt());
 
 			int rowCount = stmt.executeUpdate();
 			Log.trace("Statement executed, and " + rowCount + " rows inserted.");
@@ -138,4 +146,168 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 		}
 	}
 
+    /**
+     * This method will save the information of the user into the SSN_STATUS_CRUMB Table in database.
+     *
+     * @param   statusPO
+     *            - User information to be saved.
+     */
+    @Override
+    public void saveStatus(UserPO userPO,StatusPO statusPO){
+        Log.enter(statusPO);
+
+        if (statusPO == null) {
+            Log.warn("Inside save method with userPO == NULL");
+            return;
+        }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_STATUS)) {
+            stmt.setString(1, userPO.getUserName());
+            stmt.setString(2, statusPO.getStatusCode());
+            stmt.setString(3, statusPO.getCreatedDate());
+            //stmt.setString(4, statusPO.getCrumbID());
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+    }
+    /**
+     * This method will update the latest status code information of the user into the SSN_USERS Table in database.
+     *
+     * @param   statusPO
+     *            - User information to be saved.
+     */
+    @Override
+    public void loadLastStatusCode(UserPO userPO,StatusPO statusPO){
+        Log.enter(statusPO);
+
+        if (statusPO == null) {
+            Log.warn("Inside save method with userPO == NULL");
+            return;
+        }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_STATUS)) {
+             stmt.setString(1, statusPO.getStatusCode());
+            stmt.setString(2,statusPO.getCreatedDate());
+             stmt.setString(3, userPO.getUserName());
+          //  stmt.setString(4, statusPO.getCrumbID());
+            int rowCount = stmt.executeUpdate();
+            conn.commit();
+            Log.info("Status details added");
+            Log.trace("Statement executed, and " + rowCount + " rows UPD.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+    }
+
+
+    public List<StatusPO> loadStatuses(String userName) {
+        Log.enter();
+
+        List<StatusPO> statuses = new ArrayList<StatusPO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.FIND_ALL_USER_STATUSES)) {
+            stmt.setString(1, userName.toUpperCase());
+            statuses = processStatuses(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(statuses);
+        }
+
+        return statuses;
+    }
+
+    private List<StatusPO> processStatuses(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processStatuses method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<StatusPO> statuses = new ArrayList<StatusPO>();
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                StatusPO spo = new StatusPO();
+                spo.setUserName(rs.getString(1));
+                spo.setStatusCode(rs.getString(2));
+                spo.setCreatedDate(rs.getString(3));
+                spo.setCrumbID(rs.getString(4));
+
+                statuses.add(spo);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(statuses);
+        }
+
+        return statuses;
+    }
+
+    @Override
+    public StatusPO findByCrumbID(String crumbID) {
+        Log.enter(crumbID);
+
+        if (crumbID == null) {
+            Log.warn("Inside findByCrumbID method with NULL crumbID.");
+            return null;
+        }
+
+        StatusPO spo = new StatusPO();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.FIND_STATUS_BY_CRUMB)) {
+            stmt.setString(1, crumbID.toUpperCase());
+
+            spo = processCrumb(stmt);
+
+            if (spo == null) {
+                Log.debug("No user crumb exists with crumbID = " + crumbID);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(spo);
+        }
+
+        return spo;
+    }
+
+
+
+    private StatusPO processCrumb(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processResults method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        StatusPO spo =  new StatusPO();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+
+                spo.setUserName(rs.getString(1));
+                spo.setStatusCode(rs.getString(2));
+                spo.setCreatedDate(rs.getString(3));
+
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(spo);
+        }
+        return spo;
+
+    }
 }

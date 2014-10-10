@@ -13,7 +13,9 @@ public class UserPO {
 	private long userId;
 	private String userName;
 	private String password;
-	private String salt;
+    private String statusCode;
+    private String statusDate;
+    private String salt;
 
 	public long getUserId() {
 		return userId;
@@ -31,13 +33,21 @@ public class UserPO {
 		this.userName = userName;
 	}
 
-	public String getPassword() {
+    public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+    public void setStatusCode(String statusCode){this.statusCode = statusCode;}
+
+    public String getStatusCode() {return statusCode;}
+
+    public String getStatusDate() {return statusDate;}
+
+    public void  setStatusDate(String statusDate){this.statusDate = statusDate;}
 
 	public String getSalt() {
 		return salt;

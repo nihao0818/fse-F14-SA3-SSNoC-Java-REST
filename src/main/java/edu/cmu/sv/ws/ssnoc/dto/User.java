@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 public class User {
 	private String userName;
 	private String password;
+    private String statusCode;
+    private String statusDate;
 
 	public String getUserName() {
 		return userName;
@@ -27,7 +29,15 @@ public class User {
 		this.password = password;
 	}
 
-	@Override
+    public String getStatusCode(){return statusCode;}
+
+    public void setStatusCode(String statusCode){this.statusCode = statusCode;}
+
+    public String getStatusDate(){return statusDate;}
+
+    public void setStatusDate(String statusDate){this.statusDate = statusDate;}
+
+    @Override
 	public String toString() {
 		return new Gson().toJson(this);
 	}

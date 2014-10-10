@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
@@ -20,9 +21,12 @@ public class DBUtils {
 	private static boolean DB_TABLES_EXIST = false;
 	private static List<String> CREATE_TABLE_LST;
 
+
 	static {
 		CREATE_TABLE_LST = new ArrayList<String>();
 		CREATE_TABLE_LST.add(SQL.CREATE_USERS);
+        CREATE_TABLE_LST.add(SQL.CREATE_STATUS_CRUMB);
+        CREATE_TABLE_LST.add(SQL.CREATE_CHAT);
 	}
 
 	/**
@@ -45,13 +49,16 @@ public class DBUtils {
 			return;
 		}
 
-		final String CORE_TABLE_NAME = SQL.SSN_USERS;
 
-		try (Connection conn = getConnection();
-				Statement stmt = conn.createStatement();) {
+		//final String CORE_TABLE_NAME = SQL.SSN_USERS;
+      //  final String CORE_TABLE_NAME_1=SQL.SSN_STATUS_CRUMB;
+        final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT);
+
+        for (String CORE_TABLE_NAME : CORE_TABLE_LST){
+        try (Connection conn = getConnection();
+			Statement stmt = conn.createStatement();){
 			if (!doesTableExistInDB(conn, CORE_TABLE_NAME)) {
 				Log.info("Creating tables in database ...");
-
 				for (String query : CREATE_TABLE_LST) {
 					Log.debug("Executing query: " + query);
 					boolean status = stmt.execute(query);
@@ -65,7 +72,7 @@ public class DBUtils {
 			}
 
 			DB_TABLES_EXIST = true;
-		}
+		}}
 		Log.exit();
 	}
 
@@ -83,7 +90,10 @@ public class DBUtils {
 	 */
 	public static boolean doesTableExistInDB(Connection conn, String tableName)
 			throws SQLException {
-		Log.enter(tableName);
+
+            Log.enter(tableName);
+
+
 
 		if (conn == null || tableName == null || "".equals(tableName.trim())) {
 			Log.error("Invalid input parameters. Returning doesTableExistInDB() method with FALSE.");

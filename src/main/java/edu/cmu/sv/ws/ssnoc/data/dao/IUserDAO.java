@@ -2,6 +2,7 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 
 import java.util.List;
 
+import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 
 /**
@@ -17,16 +18,38 @@ public interface IUserDAO {
 	 *            - User information to be saved.
 	 */
 	void save(UserPO userPO);
-
-	/**
+    /**
+     * This method will save the information of the user status into the database.
+     *
+     * @param statusPO
+     *            - User information to be saved.
+     */
+    void saveStatus(UserPO userPO,StatusPO statusPO);
+    /**
+     * This method will save the status code information of the user into the SSN_USERS table in database.
+     *
+     * @param statusPO
+     *            - User information to be saved.
+     */
+    void loadLastStatusCode(UserPO userPO, StatusPO statusPO);
+    /**
 	 * This method will load all the users in the
 	 * database.
 	 * 
 	 * @return - List of all users.
 	 */
-	List<UserPO> loadUsers();
+    List<UserPO> loadUsers();
 
-	/**
+    /**
+     * This method will load all the user statuses in the
+     * database.
+     *
+     * @return - List of all user statuses.
+     */
+    List<StatusPO> loadStatuses(String userName);
+
+
+    /**
 	 * This method with search for a user by his userName in the database. The
 	 * search performed is a case insensitive search to allow case mismatch
 	 * situations.
@@ -38,4 +61,15 @@ public interface IUserDAO {
 	 */
 	UserPO findByName(String userName);
 
+    /**
+     * This method with search for a user status by unique crumbID in the database. The
+     * search performed is a case insensitive search to allow case mismatch
+     * situations.
+     *
+     * @param crumbID
+     *            - User name to search for.
+     *
+     * @return - StatusPO with the user information if a match is found.
+    */
+    StatusPO findByCrumbID(String crumbID);
 }
