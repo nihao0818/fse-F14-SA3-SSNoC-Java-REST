@@ -19,7 +19,10 @@ import java.util.List;
 
 /**
  * Created by vignan on 10/8/14.
+<<<<<<< HEAD
  * Added loadChatBuddiesByTime by YHWH on 10/12/14.
+=======
+>>>>>>> 60c170a9c4f9385970810eb2de335d7e11211afb
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
 
@@ -211,6 +214,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         }
         return chatBuddies;
     }
+<<<<<<< HEAD
 
     @Override
     public List<ExchangeInfoPO> loadChatBuddiesByTime(String startTime, String endTime){
@@ -254,4 +258,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         }
         return chatBuddies;
     }
+=======
+>>>>>>> 60c170a9c4f9385970810eb2de335d7e11211afb
 }

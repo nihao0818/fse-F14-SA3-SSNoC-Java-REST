@@ -122,6 +122,7 @@ public class SQL {
     public static final String FIND_CHAT_BUDDIES = "select distinct target" +" from " + SSN_CHAT
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
+<<<<<<< HEAD
 
     //***********************************************************************
     // All queries related to Social Network Analysis, added by YHWH
@@ -135,4 +136,6 @@ public class SQL {
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";
 
+=======
+>>>>>>> 60c170a9c4f9385970810eb2de335d7e11211afb
 }
