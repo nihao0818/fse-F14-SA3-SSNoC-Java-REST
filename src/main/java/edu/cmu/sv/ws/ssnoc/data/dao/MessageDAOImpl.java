@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by vignan on 10/8/14.
+ * Added loadChatBuddiesByTime by YHWH on 10/12/14.
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
 
@@ -201,6 +202,49 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             while (rs.next()) {
                 ExchangeInfoPO eipo = new ExchangeInfoPO();
                 eipo.setTarget(rs.getString(1));
+                chatBuddies.add(eipo);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(chatBuddies);
+        }
+        return chatBuddies;
+    }
+
+    @Override
+    public List<ExchangeInfoPO> loadChatBuddiesByTime(String startTime, String endTime){
+        Log.enter();
+
+        List<ExchangeInfoPO> chatBuddies = new ArrayList<>();
+        try(Connection conn= getConnection();
+            PreparedStatement stmt = conn
+                    .prepareStatement(SQL.FIND_CHAT_BUDDIES_BY_TIME_PERIOD)) {
+            stmt.setString(1, startTime.toUpperCase());
+            stmt.setString(2, endTime.toUpperCase());
+            chatBuddies = processChatBuddiesByTime(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(chatBuddies);
+        }
+        return chatBuddies;
+    }
+    private List<ExchangeInfoPO> processChatBuddiesByTime (PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processStatuses method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<ExchangeInfoPO> chatBuddies = new ArrayList<ExchangeInfoPO>();
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ExchangeInfoPO eipo = new ExchangeInfoPO();
+                eipo.setAuthor(rs.getString(1));
+                eipo.setTarget(rs.getString(2));
                 chatBuddies.add(eipo);
             }
         } catch (SQLException e) {

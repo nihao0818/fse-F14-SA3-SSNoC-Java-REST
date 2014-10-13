@@ -122,4 +122,17 @@ public class SQL {
     public static final String FIND_CHAT_BUDDIES = "select distinct target" +" from " + SSN_CHAT
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
+
+    //***********************************************************************
+    // All queries related to Social Network Analysis, added by YHWH
+    //***********************************************************************
+    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select distinct author, target" +" from " + SSN_CHAT
+            +" where UPPER(message_type)='CHAT' "
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";
+
+    //useless for now, have to use FIND_ALL_USERS now
+    public static final String FIND_All_ONLINE_USER_BY_TIME_PERIOD = "select distinct target" +" from " + SSN_USERS
+            +" where UPPER(message_type)='CHAT' "
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";
+
 }

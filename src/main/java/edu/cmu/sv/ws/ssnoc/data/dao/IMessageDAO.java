@@ -2,6 +2,7 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 
 /**
  * Created by vignan on 10/8/14.
+ * Added loadChatBuddiesByTime by YHWH on 10/12/14;
  */
 
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
@@ -31,4 +32,6 @@ public interface IMessageDAO {
     List<ExchangeInfoPO> loadChatMessages(String userName1, String userName2);
 
     List<ExchangeInfoPO> loadChatBuddies(String userName);
+
+    List<ExchangeInfoPO> loadChatBuddiesByTime(String startTime, String endTime);
 }
