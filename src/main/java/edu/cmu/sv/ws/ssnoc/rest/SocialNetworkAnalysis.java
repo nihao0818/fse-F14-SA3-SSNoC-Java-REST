@@ -32,51 +32,18 @@ import edu.cmu.sv.ws.ssnoc.dto.User;
  * 
  */
 
-@Path("/analysis")
+@Path("/usergroups")
 public class  SocialNetworkAnalysis extends BaseService{
 	/**
 	 * This method analyze the social network of specific time period.
-	 * @return - cluster list 
+	 * @return - clusters list
 	 */
 	@GET
 	/*@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })*/ //no need of this
-	/*@Path("/{timePeriod}")*/
     //@XmlElementWrapper(name = "analysis") not always used, but I don't know when should use it.
-	
-	public String thisIsTest(){
-
-		return "test";
-	}
-
-
-
-
-    public List<List<User>> loadMessagesAndUsers(List<User> users, List<ExchangeInfo> messages){
-        Log.enter();
-        List<User> cluster = new ArrayList<User>();
-        List<List<User>> clusters = new ArrayList<List<User>>();
-
-        try {
-            for(int j = 1; j >=0; j--) {
-
-                for (int i = 2; i >= 0; i--) {
-                    cluster.add(users.get(i));
-                }
-                clusters.add(cluster);
-            }
-        }
-        catch (Exception e){
-            handleException(e);
-        }
-        finally {
-            Log.exit();
-        }
-        return clusters;
-    }
-
+    @Path("/unconnected")
     public List<List<User>> analyzeSocialNetwork(String startTime, String endTime){
         Log.enter();
-
 
         List<List<User>> clusters = new ArrayList<List<User>>();
 
