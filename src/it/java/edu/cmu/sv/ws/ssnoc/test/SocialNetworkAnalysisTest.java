@@ -68,8 +68,8 @@ public class SocialNetworkAnalysisTest {
         String startTime = "20141001";
         String endTime = "20141005";
 
-        List<List<User>> result = analysisTest.loadMessagesAndUsers(users, messages);
-        Set<List<User>> analysisResult = analysisTest.analyzeSocialNetwork(startTime, endTime);
+        //List<List<User>> result = analysisTest.loadMessagesAndUsers(users, messages);
+        //Set<List<User>> analysisResult = analysisTest.analyzeSocialNetwork(startTime, endTime);
 
         //assertTrue(analysisTest.loadMessagesAndUsers(users, messages).contains(userB));
 
@@ -78,8 +78,7 @@ public class SocialNetworkAnalysisTest {
     @Test
     public void loadAllMessagesOfTimePeriodTest(){}
 
-    @Test
-    public void loadAllOnlineUsersOfTimePeriodTest() {}
+
 
 
 }

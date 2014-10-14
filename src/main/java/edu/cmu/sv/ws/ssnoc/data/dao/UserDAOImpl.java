@@ -17,7 +17,7 @@ import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 
 /**
  * DAO implementation for saving User information in the H2 database.
- * 
+ * Added loadChatBuddiesByTime, processChatBuddiesByTime by YHWH on 10/13/14.
  */
 public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 	/**
@@ -310,4 +310,54 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return spo;
 
     }
+
+    @Override
+    public List<List<UserPO>> loadChatBuddiesByTime(String startTime, String endTime){
+        Log.enter();
+
+        List<List<UserPO>> chatBuddies = new ArrayList<List<UserPO>>();
+        try(Connection conn= getConnection();
+            PreparedStatement stmt = conn
+                    .prepareStatement(SQL.FIND_CHAT_BUDDIES_BY_TIME_PERIOD)) {
+            stmt.setString(1, startTime.toUpperCase());
+            stmt.setString(2, endTime.toUpperCase());
+            chatBuddies = processChatBuddiesByTime(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(chatBuddies);
+        }
+        return chatBuddies;
+    }
+    private List<List<UserPO>> processChatBuddiesByTime (PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processStatuses method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<UserPO> chatPair = new ArrayList<UserPO>();
+        List<List<UserPO>> chatBuddies = new ArrayList<List<UserPO>>();
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                chatPair.clear();
+                UserPO upo1 = new UserPO();
+                UserPO upo2 = new UserPO();
+                upo1.setUserName(rs.getString(2));
+                upo2.setUserName(rs.getString(3));
+
+                chatPair.add(upo1);
+                chatPair.add(upo2);
+                chatBuddies.add(chatPair);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(chatBuddies);
+        }
+        return chatBuddies;
+    }
+
 }

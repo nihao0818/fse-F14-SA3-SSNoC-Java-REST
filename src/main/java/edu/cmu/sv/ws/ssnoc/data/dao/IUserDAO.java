@@ -8,7 +8,8 @@ import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 /**
  * Interface specifying the contract that all implementations will implement to
  * provide persistence of User information in the system.
- * 
+ *
+ * Added loadChatBuddiesByTime by YHWH on 10/13/14.
  */
 public interface IUserDAO {
 	/**
@@ -72,4 +73,14 @@ public interface IUserDAO {
      * @return - StatusPO with the user information if a match is found.
     */
     StatusPO findByCrumbID(String crumbID);
+
+    /**
+     * This method will search for all pairs of users who chatted with each other in
+     * specific time period in the database. The search performed is a case insensitive
+     * search to allow case mismatch situation.
+     * @param startTime, endTime;
+     *            - specific time period to search for.
+     * @return - all chat pairs of UserPO.
+     */
+    List<List<UserPO>> loadChatBuddiesByTime(String startTime, String endTime);
 }

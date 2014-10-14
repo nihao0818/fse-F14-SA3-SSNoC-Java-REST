@@ -122,20 +122,21 @@ public class SQL {
     public static final String FIND_CHAT_BUDDIES = "select distinct target" +" from " + SSN_CHAT
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
-<<<<<<< HEAD
 
     //***********************************************************************
     // All queries related to Social Network Analysis, added by YHWH
     //***********************************************************************
-    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select distinct author, target" +" from " + SSN_CHAT
+    /*public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select distinct author, target" +" from " + SSN_CHAT
             +" where UPPER(message_type)='CHAT' "
-            +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";*/
+    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select messageID, author, target" +" from " + SSN_CHAT + "a"
+            +" where a.messageID=(SELECT MIN(b.messageID)" +" from " + SSN_CHAT + "b"
+            +" where least(a.author, a.target)= least(b.author, b.target) "
+            +"and greatest(a.author, a.target)= greatest(b.author, b.target) "
+            +"and UPPER(message_type)='CHAT' "
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?) ";
 
-    //useless for now, have to use FIND_ALL_USERS now
-    public static final String FIND_All_ONLINE_USER_BY_TIME_PERIOD = "select distinct target" +" from " + SSN_USERS
-            +" where UPPER(message_type)='CHAT' "
-            +"and UPPER(postedAt) between UPPER(?) and UPPER(?)";
 
-=======
->>>>>>> 60c170a9c4f9385970810eb2de335d7e11211afb
+
+
 }

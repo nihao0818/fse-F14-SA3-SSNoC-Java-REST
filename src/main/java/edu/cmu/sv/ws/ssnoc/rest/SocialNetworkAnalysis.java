@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.*;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import org.h2.util.StringUtils;
@@ -73,20 +74,52 @@ public class  SocialNetworkAnalysis extends BaseService{
         return clusters;
     }
 
-    public Set<List<User>> analyzeSocialNetwork(String startTime, String endTime){
+    public List<List<User>> analyzeSocialNetwork(String startTime, String endTime){
         Log.enter();
-        List<User> cluster = new ArrayList<User>();
-        Set<List<User>> clusters = new TreeSet<List<User>>();
-        List<User> allOnlineUsers = new ArrayList<User>();
-        List<ExchangeInfo> buddies = null;
+
+
+        List<List<User>> clusters = new ArrayList<List<User>>();
+
+        List<User> allUsers = null;
+        List<User> pair = null;
+        List<List<User>> buddies = null;
 
         try {
-            List<ExchangeInfoPO> buddiesPOs = DAOFactory.getInstance().getMessageDAO().loadChatBuddiesByTime(startTime,endTime);
+            List<List<UserPO>> buddiesPOs = DAOFactory.getInstance().getUserDAO().loadChatBuddiesByTime(startTime,endTime);
+            pair = new ArrayList<User>();
+            buddies = new ArrayList<List<User>>();
+            for (List<UserPO> pairPO : buddiesPOs ){
+                pair.clear();
+                for (UserPO userPO : pairPO){
+                    User dto = ConverterUtils.convert(userPO);
+                    pair.add(dto);
+                }
+                buddies.add(pair);
+            }
 
-            buddies = new ArrayList<ExchangeInfo>();
-            for (ExchangeInfoPO exchangeInfoPO : buddiesPOs ){
-                ExchangeInfo dto = ConverterUtils.convert(exchangeInfoPO);
-                buddies.add(dto);
+            List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
+            allUsers = new ArrayList<User>();
+            for (UserPO po : userPOs) {
+                User dto = ConverterUtils.convert(po);
+                allUsers.add(dto);
+            }
+
+            clusters.add(allUsers);
+            List<List<User>> temp = new ArrayList<List<User>>();
+            for(List<User> eachPair : buddies) {
+                for(List<User> eachCluster : clusters){
+                    if (eachCluster.containsAll(eachPair)) {
+                        List<User> cluster1= new ArrayList<User>(eachCluster);
+                        List<User> cluster2= new ArrayList<User>(eachCluster);
+                        cluster1.remove(eachPair.get(0));
+                        cluster2.remove(eachPair.get(1));
+                        temp.add(cluster1);
+                        temp.add(cluster2);
+                        clusters.remove(eachCluster);
+                    }
+                }
+                clusters.addAll(temp);
+                temp.clear();
             }
 
         }
