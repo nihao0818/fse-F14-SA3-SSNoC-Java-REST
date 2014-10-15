@@ -123,7 +123,6 @@ public class SQL {
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
 
-<<<<<<< HEAD
     //***********************************************************************
     // All queries related to Social Network Analysis, added by YHWH
     //***********************************************************************
@@ -138,10 +137,6 @@ public class SQL {
             +"and UPPER(postedAt) between UPPER(?) and UPPER(?))";
 
 
-
-
-}
-=======
     // ****************************************************************
     // All queries related to MemoryCrumb
     // ****************************************************************
@@ -166,4 +161,3 @@ public class SQL {
             +"( postsPerSecond, getsPerSecond) values (?,?)";
 
 }
->>>>>>> 8b6847e276ac1538b8654068f221b9c88c3e1043
