@@ -27,6 +27,8 @@ public class DBUtils {
 		CREATE_TABLE_LST.add(SQL.CREATE_USERS);
         CREATE_TABLE_LST.add(SQL.CREATE_STATUS_CRUMB);
         CREATE_TABLE_LST.add(SQL.CREATE_CHAT);
+        CREATE_TABLE_LST.add(SQL.CREATE_MEMORY_CRUMB);
+        CREATE_TABLE_LST.add(SQL.CREATE_PERFORMANCE_CRUMB);
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class DBUtils {
 
 		//final String CORE_TABLE_NAME = SQL.SSN_USERS;
       //  final String CORE_TABLE_NAME_1=SQL.SSN_STATUS_CRUMB;
-        final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT);
+        final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT,SQL.SSN_MEMORY_CRUMB,SQL.SSN_PERFORMANCE_CRUMB);
 
         for (String CORE_TABLE_NAME : CORE_TABLE_LST){
         try (Connection conn = getConnection();

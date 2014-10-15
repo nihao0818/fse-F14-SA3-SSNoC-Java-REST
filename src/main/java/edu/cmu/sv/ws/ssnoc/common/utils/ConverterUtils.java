@@ -1,9 +1,11 @@
 package edu.cmu.sv.ws.ssnoc.common.utils;
 
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
+import edu.cmu.sv.ws.ssnoc.data.po.MemoryPO;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
+import edu.cmu.sv.ws.ssnoc.dto.Memory;
 import edu.cmu.sv.ws.ssnoc.dto.Status;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 
@@ -123,5 +125,19 @@ public class ConverterUtils {
         einfopo.setContent(einfodto.getContent());
 
         return einfopo;
+    }
+
+    public static final Memory convert(MemoryPO memdto){
+            if(memdto == null){
+                return null;
+            }
+        Memory memstats = new Memory();
+        memstats.setUsedPersistent(memdto.getUsedPersistent());
+        memstats.setRemainingPersistent(memdto.getRemainingPersistent());
+        memstats.setUsedVolatile(memdto.getUsedVolatile());
+        memstats.setRemainingVolatile(memdto.getRemainingVolatile());
+        memstats.setCreatedAt(memdto.getCreatedAt());
+
+        return memstats;
     }
 }

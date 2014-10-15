@@ -41,6 +41,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 		}
 
 		return users;
+
 	}
 
 	private List<UserPO> processResults(PreparedStatement stmt) {
