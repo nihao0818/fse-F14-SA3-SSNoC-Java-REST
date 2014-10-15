@@ -1,29 +1,17 @@
 package edu.cmu.sv.ws.ssnoc.rest;
 
-import javax.crypto.SecretKey;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.*;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
-import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
-import org.h2.util.StringUtils;
+import com.google.gson.Gson;
 
-import edu.cmu.sv.ws.ssnoc.common.exceptions.ServiceException;
-import edu.cmu.sv.ws.ssnoc.common.exceptions.UnauthorizedUserException;
-import edu.cmu.sv.ws.ssnoc.common.exceptions.ValidationException;
+
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
-import edu.cmu.sv.ws.ssnoc.common.utils.SSNCipher;
-import edu.cmu.sv.ws.ssnoc.data.dao.MessageDAOImpl;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
-import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 
@@ -39,10 +27,9 @@ public class  SocialNetworkAnalysis extends BaseService{
 	 * @return - clusters list
 	 */
 	@GET
-	/*@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })*/ //no need of this
-    //@XmlElementWrapper(name = "analysis") not always used, but I don't know when should use it.
-    @Path("/unconnected")
-    public List<List<User>> analyzeSocialNetwork(String startTime, String endTime){
+	@Produces({ MediaType.APPLICATION_JSON }) //no need of this
+    @Path("/unconnected/{startTime}/{endTime}")
+    public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
         Log.enter();
 
         List<List<User>> clusters = new ArrayList<List<User>>();
@@ -97,7 +84,7 @@ public class  SocialNetworkAnalysis extends BaseService{
             Log.exit(clusters);
         }
 
-        return clusters;
+        return ok(new Gson().toJson(clusters));
     }
 }
 	
