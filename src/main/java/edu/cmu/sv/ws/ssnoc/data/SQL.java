@@ -1,5 +1,4 @@
 package edu.cmu.sv.ws.ssnoc.data;
-
 /**
  * This class contains all the SQL related code that is used by the project.
  * Note that queries are grouped by their purpose and table associations for
@@ -14,7 +13,8 @@ public class SQL {
 	public static final String SSN_USERS = "SSN_USERS";
     public static final String SSN_STATUS_CRUMB="SSN_STATUS_CRUMB";
     public static final String SSN_CHAT="SSN_MESSAGE";
-
+    public static final String SSN_MEMORY_CRUMB="SSN_MEMORY_CRUMB";
+    public static final String SSN_PERFORMANCE_CRUMB="SSN_PERFORMANCE_CRUMB";
 	/**
 	 * Query to check if a given table exists in the H2 database.
 	 */
@@ -123,6 +123,7 @@ public class SQL {
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
 
+<<<<<<< HEAD
     //***********************************************************************
     // All queries related to Social Network Analysis, added by YHWH
     //***********************************************************************
@@ -140,3 +141,29 @@ public class SQL {
 
 
 }
+=======
+    // ****************************************************************
+    // All queries related to MemoryCrumb
+    // ****************************************************************
+    public static final String CREATE_MEMORY_CRUMB = "create table IF NOT EXISTS "
+            + SSN_MEMORY_CRUMB +" ( crumbID IDENTITY PRIMARY KEY, usedVMemory long, remainingVMemory long,usedPersistent long, " +
+            "remainingPersistent long, createdAt varchar(20))";
+
+    public static final String INSERT_MEMORY_STATS = "insert into "+ SSN_MEMORY_CRUMB
+            +" (usedVMemory, remainingVMemory, usedPersistent,remainingPersistent,createdAt) values (?,?,?,?,?)";
+
+    public static final String DELETE_MEMORY_STATS = "Truncate table "+SSN_MEMORY_CRUMB;
+
+    public static final String GET_MEMORY_STATS = "select usedVMemory, remainingVMemory, usedPersistent, remainingPersistent, " +
+            "createdAt from "+SSN_MEMORY_CRUMB+" where createdAt between (?) and (?)"+" order by createdAt DESC";
+    // ****************************************************************
+    // All queries related to PerformanceCrumb
+    // ****************************************************************
+    public static final String CREATE_PERFORMANCE_CRUMB = "create table IF NOT EXISTS "
+            + SSN_PERFORMANCE_CRUMB +" ( postsPerSecond long, getsPerSecond long)";
+
+    public static final String INSERT_PERFORMANCE_STATS = "insert into "+SSN_PERFORMANCE_CRUMB
+            +"( postsPerSecond, getsPerSecond) values (?,?)";
+
+}
+>>>>>>> 8b6847e276ac1538b8654068f221b9c88c3e1043

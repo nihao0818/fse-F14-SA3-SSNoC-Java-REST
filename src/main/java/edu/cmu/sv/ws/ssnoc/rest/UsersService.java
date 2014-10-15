@@ -28,7 +28,7 @@ public class UsersService extends BaseService {
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@XmlElementWrapper(name = "users")
-   // @Path("/")
+   @Path("/")
 	public List<User> loadUsers() {
 		Log.enter();
 
