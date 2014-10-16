@@ -33,31 +33,10 @@ public class  SocialNetworkAnalysis extends BaseService{
         Log.enter();
 
         List<List<User>> clusters = new ArrayList<List<User>>();
-
-        List<User> allUsers = null;
-        List<User> pair = null;
-        List<List<User>> buddies = null;
+        List<User> allUsers = loadAllUsers();
+        List<List<User>> buddies = loadChatBuddies(startTime, endTime);
 
         try {
-            List<List<UserPO>> buddiesPOs = DAOFactory.getInstance().getUserDAO().loadChatBuddiesByTime(startTime,endTime);
-            pair = new ArrayList<User>();
-            buddies = new ArrayList<List<User>>();
-            for (List<UserPO> pairPO : buddiesPOs ){
-                pair.clear();
-                for (UserPO userPO : pairPO){
-                    User dto = ConverterUtils.convert(userPO);
-                    pair.add(dto);
-                }
-                buddies.add(pair);
-            }
-
-            List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
-            allUsers = new ArrayList<User>();
-            for (UserPO po : userPOs) {
-                User dto = ConverterUtils.convert(po);
-                allUsers.add(dto);
-            }
-
             clusters.add(allUsers);
             List<List<User>> temp = new ArrayList<List<User>>();
             for(List<User> eachPair : buddies) {
@@ -85,6 +64,46 @@ public class  SocialNetworkAnalysis extends BaseService{
         }
 
         return ok(new Gson().toJson(clusters));
+    }
+
+    public List<List<User>>loadChatBuddies(String startTime, String endTime) {
+        List<User> pair = null;
+        List<List<User>> buddies = null;
+
+        try{
+            List<List<UserPO>> buddiesPOs = DAOFactory.getInstance().getUserDAO().loadChatBuddiesByTime(startTime,endTime);
+            pair = new ArrayList<User>();
+            buddies = new ArrayList<List<User>>();
+            for (List<UserPO> pairPO : buddiesPOs ){
+                pair.clear();
+                for (UserPO userPO : pairPO){
+                    User dto = ConverterUtils.convert(userPO);
+                    pair.add(dto);
+                }
+                buddies.add(pair);
+            }
+        }
+        catch (Exception e) {
+            handleException(e);
+        }
+
+        return buddies;
+    }
+    public List<User>loadAllUsers() {
+        List<User> allUsers = null;
+
+        try{
+            List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
+            allUsers = new ArrayList<User>();
+            for (UserPO po : userPOs) {
+                User dto = ConverterUtils.convert(po);
+                allUsers.add(dto);
+            }
+        }
+        catch (Exception e) {
+            handleException(e);
+        }
+        return allUsers;
     }
 }
 	
