@@ -6,3 +6,4 @@ before_install: mvn clean
 notifications:
    email:
       - Qihao.bao@west.cmu.edu
+	- vignan.uppugandla@sv.cmu.edu
