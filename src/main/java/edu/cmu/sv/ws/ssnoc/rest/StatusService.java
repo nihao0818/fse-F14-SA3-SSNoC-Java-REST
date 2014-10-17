@@ -7,9 +7,12 @@ package edu.cmu.sv.ws.ssnoc.rest;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
+import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
 import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
+import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import edu.cmu.sv.ws.ssnoc.dto.Status;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 
@@ -42,7 +45,28 @@ public class StatusService extends BaseService{
             Log.trace("Inserting status details.....:"+userName);
             dao.saveStatus(po,spo);
             dao.loadLastStatusCode(po,spo);
+            //Status update on Wall Message
+            ExchangeInfoPO msg = new ExchangeInfoPO();
+            msg.setAuthor(po.getUserName());
+            String content = null;
+            switch (spo.getStatusCode()){
+                case "OK":
+                    content = "I am OK, I do not need help";
+                    break;
+                case "HELP":
+                    content = "I need help, but this is not a life threatening emergency";
+                    break;
+                case "EMERGENCY":
+                    content = "I need help now, as this is a life threatening emergency!";
+                    break;
+                default:
+                    content = "The user has not been providing his/her status yet";
+            }
+            msg.setContent(content);
+            msg.setPostedAt(spo.getCreatedDate());
 
+            IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+            mdao.saveWallMessage(po,msg);
         }
         catch (Exception e){
             handleException(e);

@@ -10,11 +10,11 @@ import edu.cmu.sv.ws.ssnoc.dto.Memory;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
@@ -25,17 +25,15 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 public class MeasureMemoryService extends BaseService{
     static Timer timeMonitor = new Timer();
     @POST
-    //@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/start")
-    public void startMemoryMonitor(){
+    public Response startMemoryMonitor(){
             timeMonitor = null;
             timeMonitor = new Timer();
          TimerTask scanTask = new TimerTask() {
              IMemoryDAO mdao = DAOFactory.getInstance().getMemoryDAO();
              MemoryPO memDetails = new MemoryPO();
-
-
-             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
              @Override
              public void run() {
@@ -59,9 +57,13 @@ public class MeasureMemoryService extends BaseService{
                  Calendar calendar = Calendar.getInstance();
                  memDetails.setCreatedAt(df.format(calendar.getTime()));
                 mdao.insertMemoryStats(memDetails);
+
              }
+
          };
         timeMonitor.schedule(scanTask,0,60000);
+
+        return ok();
     }
 
     @POST
