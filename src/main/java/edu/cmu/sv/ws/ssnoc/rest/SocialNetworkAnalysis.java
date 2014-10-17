@@ -29,7 +29,7 @@ public class  SocialNetworkAnalysis extends BaseService{
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
     @Path("/unconnected/{startTime}/{endTime}")
-    public List<List<String>> analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
+    public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
         Log.enter();
 
         List<List<String>> clusters = new ArrayList<List<String>>();
@@ -65,9 +65,9 @@ public class  SocialNetworkAnalysis extends BaseService{
             Log.exit(clusters);
         }
 
-        return clusters;
+        //return clusters;
 
-        //return ok(new Gson().toJson(clusters));
+        return ok(new Gson().toJson(clusters));
     }
 
     public List<List<String>>loadChatBuddies(String startTime, String endTime) {
