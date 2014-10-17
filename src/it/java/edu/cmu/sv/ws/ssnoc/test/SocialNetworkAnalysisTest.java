@@ -1,19 +1,15 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
-import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
-import edu.cmu.sv.ws.ssnoc.data.dao.IPerformanceDAO;
-import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+
 import edu.cmu.sv.ws.ssnoc.rest.SocialNetworkAnalysis;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
-import edu.cmu.sv.ws.ssnoc.data.SQLTest;
-import edu.cmu.sv.ws.ssnoc.data.dao.PerformanceDAOImpl;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,13 +17,10 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.lang.reflect.Method;
-import java.lang.Class;
+
 
 
 /**
@@ -109,17 +102,12 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void loadAllUsersTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        List<User> testData = new ArrayList<User>();
-        User data1 = new User();
-            data1.setUserName("A");
-        User data2 = new User();
-            data2.setUserName("B");
-        User data3 = new User();
-            data3.setUserName("C");
-        User data4 = new User();
-            data4.setUserName("D");
-        User data5 = new User();
-            data5.setUserName("E");
+        List<String> testData = new ArrayList<String>();
+        String data1 = "A";
+        String data2 = "B";
+        String data3 = "C";
+        String data4 = "D";
+        String data5 = "E";
 
         testData.add(data1);
         testData.add(data2);
@@ -127,7 +115,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         testData.add(data4);
         testData.add(data5);
         //List<User> result = analysisTest.loadAllUsers();
-        assertEquals(testData.size(), analysisTest.loadAllUsers().size());
+        assertEquals(testData, analysisTest.loadAllUsers());
         //assertTrue(testData.contains(analysisTest.loadAllUsers()));
 
     }
@@ -138,23 +126,19 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         String startTime = "20141001000000";
         String endTime = "20141031235959";
 
-        List<List<User>> testData = new ArrayList<List<User>>();
-        User userA = new User();
-            userA.setUserName("A");
-        User userB = new User();
-            userA.setUserName("B");
-        User userC = new User();
-            userA.setUserName("C");
-        User userD = new User();
-            userA.setUserName("D");
+        List<List<String>> testData = new ArrayList<List<String>>();
+        String userA = "A";
+        String userB = "B";
+        String userC = "C";
+        String userD = "D";
 
-        List<User> data1 = new ArrayList<User>();
+        List<String> data1 = new ArrayList<String>();
             data1.add(userA);
             data1.add(userB);
-        List<User> data2 = new ArrayList<User>();
+        List<String> data2 = new ArrayList<String>();
             data2.add(userA);
             data2.add(userC);
-        List<User> data3 = new ArrayList<User>();
+        List<String> data3 = new ArrayList<String>();
             data3.add(userC);
             data3.add(userD);
 
@@ -162,42 +146,41 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         testData.add(data2);
         testData.add(data3);
 
-        assertEquals(testData.size(), analysisTest.loadChatBuddies(startTime, endTime).size());
+        List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+
+        assertEquals(testData, result);
 
     }
 
     @Test
     public void analyzeSocialNetworkTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        String startTime = "20141001000000";
+        String endTime = "20141031235959";
 
-        List<List<User>> clusters = new ArrayList<List<User>>();
+        List<List<String>> clusters = new ArrayList<List<String>>();
 
-        User userA = new User();
-            userA.setUserName("A");
-        User userB = new User();
-            userB.setUserName("B");
-        User userC = new User();
-            userC.setUserName("C");
-        User userD = new User();
-            userD.setUserName("D");
-        User userE = new User();
-            userE.setUserName("E");
+        String userA = "A";
+        String userB = "B";
+        String userC = "C";
+        String userD = "D";
+        String userE = "E";
 
-        List<User> cluster1 = new ArrayList<User>();
+        List<String> cluster1 = new ArrayList<String>();
             cluster1.add(userA);
             cluster1.add(userD);
             cluster1.add(userE);
-        List<User> cluster2 = new ArrayList<User>();
+        List<String> cluster2 = new ArrayList<String>();
             cluster2.add(userC);
             cluster2.add(userE);
-        List<User> cluster3 = new ArrayList<User>();
+        List<String> cluster3 = new ArrayList<String>();
             cluster3.add(userD);
             cluster3.add(userE);
-        List<User> cluster4 = new ArrayList<User>();
+        List<String> cluster4 = new ArrayList<String>();
             cluster4.add(userB);
             cluster4.add(userC);
             cluster4.add(userE);
-        List<User> cluster5 = new ArrayList<User>();
+        List<String> cluster5 = new ArrayList<String>();
             cluster5.add(userB);
             cluster5.add(userD);
             cluster5.add(userE);
@@ -208,7 +191,10 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         clusters.add(cluster4);
         clusters.add(cluster5);
 
-        assertEquals(clusters.size(), analysisTest.loadAllUsers().size());
+        List<List<String>> result = analysisTest.analyzeSocialNetwork(startTime, endTime);
+
+
+        assertTrue(clusters.containsAll(result)&&result.containsAll(clusters));
     }
 
     @After

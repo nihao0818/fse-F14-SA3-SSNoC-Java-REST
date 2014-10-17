@@ -338,12 +338,13 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         Log.debug("Executing stmt = " + stmt);
-        List<UserPO> chatPair = new ArrayList<UserPO>();
+
         List<List<UserPO>> chatBuddies = new ArrayList<List<UserPO>>();
 
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                chatPair.clear();
+                List<UserPO> chatPair = new ArrayList<UserPO>();
+
                 UserPO upo1 = new UserPO();
                 UserPO upo2 = new UserPO();
                 upo1.setUserName(rs.getString(2));
@@ -352,6 +353,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 chatPair.add(upo1);
                 chatPair.add(upo2);
                 chatBuddies.add(chatPair);
+
             }
         } catch (SQLException e) {
             handleException(e);

@@ -27,32 +27,34 @@ public class  SocialNetworkAnalysis extends BaseService{
 	 * @return - clusters list
 	 */
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON }) //no need of this
+	@Produces({ MediaType.APPLICATION_JSON })
     @Path("/unconnected/{startTime}/{endTime}")
-    public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
+    public List<List<String>> analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
         Log.enter();
 
-        List<List<User>> clusters = new ArrayList<List<User>>();
-        List<User> allUsers = loadAllUsers();
-        List<List<User>> buddies = loadChatBuddies(startTime, endTime);
+        List<List<String>> clusters = new ArrayList<List<String>>();
+        List<String> allUsers = loadAllUsers();
+        List<List<String>> buddies = loadChatBuddies(startTime, endTime);
 
         try {
             clusters.add(allUsers);
-            List<List<User>> temp = new ArrayList<List<User>>();
-            for(List<User> eachPair : buddies) {
-                for(List<User> eachCluster : clusters){
+
+            for(List<String> eachPair : buddies) {
+                List<List<String>> temp = new ArrayList<List<String>>();
+                for(List<String> eachCluster : clusters){
                     if (eachCluster.containsAll(eachPair)) {
-                        List<User> cluster1= new ArrayList<User>(eachCluster);
-                        List<User> cluster2= new ArrayList<User>(eachCluster);
+                        List<String> cluster1= new ArrayList<String>(eachCluster);
+                        List<String> cluster2= new ArrayList<String>(eachCluster);
                         cluster1.remove(eachPair.get(0));
                         cluster2.remove(eachPair.get(1));
                         temp.add(cluster1);
                         temp.add(cluster2);
-                        clusters.remove(eachCluster);
+                    }
+                    else {
+                        temp.add(eachCluster);
                     }
                 }
-                clusters.addAll(temp);
-                temp.clear();
+                clusters = temp;
             }
 
         }
@@ -63,21 +65,23 @@ public class  SocialNetworkAnalysis extends BaseService{
             Log.exit(clusters);
         }
 
-        return ok(new Gson().toJson(clusters));
+        return clusters;
+
+        //return ok(new Gson().toJson(clusters));
     }
 
-    public List<List<User>>loadChatBuddies(String startTime, String endTime) {
-        List<User> pair = null;
-        List<List<User>> buddies = null;
+    public List<List<String>>loadChatBuddies(String startTime, String endTime) {
+        List<String> pair = null;
+        List<List<String>> buddies = null;
 
         try{
             List<List<UserPO>> buddiesPOs = DAOFactory.getInstance().getUserDAO().loadChatBuddiesByTime(startTime,endTime);
-            pair = new ArrayList<User>();
-            buddies = new ArrayList<List<User>>();
+
+            buddies = new ArrayList<List<String>>();
             for (List<UserPO> pairPO : buddiesPOs ){
-                pair.clear();
+                pair = new ArrayList<String>();
                 for (UserPO userPO : pairPO){
-                    User dto = ConverterUtils.convert(userPO);
+                    String dto = ConverterUtils.convert(userPO).getUserName();
                     pair.add(dto);
                 }
                 buddies.add(pair);
@@ -89,14 +93,14 @@ public class  SocialNetworkAnalysis extends BaseService{
 
         return buddies;
     }
-    public List<User>loadAllUsers() {
-        List<User> allUsers = null;
+    public List<String> loadAllUsers() {
+        List<String> allUsers = null;
 
         try{
             List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
-            allUsers = new ArrayList<User>();
+            allUsers = new ArrayList<>();
             for (UserPO po : userPOs) {
-                User dto = ConverterUtils.convert(po);
+                String dto = ConverterUtils.convert(po).getUserName();
                 allUsers.add(dto);
             }
         }
