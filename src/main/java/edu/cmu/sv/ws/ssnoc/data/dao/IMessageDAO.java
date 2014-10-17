@@ -31,4 +31,5 @@ public interface IMessageDAO {
     List<ExchangeInfoPO> loadChatMessages(String userName1, String userName2);
 
     List<ExchangeInfoPO> loadChatBuddies(String userName);
+
 }

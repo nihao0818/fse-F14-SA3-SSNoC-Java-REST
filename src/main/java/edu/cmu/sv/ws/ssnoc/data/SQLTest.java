@@ -6,6 +6,7 @@ package edu.cmu.sv.ws.ssnoc.data;
 public class SQLTest {
 
     public static final String SSN_CHAT_TEST="SSN_MESSAGE_TEST";
+    public static final String SSN_USERS_TEST = "SSN_USERS";
 
     public static final String CREATE_CHAT_TEST = "create table IF NOT EXISTS "
             + SSN_CHAT_TEST +" ( messageID IDENTITY PRIMARY KEY, author VARCHAR(100), message_type VARCHAR(20),target varchar(100), " +

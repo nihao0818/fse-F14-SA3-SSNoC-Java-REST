@@ -12,9 +12,7 @@ import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
-import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import edu.cmu.sv.ws.ssnoc.dto.Status;
-import edu.cmu.sv.ws.ssnoc.dto.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

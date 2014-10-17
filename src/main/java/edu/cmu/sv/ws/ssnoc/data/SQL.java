@@ -123,6 +123,17 @@ public class SQL {
             +" where UPPER(message_type)='CHAT' "
             +"and UPPER(author)=UPPER(?)";
 
+    //***********************************************************************
+    // All queries related to Social Network Analysis, added by YHWH
+    //***********************************************************************
+    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select messageID, author, target" +" from " + SSN_CHAT + " a"
+            +" where a.messageID=(SELECT MIN(b.messageID)" +" from " + SSN_CHAT + " b"
+            +" where least(a.author, a.target)= least(b.author, b.target) "
+            +"and greatest(a.author, a.target)= greatest(b.author, b.target) "
+            +"and UPPER(message_type)='CHAT' "
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?))";
+
+
     // ****************************************************************
     // All queries related to MemoryCrumb
     // ****************************************************************

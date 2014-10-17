@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by vignan on 10/8/14.
+ *
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
 
@@ -210,4 +211,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         }
         return chatBuddies;
     }
+
+
 }
