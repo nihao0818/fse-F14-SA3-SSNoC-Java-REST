@@ -66,28 +66,28 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         stmtInsertUser.execute();
 
         PreparedStatement stmtInsertChat = conn.prepareStatement(SQL.INSERT_CHAT);
-        stmtInsertChat.setString(1, "A");
+        stmtInsertChat.setString(1, "D");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "B");
-        stmtInsertChat.setString(4, "20141001143325");
+        stmtInsertChat.setString(3, "E");
+        stmtInsertChat.setString(4, "2014-10-01 14:33");
+        stmtInsertChat.setString(5, "test");
+        stmtInsertChat.execute();
+        stmtInsertChat.setString(1, "B");
+        stmtInsertChat.setString(2, "CHAT");
+        stmtInsertChat.setString(3, "D");
+        stmtInsertChat.setString(4, "2014-10-05 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
         stmtInsertChat.setString(1, "A");
         stmtInsertChat.setString(2, "CHAT");
         stmtInsertChat.setString(3, "C");
-        stmtInsertChat.setString(4, "20141005143325");
+        stmtInsertChat.setString(4, "2014-10-10 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
         stmtInsertChat.setString(1, "C");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "D");
-        stmtInsertChat.setString(4, "20141010143325");
-        stmtInsertChat.setString(5, "test");
-        stmtInsertChat.execute();
-        stmtInsertChat.setString(1, "B");
-        stmtInsertChat.setString(2, "CHAT");
         stmtInsertChat.setString(3, "A");
-        stmtInsertChat.setString(4, "20141015143325");
+        stmtInsertChat.setString(4, "2014-10-15 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
 
@@ -123,24 +123,25 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void loadChatBuddiesTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        String startTime = "20141001000000";
-        String endTime = "20141031235959";
+        String startTime = "2014-10-01 00:00";
+        String endTime = "2014-10-31 23:59";
 
         List<List<String>> testData = new ArrayList<List<String>>();
         String userA = "A";
         String userB = "B";
         String userC = "C";
         String userD = "D";
+        String userE = "E";
 
         List<String> data1 = new ArrayList<String>();
-            data1.add(userA);
-            data1.add(userB);
+            data1.add(userD);
+            data1.add(userE);
         List<String> data2 = new ArrayList<String>();
-            data2.add(userA);
-            data2.add(userC);
+            data2.add(userB);
+            data2.add(userD);
         List<String> data3 = new ArrayList<String>();
+            data3.add(userA);
             data3.add(userC);
-            data3.add(userD);
 
         testData.add(data1);
         testData.add(data2);
@@ -155,8 +156,8 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void analyzeSocialNetworkTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        String startTime = "20141001000000";
-        String endTime = "20141031235959";
+        String startTime = "2014-10-01 00:00";
+        String endTime = "2014-10-31 23:59";
 
         List<List<String>> clusters = new ArrayList<List<String>>();
 
@@ -168,28 +169,31 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
 
         List<String> cluster1 = new ArrayList<String>();
             cluster1.add(userA);
-            cluster1.add(userD);
-            cluster1.add(userE);
+            cluster1.add(userB);
         List<String> cluster2 = new ArrayList<String>();
+            cluster2.add(userB);
             cluster2.add(userC);
-            cluster2.add(userE);
         List<String> cluster3 = new ArrayList<String>();
+            cluster3.add(userA);
             cluster3.add(userD);
-            cluster3.add(userE);
         List<String> cluster4 = new ArrayList<String>();
-            cluster4.add(userB);
             cluster4.add(userC);
-            cluster4.add(userE);
+            cluster4.add(userD);
         List<String> cluster5 = new ArrayList<String>();
+            cluster5.add(userA);
             cluster5.add(userB);
-            cluster5.add(userD);
             cluster5.add(userE);
+        List<String> cluster6 = new ArrayList<String>();
+            cluster6.add(userB);
+            cluster6.add(userC);
+            cluster6.add(userE);
 
         clusters.add(cluster1);
         clusters.add(cluster2);
         clusters.add(cluster3);
         clusters.add(cluster4);
         clusters.add(cluster5);
+        clusters.add(cluster6);
 
         //List<List<String>> result = analysisTest.analyzeSocialNetwork(startTime, endTime);
 
