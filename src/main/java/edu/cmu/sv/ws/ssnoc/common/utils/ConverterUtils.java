@@ -1,13 +1,7 @@
 package edu.cmu.sv.ws.ssnoc.common.utils;
 
-import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
-import edu.cmu.sv.ws.ssnoc.data.po.MemoryPO;
-import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
-import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
-import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
-import edu.cmu.sv.ws.ssnoc.dto.Memory;
-import edu.cmu.sv.ws.ssnoc.dto.Status;
-import edu.cmu.sv.ws.ssnoc.dto.User;
+import edu.cmu.sv.ws.ssnoc.data.po.*;
+import edu.cmu.sv.ws.ssnoc.dto.*;
 
 /**
  * This is a utility class used to convert PO (Persistent Objects) and View
@@ -139,5 +133,16 @@ public class ConverterUtils {
         memstats.setCreatedAt(memdto.getCreatedAt());
 
         return memstats;
+    }
+
+    public static final Performance convert(PerformancePO po){
+        if (po==null){
+            return null;
+        }
+        Performance pdto = new Performance();
+        pdto.setPostsPerSecond(po.getPostsPerSecond());
+        pdto.setGetPerSecond(po.getGetPerSecond());
+
+        return pdto;
     }
 }

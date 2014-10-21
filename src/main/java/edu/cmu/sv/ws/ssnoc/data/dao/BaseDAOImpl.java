@@ -41,7 +41,7 @@ public class BaseDAOImpl {
 	 * @throws SQLException
 	 */
 	protected Connection getConnection() throws SQLException {
-		return DBUtils.getConnection();
+        return DBUtils.getConnection();
 	}
 
 	protected void handleException(Exception e) {

@@ -152,9 +152,13 @@ public class SQL {
     // All queries related to PerformanceCrumb
     // ****************************************************************
     public static final String CREATE_PERFORMANCE_CRUMB = "create table IF NOT EXISTS "
-            + SSN_PERFORMANCE_CRUMB +" ( postsPerSecond long, getsPerSecond long)";
+            + SSN_PERFORMANCE_CRUMB +" ( postsPerSecond double, getsPerSecond double)";
 
     public static final String INSERT_PERFORMANCE_STATS = "insert into "+SSN_PERFORMANCE_CRUMB
             +"( postsPerSecond, getsPerSecond) values (?,?)";
 
+    public static final String GET_PERFORMANCE_STATS = "select postsPerSecond, getsPerSecond" +
+            " from "+SSN_PERFORMANCE_CRUMB;
+
+    public static final String RESET_PERFORMANCE_STATS ="TRUNCATE TABLE " +SSN_PERFORMANCE_CRUMB ;
 }

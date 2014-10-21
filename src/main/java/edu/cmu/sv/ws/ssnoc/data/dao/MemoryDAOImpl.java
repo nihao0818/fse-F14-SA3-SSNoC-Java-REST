@@ -2,7 +2,6 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
-import edu.cmu.sv.ws.ssnoc.data.SQLTest;
 import edu.cmu.sv.ws.ssnoc.data.po.MemoryPO;
 import edu.cmu.sv.ws.ssnoc.dto.Memory;
 

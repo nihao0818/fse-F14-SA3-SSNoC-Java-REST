@@ -17,7 +17,7 @@ import edu.cmu.sv.ws.ssnoc.rest.SSNoCAppInitializer;
  * 3. DB_PASSWORD // Commented out for obvious reasons. <br/>
  * 4. DB_CONNECTION_POOL_SIZE = 20 <br/>
  * 5. invalidNameSet - A set of names that are not valid
- * 
+ *
  */
 public class PropertyUtils {
 	/**
@@ -51,6 +51,16 @@ public class PropertyUtils {
 	 */
 	public static String ADMIN_CODE;
 
+    public static String PERF_DB_CONN_URL;
+
+    public static String PERF_DB_USERNAME;
+
+    public static String PERF_DB_PASSWORD;
+
+    public static int PERF_DB_CONNECTION_POOL_SIZE;
+
+    public static String PERF_ADMIN_CODE;
+
 	static {
 		Log.trace("Loading properties files ...");
 		try (InputStream input = SSNoCAppInitializer.class.getClassLoader()
@@ -66,6 +76,8 @@ public class PropertyUtils {
 				DB_CONNECTION_POOL_SIZE = Integer.parseInt(prop
 						.getProperty("dbConnPoolSize"));
 				ADMIN_CODE = prop.getProperty("adminCode");
+
+                PERF_DB_CONN_URL = prop.getProperty("dbConnurlPerf");
 
 				// Load the list of invalid names into a Set
 				String invalidNames = prop.getProperty("invalidNames");

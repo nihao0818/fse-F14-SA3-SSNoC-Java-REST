@@ -35,9 +35,9 @@ public class DAOFactory {
 
     public IMessageDAO getMessageDAO() {return new MessageDAOImpl(); }
 
-    public IPerformanceDAO getPerformanceDAO(){return new PerformanceDAOImpl();}
-
     public IMemoryDAO getMemoryDAO() {
         return new MemoryDAOImpl();
     }
+
+    public IPerformanceDAO getPerformanceDA0() {return new PerformanceDAOImpl();}
 }

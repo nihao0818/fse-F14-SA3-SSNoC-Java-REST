@@ -32,4 +32,8 @@ public class ConnectionPoolFactory {
 	public IConnectionPool getH2ConnectionPool() {
 		return H2ConnectionPoolImpl.getInstance();
 	}
+
+    public IConnectionPool getPerfTestConnectionPool(){
+        return PerfTestConnPoolImpl.getInstance();
+    }
 }

@@ -16,7 +16,8 @@ public class SSNoCAppInitializer extends HttpServlet {
 		// Perform any steps needed during server startup as part
 		// of this method. This includes initializing database etc.
 		try {
-			DBUtils.initializeDatabase();
+            DBUtils.initializeDatabase();
+
 		} catch (SQLException e) {
 			Log.error("Oops :( We ran into an error when trying to intialize "
 					+ "database. Please check the trace for more details.", e);

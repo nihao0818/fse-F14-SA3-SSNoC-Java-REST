@@ -32,4 +32,10 @@ public interface IMessageDAO {
 
     List<ExchangeInfoPO> loadChatBuddies(String userName);
 
+    int getGetWallRequestsCount();
+
+    int getPostWallRequestCount();
+
+    void resetRequestsCount();
+
 }
