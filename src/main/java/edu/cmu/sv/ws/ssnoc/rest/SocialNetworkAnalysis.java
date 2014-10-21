@@ -39,22 +39,24 @@ public class  SocialNetworkAnalysis extends BaseService{
         try {
             clusters.add(allUsers);
 
-            for(List<String> eachPair : buddies) {
-                List<List<String>> temp = new ArrayList<List<String>>();
-                for(List<String> eachCluster : clusters){
-                    if (eachCluster.containsAll(eachPair)) {
-                        List<String> cluster1= new ArrayList<String>(eachCluster);
-                        List<String> cluster2= new ArrayList<String>(eachCluster);
-                        cluster1.remove(eachPair.get(0));
-                        cluster2.remove(eachPair.get(1));
-                        temp.add(cluster1);
-                        temp.add(cluster2);
+            if(buddies.isEmpty()){ return null;}
+            else {
+                for (List<String> eachPair : buddies) {
+                    List<List<String>> temp = new ArrayList<List<String>>();
+                    for (List<String> eachCluster : clusters) {
+                        if (eachCluster.containsAll(eachPair)) {
+                            List<String> cluster1 = new ArrayList<String>(eachCluster);
+                            List<String> cluster2 = new ArrayList<String>(eachCluster);
+                            cluster1.remove(eachPair.get(0));
+                            cluster2.remove(eachPair.get(1));
+                            temp.add(cluster1);
+                            temp.add(cluster2);
+                        } else {
+                            temp.add(eachCluster);
+                        }
                     }
-                    else {
-                        temp.add(eachCluster);
-                    }
+                    clusters = temp;
                 }
-                clusters = temp;
             }
 
         }
