@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * Created by Vignan on 10/14/2014.
@@ -22,13 +24,14 @@ import java.sql.SQLException;
 
 @Path("/performance")
 public class MeasurePerformanceService extends BaseService {
-    private int duration;
+   static Date startDate;
+   static Date endDate;
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/setup")
-    public Response startPerformanceMeasure(int durationInSec ){
-        duration = durationInSec;
+    public Response startPerformanceMeasure(){
+        startDate = new Date();
         IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
         IPerformanceDAO pdao = DAOFactory.getInstance().getPerformanceDA0();
         pdao.resetPerformanceStats();
@@ -50,9 +53,12 @@ public class MeasurePerformanceService extends BaseService {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/teardown")
     public void stopPerformanceMeasure(){
+        endDate = new Date();
+        long duration = (endDate.getTime()-startDate.getTime())/1000;
         IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
-        double postWallRequests = mdao.getPostWallRequestCount()/duration;
-        double getWallRequests = mdao.getGetWallRequestsCount()/duration;
+        DecimalFormat df = new DecimalFormat("0.000");
+        double postWallRequests = Double.valueOf(df.format((double)mdao.getPostWallRequestCount()/duration));
+        double getWallRequests = Double.valueOf(df.format((double)mdao.getGetWallRequestsCount()/duration));
         PerformancePO po = new PerformancePO();
         po.setPostsPerSecond(postWallRequests);
         po.setGetPerSecond(getWallRequests);

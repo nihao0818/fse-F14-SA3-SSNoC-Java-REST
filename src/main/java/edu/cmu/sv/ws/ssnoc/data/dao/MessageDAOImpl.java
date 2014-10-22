@@ -17,8 +17,8 @@ import java.util.List;
  *
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
-    static int postWallRequests = 0;
-    static int getWallRequests = 0;
+    static long postWallRequests = 0;
+    static long getWallRequests = 0;
 
 
 
@@ -219,12 +219,12 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
     }
 
     @Override
-    public int getGetWallRequestsCount(){
+    public long getGetWallRequestsCount(){
         return getWallRequests;
     }
 
     @Override
-    public int getPostWallRequestCount(){
+    public long getPostWallRequestCount(){
         return postWallRequests;
     }
 

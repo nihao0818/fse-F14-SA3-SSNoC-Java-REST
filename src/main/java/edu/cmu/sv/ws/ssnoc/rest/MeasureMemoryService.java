@@ -68,7 +68,6 @@ public class MeasureMemoryService extends BaseService{
     }
 
     @POST
-    //@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Path("/stop")
     public void stopMemoryMonitor(){
             timeMonitor.cancel();
