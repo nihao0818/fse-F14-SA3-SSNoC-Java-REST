@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ssnoc:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="ssnoc.war">
+      <element id="artifact" artifact-name="ssnoc:war exploded" />
+    </root>
+  </artifact>
+</component>

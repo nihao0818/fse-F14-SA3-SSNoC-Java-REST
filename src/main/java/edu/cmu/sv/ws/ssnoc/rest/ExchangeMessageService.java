@@ -32,7 +32,8 @@ public class ExchangeMessageService extends BaseService {
 
         ExchangeInfo resp = new ExchangeInfo();
         try {
-            UserPO po = loadExistingUser(userName);
+            UserPO po = new UserPO();
+            po.setUserName(userName);
 
             IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
 
@@ -49,7 +50,15 @@ public class ExchangeMessageService extends BaseService {
         finally {
             Log.exit();
         }
+        Log.trace("Checking Memory Space after the message insertion");
+        Runtime rt=Runtime.getRuntime();
+        long freeVMemory = rt.freeMemory()/1024;
 
+        if(freeVMemory<2048)
+        {
+            Log.trace("freeVMemory working");
+            return ok("Run Time Free Memory is less than 2MB");
+        }
         return created(resp);
     }
 

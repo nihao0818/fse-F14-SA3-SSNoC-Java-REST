@@ -3,18 +3,13 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
-import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
-import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +17,16 @@ import java.util.List;
  *
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
+    static long postWallRequests = 0;
+    static long getWallRequests = 0;
+
+
+
+    @Override
+    public void resetRequestsCount(){
+        postWallRequests = 0;
+        getWallRequests = 0;
+    }
 
 
     @Override
@@ -38,6 +43,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             handleException(e);
             Log.exit(wallMessages);
         }
+        getWallRequests+=1;
         return wallMessages;
     }
 
@@ -66,7 +72,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         } finally {
             Log.exit(wallMessages);
         }
-
         return wallMessages;
     }
 
@@ -94,6 +99,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         } finally {
             Log.exit();
         }
+        postWallRequests+=1;
     }
 
     @Override
@@ -210,6 +216,16 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             Log.exit(chatBuddies);
         }
         return chatBuddies;
+    }
+
+    @Override
+    public long getGetWallRequestsCount(){
+        return getWallRequests;
+    }
+
+    @Override
+    public long getPostWallRequestCount(){
+        return postWallRequests;
     }
 
 

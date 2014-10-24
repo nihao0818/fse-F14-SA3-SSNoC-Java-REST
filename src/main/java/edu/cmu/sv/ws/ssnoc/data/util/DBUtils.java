@@ -1,16 +1,13 @@
 package edu.cmu.sv.ws.ssnoc.data.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
+import org.h2.tools.DeleteDbFiles;
 
 /**
  * This is a utility class to provide common functions to access and handle
@@ -20,7 +17,7 @@ import edu.cmu.sv.ws.ssnoc.data.SQL;
 public class DBUtils {
 	private static boolean DB_TABLES_EXIST = false;
 	private static List<String> CREATE_TABLE_LST;
-
+    private static boolean performaceRunning = false;
 
 	static {
 		CREATE_TABLE_LST = new ArrayList<String>();
@@ -31,14 +28,31 @@ public class DBUtils {
         CREATE_TABLE_LST.add(SQL.CREATE_PERFORMANCE_CRUMB);
 	}
 
-	/**
+    /**
 	 * This method will initialize the database.
 	 * 
 	 * @throws SQLException
 	 */
 	public static void initializeDatabase() throws SQLException {
-		createTablesInDB();
+        createTablesInDB();
 	}
+
+    public static void setPerformaceRunning() throws SQLException{
+        performaceRunning = true;
+        DB_TABLES_EXIST = false;
+        Log.trace("Performace Test enabled");
+        initializeDatabase();
+
+    }
+
+    public static void stopPerformanceRunning() throws SQLException{
+        Log.trace("Shutting Down Performance Test Database.......");
+        getConnection().createStatement().execute("SHUTDOWN");
+        Log.trace("Deleting Performance Test Database.......");
+        DeleteDbFiles.execute("~", "h2dbPerf", true);
+        Log.trace("Performance Test Database Deleted ");
+        performaceRunning = false;
+    }
 
 	/**
 	 * This method will create necessary tables in the database.
@@ -52,8 +66,6 @@ public class DBUtils {
 		}
 
 
-		//final String CORE_TABLE_NAME = SQL.SSN_USERS;
-      //  final String CORE_TABLE_NAME_1=SQL.SSN_STATUS_CRUMB;
         final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT,SQL.SSN_MEMORY_CRUMB,SQL.SSN_PERFORMANCE_CRUMB);
 
         for (String CORE_TABLE_NAME : CORE_TABLE_LST){
@@ -138,8 +150,11 @@ public class DBUtils {
 	 * @throws SQLException
 	 */
 	public static final Connection getConnection() throws SQLException {
-		IConnectionPool cp = ConnectionPoolFactory.getInstance()
-				.getH2ConnectionPool();
+        if(performaceRunning){
+            IConnectionPool cp = ConnectionPoolFactory.getInstance().getPerfTestConnectionPool();
+            return cp.getConnection();
+        }
+		IConnectionPool cp = ConnectionPoolFactory.getInstance().getH2ConnectionPool();
 		return cp.getConnection();
 	}
 }

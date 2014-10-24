@@ -8,16 +8,16 @@ import com.google.gson.Gson;
  */
 public class Performance {
 
-    private long postsPerSecond;
-    private long getPerSecond;
+    private double postsPerSecond;
+    private double getPerSecond;
 
-    public void setPostsPerSecond(long postsPerSecond){this.postsPerSecond=postsPerSecond;}
+    public void setPostsPerSecond(double postsPerSecond){this.postsPerSecond=postsPerSecond;}
 
-    public long getPostsPerSecond(){return postsPerSecond;}
+    public double getPostsPerSecond(){return postsPerSecond;}
 
-    public void setGetPerSecond(long getPerSecond){this.getPerSecond=getPerSecond;}
+    public void setGetPerSecond(double getPerSecond){this.getPerSecond=getPerSecond;}
 
-    public long getGetPerSecond(){return getPerSecond;}
+    public double getGetPerSecond(){return getPerSecond;}
 
     @Override
     public String toString() {
