@@ -75,7 +75,6 @@ public class MeasureMemoryService extends BaseService{
     }
 
     @DELETE
-    @Path("/")
     public void deleteMemoryCrumb(){
         IMemoryDAO mdao = DAOFactory.getInstance().getMemoryDAO();
         mdao.deleteMemoryCrumbData();
@@ -85,7 +84,6 @@ public class MeasureMemoryService extends BaseService{
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @XmlElementWrapper(name = "memorystats")
-    @Path("/")
     public List<Memory> loadMemoryStats(){
         Calendar calendar = Calendar.getInstance();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");

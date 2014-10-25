@@ -1,7 +1,10 @@
 package edu.cmu.sv.ws.ssnoc.common.utils;
 
+import edu.cmu.sv.ws.ssnoc.common.logging.Log;
+import edu.cmu.sv.ws.ssnoc.data.dao.IAnnouncementDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.*;
 import edu.cmu.sv.ws.ssnoc.dto.*;
+import edu.cmu.sv.ws.ssnoc.dto.Announcement;
 
 /**
  * This is a utility class used to convert PO (Persistent Objects) and View
@@ -135,14 +138,29 @@ public class ConverterUtils {
         return memstats;
     }
 
-    public static final Performance convert(PerformancePO po){
-        if (po==null){
+    public static final AnnouncementPO convert(Announcement ancmnt) {
+        if (ancmnt==null){
             return null;
         }
-        Performance pdto = new Performance();
-        pdto.setPostsPerSecond(po.getPostsPerSecond());
-        pdto.setGetPerSecond(po.getGetPerSecond());
+        AnnouncementPO apo = new AnnouncementPO();
+        apo.setLocation(ancmnt.getLocation());
+        apo.setTitle(ancmnt.getTitle());
+        apo.setContent(ancmnt.getContent());
 
-        return pdto;
+        return apo;
+    }
+
+    public static final Announcement convert(AnnouncementPO apo) {
+        if (apo == null){
+            return null;
+        }
+        Announcement ancmnt = new Announcement();
+        ancmnt.setAuthor(apo.getAuthor());
+        ancmnt.setPostedAt(apo.getPostedAt());
+        ancmnt.setLocation(apo.getLocation());
+        ancmnt.setTitle(apo.getTitle());
+        ancmnt.setContent(apo.getContent());
+
+        return ancmnt;
     }
 }

@@ -39,5 +39,5 @@ public class DAOFactory {
         return new MemoryDAOImpl();
     }
 
-    public IPerformanceDAO getPerformanceDA0() {return new PerformanceDAOImpl();}
+    public IAnnouncementDAO getAnnouncementDAO(){return new AnnouncementDAOImpl();}
 }

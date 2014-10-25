@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,17 +20,6 @@ import java.util.List;
  *
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
-    static long postWallRequests = 0;
-    static long getWallRequests = 0;
-
-
-
-    @Override
-    public void resetRequestsCount(){
-        postWallRequests = 0;
-        getWallRequests = 0;
-    }
-
 
     @Override
     public List<ExchangeInfoPO> loadWallMessages(){
@@ -43,7 +35,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             handleException(e);
             Log.exit(wallMessages);
         }
-        getWallRequests+=1;
         return wallMessages;
     }
 
@@ -83,13 +74,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             Log.warn("Inside save method for wall message with einfoPO == NULL");
             return;
         }
-
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
             stmt.setString(1, userPO.getUserName());
             stmt.setString(2, "Wall");
             stmt.setString(3,null);
-            stmt.setString(4,einfoPO.getPostedAt());
+            stmt.setString(4,df.format(dateobj));
             stmt.setString(5, einfoPO.getContent());
 
             int rowCount = stmt.executeUpdate();
@@ -99,7 +91,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         } finally {
             Log.exit();
         }
-        postWallRequests+=1;
     }
 
     @Override
@@ -217,16 +208,5 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         }
         return chatBuddies;
     }
-
-    @Override
-    public long getGetWallRequestsCount(){
-        return getWallRequests;
-    }
-
-    @Override
-    public long getPostWallRequestCount(){
-        return postWallRequests;
-    }
-
 
 }

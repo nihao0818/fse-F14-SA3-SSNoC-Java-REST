@@ -57,9 +57,9 @@ public class ExchangeMessageService extends BaseService {
         if(freeVMemory<2048)
         {
             Log.trace("freeVMemory working");
-            return ok("Run Time Free Memory is less than 2MB");
+            return ok("Free Memory<2MB");
         }
-        return created(resp);
+        return ok("wall message saved");
     }
 
     @POST

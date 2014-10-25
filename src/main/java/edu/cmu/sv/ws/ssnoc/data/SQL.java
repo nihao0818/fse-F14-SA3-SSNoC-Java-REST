@@ -14,7 +14,7 @@ public class SQL {
     public static final String SSN_STATUS_CRUMB="SSN_STATUS_CRUMB";
     public static final String SSN_CHAT="SSN_MESSAGE";
     public static final String SSN_MEMORY_CRUMB="SSN_MEMORY_CRUMB";
-    public static final String SSN_PERFORMANCE_CRUMB="SSN_PERFORMANCE_CRUMB";
+    public static final String SSN_ANNOUNCEMENTS="SSN_ANNOUNCEMENTS_CRUMB";
 	/**
 	 * Query to check if a given table exists in the H2 database.
 	 */
@@ -148,17 +148,15 @@ public class SQL {
 
     public static final String GET_MEMORY_STATS = "select usedVMemory, remainingVMemory, usedPersistent, remainingPersistent, " +
             "createdAt from "+SSN_MEMORY_CRUMB+" where createdAt between (?) and (?)"+" order by createdAt DESC";
-    // ****************************************************************
-    // All queries related to PerformanceCrumb
-    // ****************************************************************
-    public static final String CREATE_PERFORMANCE_CRUMB = "create table IF NOT EXISTS "
-            + SSN_PERFORMANCE_CRUMB +" ( postsPerSecond double, getsPerSecond double)";
 
-    public static final String INSERT_PERFORMANCE_STATS = "insert into "+SSN_PERFORMANCE_CRUMB
-            +"( postsPerSecond, getsPerSecond) values (?,?)";
-
-    public static final String GET_PERFORMANCE_STATS = "select postsPerSecond, getsPerSecond" +
-            " from "+SSN_PERFORMANCE_CRUMB;
-
-    public static final String RESET_PERFORMANCE_STATS ="TRUNCATE TABLE " +SSN_PERFORMANCE_CRUMB ;
+    /************************************************************************
+     * All Queries related to Announcements
+     *************************************************************************/
+    public static final String CREATE_ANNOUNCEMENT_CRUMB = "create table IF NOT EXISTS " +
+            SSN_ANNOUNCEMENTS+" (announcementID IDENTITY PRIMARY KEY, author varchar(20),postedAt varchar(20), " +
+            "location varchar(50), title varchar(50), content varchar(512))";
+    public static final String INSERT_ANNOUNCEMENT = "insert into "+SSN_ANNOUNCEMENTS+
+            " (author, postedAt, location, title, content) values (?,?,?,?,?)";
+    public static final String GET_ANNOUNCEMENTS = "select author, postedAt, title, content" +
+            " from "+SSN_ANNOUNCEMENTS;
 }
