@@ -58,6 +58,7 @@ public class  SocialNetworkAnalysis extends BaseService{
                     clusters = temp;
                 }
             }
+            if (clusters.isEmpty()){ return null;}
 
         }
         catch (Exception e){
