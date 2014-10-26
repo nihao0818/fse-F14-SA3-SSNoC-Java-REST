@@ -20,7 +20,8 @@ public class StatusPO {
     private String userName;
     private String statusCode;
     private String createdDate;
-    private String crumbID;
+    private long crumbID;
+
 
     public String getUserName() {
         return userName;
@@ -44,11 +45,11 @@ public class StatusPO {
         this.createdDate = createdDate;
     }
 
-    public String getCrumbID() {
+    public long getCrumbID() {
         return crumbID;
     }
 
-    public void setCrumbID(String crumbID) {
+    public void setCrumbID(long crumbID) {
         this.crumbID = crumbID;
     }
 

@@ -14,9 +14,18 @@ import java.sql.Timestamp;
  *
  */
 public class Status {
+    private long crumbID;
     private String userName;
     private String statusCode;
     private String createdDate;
+
+    public long getCrumbidID() {
+        return crumbID;
+    }
+
+    public void setCrumbID(long crumbID) {
+        this.crumbID = crumbID;
+    }
 
     public String getUserName() {
         return userName;

@@ -8,12 +8,21 @@ import com.google.gson.Gson;
  * 
  */
 public class User {
+    private long userid;
 	private String userName;
 	private String password;
     private String statusCode;
     private String statusDate;
 
-	public String getUserName() {
+    public long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+
+    public String getUserName() {
 		return userName;
 	}
 

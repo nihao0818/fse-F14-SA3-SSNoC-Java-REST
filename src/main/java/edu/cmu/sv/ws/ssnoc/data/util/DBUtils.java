@@ -42,7 +42,10 @@ public class DBUtils {
         DB_TABLES_EXIST = false;
         Log.trace("Performace Test enabled");
         initializeDatabase();
+    }
 
+    public static boolean isPerformaceRunning(){
+        return performaceRunning;
     }
 
     public static void stopPerformanceRunning() throws SQLException{

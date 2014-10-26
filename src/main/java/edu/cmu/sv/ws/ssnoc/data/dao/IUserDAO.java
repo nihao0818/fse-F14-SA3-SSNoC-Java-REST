@@ -47,7 +47,7 @@ public interface IUserDAO {
      *
      * @return - List of all user statuses.
      */
-    List<StatusPO> loadStatuses(String userName);
+    List<StatusPO> loadStatuses(long user_id);
 
 
     /**
@@ -72,7 +72,7 @@ public interface IUserDAO {
      *
      * @return - StatusPO with the user information if a match is found.
     */
-    StatusPO findByCrumbID(String crumbID);
+    StatusPO findByCrumbID(long crumbID);
 
     /**
      * This method will search for all pairs of users who chatted with each other in

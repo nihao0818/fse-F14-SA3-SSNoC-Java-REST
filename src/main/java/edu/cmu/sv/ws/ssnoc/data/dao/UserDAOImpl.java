@@ -163,10 +163,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_STATUS)) {
-            stmt.setString(1, userPO.getUserName());
+            stmt.setLong(1, userPO.getUserId());
             stmt.setString(2, statusPO.getStatusCode());
             stmt.setString(3, statusPO.getCreatedDate());
-            //stmt.setString(4, statusPO.getCrumbID());
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");
         } catch (SQLException e) {
@@ -193,8 +192,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
              PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_STATUS)) {
              stmt.setString(1, statusPO.getStatusCode());
             stmt.setString(2,statusPO.getCreatedDate());
-             stmt.setString(3, userPO.getUserName());
-          //  stmt.setString(4, statusPO.getCrumbID());
+             stmt.setLong(3, userPO.getUserId());
             int rowCount = stmt.executeUpdate();
             conn.commit();
             Log.info("Status details added");
@@ -208,14 +206,14 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
 
 
-    public List<StatusPO> loadStatuses(String userName) {
+    public List<StatusPO> loadStatuses(long user_id) {
         Log.enter();
 
         List<StatusPO> statuses = new ArrayList<StatusPO>();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.FIND_ALL_USER_STATUSES)) {
-            stmt.setString(1, userName.toUpperCase());
+            stmt.setLong(1, user_id);
             statuses = processStatuses(stmt);
         } catch (SQLException e) {
             handleException(e);
@@ -239,10 +237,11 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 StatusPO spo = new StatusPO();
-                spo.setUserName(rs.getString(1));
-                spo.setStatusCode(rs.getString(2));
-                spo.setCreatedDate(rs.getString(3));
-                spo.setCrumbID(rs.getString(4));
+                spo.setCrumbID(rs.getLong(1));
+                spo.setUserName(rs.getString(2));
+                spo.setStatusCode(rs.getString(3));
+                spo.setCreatedDate(rs.getString(4));
+
 
                 statuses.add(spo);
             }
@@ -256,10 +255,10 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
 
     @Override
-    public StatusPO findByCrumbID(String crumbID) {
+    public StatusPO findByCrumbID(long crumbID) {
         Log.enter(crumbID);
 
-        if (crumbID == null) {
+        if (crumbID == 0) {
             Log.warn("Inside findByCrumbID method with NULL crumbID.");
             return null;
         }
@@ -268,7 +267,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.FIND_STATUS_BY_CRUMB)) {
-            stmt.setString(1, crumbID.toUpperCase());
+            stmt.setLong(1, crumbID);
 
             spo = processCrumb(stmt);
 
@@ -279,7 +278,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             handleException(e);
             Log.exit(spo);
         }
-
         return spo;
     }
 
@@ -297,11 +295,10 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         StatusPO spo =  new StatusPO();
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-
-                spo.setUserName(rs.getString(1));
-                spo.setStatusCode(rs.getString(2));
-                spo.setCreatedDate(rs.getString(3));
-
+                spo.setCrumbID(rs.getLong(1));
+                spo.setUserName(rs.getString(2));
+                spo.setStatusCode(rs.getString(3));
+                spo.setCreatedDate(rs.getString(4));
             }
         } catch (SQLException e) {
             handleException(e);

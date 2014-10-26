@@ -30,7 +30,7 @@ public class AnnouncementDAOImpl extends BaseDAOImpl implements IAnnouncementDAO
         Date dateobj = new Date();
         try(Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_ANNOUNCEMENT)){
-            stmt.setString(1,user.getUserName());
+            stmt.setLong(1,user.getUserId());
             stmt.setString(2,df.format(dateobj));
             stmt.setString(3,ancmnt.getLocation());
             stmt.setString(4,ancmnt.getTitle());

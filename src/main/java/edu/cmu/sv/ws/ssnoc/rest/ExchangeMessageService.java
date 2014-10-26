@@ -6,8 +6,10 @@ import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
+import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 
 import javax.ws.rs.*;
@@ -32,17 +34,35 @@ public class ExchangeMessageService extends BaseService {
 
         ExchangeInfo resp = new ExchangeInfo();
         try {
-            UserPO po = new UserPO();
-            po.setUserName(userName);
+            UserPO po = null;
+            UserPO performancePO = new UserPO();
 
-            IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+            if(DBUtils.isPerformaceRunning()){
+                performancePO.setUserName(userName);
+               performancePO.setUserId(1);
 
-            ExchangeInfoPO einfopo = ConverterUtils.convert(message);
+                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
 
-            Log.trace("Inserting message on public wall from.....:"+userName);
+                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
 
-            mdao.saveWallMessage(po, einfopo);
-            resp = ConverterUtils.convert(einfopo);
+                Log.trace("Inserting message on public wall from.....:"+userName);
+
+                mdao.saveWallMessage(performancePO, einfopo);
+                resp = ConverterUtils.convert(einfopo);
+            }else{
+                IUserDAO udao = DAOFactory.getInstance().getUserDAO();
+                po = udao.findByName(userName);
+
+                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+
+                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
+
+                Log.trace("Inserting message on public wall from.....:"+userName);
+
+                mdao.saveWallMessage(po, einfopo);
+                resp = ConverterUtils.convert(einfopo);
+            }
+
         }
         catch (Exception e){
             handleException(e);

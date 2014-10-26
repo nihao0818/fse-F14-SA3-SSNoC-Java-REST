@@ -52,9 +52,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             while (rs.next()) {
                 ExchangeInfoPO epo = new ExchangeInfoPO();
                 epo.setAuthor(rs.getString(1));
-                epo.setTarget(rs.getString(2));
-                epo.setContent(rs.getString(3));
-                epo.setPostedAt(rs.getString(4));
+                epo.setContent(rs.getString(2));
+                epo.setPostedAt(rs.getString(3));
 
                 wallMessages.add(epo);
             }
@@ -78,7 +77,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         Date dateobj = new Date();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
-            stmt.setString(1, userPO.getUserName());
+            stmt.setLong(1, userPO.getUserId());
             stmt.setString(2, "Wall");
             stmt.setString(3,null);
             stmt.setString(4,df.format(dateobj));
@@ -94,17 +93,17 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
     }
 
     @Override
-    public List<ExchangeInfoPO> loadChatMessages(String userName1, String userName2){
+    public List<ExchangeInfoPO> loadChatMessages(UserPO po1, UserPO po2){
         Log.enter();
 
         List<ExchangeInfoPO> chatMessages = new ArrayList<>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
                 .prepareStatement(SQL.FIND_CHAT_MESSAGES)) {
-            stmt.setString(1, userName1.toUpperCase());
-            stmt.setString(2, userName2.toUpperCase());
-            stmt.setString(3, userName1.toUpperCase());
-            stmt.setString(4, userName2.toUpperCase());
+            stmt.setLong(1, po1.getUserId());
+            stmt.setLong(2, po2.getUserId());
+            stmt.setLong(3, po1.getUserId());
+            stmt.setLong(4, po2.getUserId());
             chatMessages = processChatMessages(stmt);
         } catch (SQLException e) {
             handleException(e);
@@ -149,13 +148,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             Log.warn("Inside save method for wall message with einfoPO == NULL");
             return;
         }
-
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
-            stmt.setString(1, userPO1.getUserName());
+            stmt.setLong(1, userPO1.getUserId());
             stmt.setString(2, "Chat");
-            stmt.setString(3,userPO2.getUserName());
-            stmt.setString(4,einfoPO.getPostedAt());
+            stmt.setLong(3,userPO2.getUserId());
+            stmt.setString(4,df.format(dateobj));
             stmt.setString(5, einfoPO.getContent());
 
             int rowCount = stmt.executeUpdate();
@@ -168,14 +168,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
     }
 
     @Override
-    public List<ExchangeInfoPO> loadChatBuddies(String userName){
+    public List<ExchangeInfoPO> loadChatBuddies(UserPO po){
         Log.enter();
 
         List<ExchangeInfoPO> chatBuddies = new ArrayList<>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
                     .prepareStatement(SQL.FIND_CHAT_BUDDIES)) {
-            stmt.setString(1, userName.toUpperCase());
+            stmt.setLong(1, po.getUserId());
             chatBuddies = processChatBuddies(stmt);
         } catch (SQLException e) {
             handleException(e);

@@ -28,6 +28,7 @@ public class ConverterUtils {
 		}
 
 		User dto = new User();
+        dto.setUserid(po.getUserId());
 		dto.setUserName(po.getUserName());
         dto.setStatusCode(po.getStatusCode());
         dto.setStatusDate(po.getStatusDate());
@@ -68,6 +69,7 @@ public class ConverterUtils {
         }
 
         Status sdto = new Status();
+        sdto.setCrumbID(spo.getCrumbID());
         sdto.setUserName(spo.getUserName());
         sdto.setStatusCode(spo.getStatusCode());
         sdto.setCreatedDate(spo.getCreatedDate());
