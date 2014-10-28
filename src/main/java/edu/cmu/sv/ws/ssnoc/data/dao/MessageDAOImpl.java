@@ -256,7 +256,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         Log.enter(stmt);
 
         if (stmt == null) {
-            Log.warn("Inside process wall messages method with NULL statement object.");
+            Log.warn("Inside process announcements method with NULL statement object.");
             return null;
         }
 
