@@ -39,5 +39,4 @@ public class DAOFactory {
         return new MemoryDAOImpl();
     }
 
-    public IAnnouncementDAO getAnnouncementDAO(){return new AnnouncementDAOImpl();}
 }

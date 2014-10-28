@@ -13,7 +13,6 @@ public class SQL {    /*
     public static final String SSN_STATUS_CRUMB="SSN_STATUS";
     public static final String SSN_CHAT="SSN_MESSAGE";
     public static final String SSN_MEMORY_CRUMB="SSN_MEMORY";
-    public static final String SSN_ANNOUNCEMENTS="SSN_ANNOUNCEMENTS";
     /**
      * Query to check if a given table exists in the H2 database.
      */
@@ -51,13 +50,6 @@ public class SQL {    /*
             + SSN_MEMORY_CRUMB +
             " ( memory_id IDENTITY PRIMARY KEY, usedVMemory long, remainingVMemory long,usedPersistent long, " +
             "remainingPersistent long, createdAt varchar(20))";
-    //Announcements table
-    public static final String CREATE_ANNOUNCEMENT_CRUMB = "create table IF NOT EXISTS " +
-            SSN_ANNOUNCEMENTS+
-            " (announcement_id IDENTITY PRIMARY KEY, " +
-            "author_id long REFERENCES SSN_USERS(user_id), " +
-            "postedAt varchar(20), " +
-            "location varchar(50), title varchar(50), content varchar(512))";
 
     /****************************************************
      All SELECT queries
@@ -118,10 +110,12 @@ public class SQL {    /*
     public static final String GET_MEMORY_STATS = "select usedVMemory, remainingVMemory, usedPersistent, remainingPersistent, " +
             "createdAt from "+SSN_MEMORY_CRUMB+" where createdAt between (?) and (?)"+" order by createdAt DESC";
     //ANNOUNCEMENTS table
-    public static final String GET_ANNOUNCEMENTS = "select user_name, postedAt, title, content" +
-            " from "+SSN_ANNOUNCEMENTS+","+SSN_USERS
-            +" where author_id=user_id"
-            +" order by postedAt";
+    public static final String FIND_ALL_ANNOUNCEMENTS = "select u1.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"
+            +" where author_id=u1.user_id and "+
+            "UPPER(message_type)='ANNOUNCEMENT' "
+            +"order by postedAt";
 
     /********************************************************
      All Insert queries
@@ -138,9 +132,6 @@ public class SQL {    /*
     //MEMORY table
     public static final String INSERT_MEMORY_STATS = "insert into "+ SSN_MEMORY_CRUMB
             +" (usedVMemory, remainingVMemory, usedPersistent,remainingPersistent,createdAt) values (?,?,?,?,?)";
-    //ANNOUNCEMENTS table
-    public static final String INSERT_ANNOUNCEMENT = "insert into "+SSN_ANNOUNCEMENTS+
-            " (author_id, postedAt, location, title, content) values (?,?,?,?,?)";
 
     /*********************************************************
      UPDATE queries

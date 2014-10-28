@@ -74,6 +74,31 @@ public class ExchangeInfoService extends BaseService{
         return chatMessages;
     }
 
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @XmlElementWrapper(name = "announcements")
+    @Path("/announcement")
+    public List<ExchangeInfo> loadAllAnnouncements(){
+        Log.enter();
+
+        List<ExchangeInfo> announcements= null;
+        try{
+            List<ExchangeInfoPO> eInfoPO = DAOFactory.getInstance().getMessageDAO().loadAllAnnouncements();
+
+            announcements = new ArrayList<>();
+            for(ExchangeInfoPO epo : eInfoPO){
+                ExchangeInfo einfodto = ConverterUtils.convert(epo);
+                announcements.add(einfodto);
+            }
+        } catch (Exception e){
+            handleException(e);
+        } finally {
+            Log.exit(announcements);
+        }
+        return announcements;
+
+    }
+
 
 
 

@@ -112,5 +112,30 @@ public class ExchangeMessageService extends BaseService {
         return created(resp);
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Path("/announcement/{userName}")
+    public Response addAnnouncement(@PathParam("userName") String userName, ExchangeInfo message){
+        Log.enter(userName, message);
+
+        ExchangeInfo resp = new ExchangeInfo();
+        try {
+            UserPO po = loadExistingUser(userName);
+            IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+
+            ExchangeInfoPO einfopo = ConverterUtils.convert(message);
+
+            Log.trace("Inserting announcement from.....:"+userName);
+
+            mdao.saveAnnouncement(po, einfopo);
+            resp = ConverterUtils.convert(einfopo);
+        }catch (Exception e ){
+            handleException(e);
+        }finally {
+            Log.exit();
+        }
+        return ok("Announcement saved");
+    }
+
 
 }

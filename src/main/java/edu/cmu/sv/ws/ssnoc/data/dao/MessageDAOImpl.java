@@ -209,4 +209,74 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         return chatBuddies;
     }
 
+    @Override
+    public void saveAnnouncement(UserPO userPO, ExchangeInfoPO einfoPO){
+        Log.enter(einfoPO);
+        if (einfoPO == null) {
+            Log.warn("Inside save method for wall message with einfoPO == NULL");
+            return;
+        }
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
+            stmt.setLong(1, userPO.getUserId());
+            stmt.setString(2, "Announcement");
+            stmt.setString(3,null);
+            stmt.setString(4,df.format(dateobj));
+            stmt.setString(5, einfoPO.getContent());
+
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+    }
+
+    @Override
+    public List<ExchangeInfoPO> loadAllAnnouncements(){
+        Log.enter();
+
+        String query = SQL.FIND_ALL_ANNOUNCEMENTS;
+
+        List<ExchangeInfoPO> announcements = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            announcements = processAllAnnouncements(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(announcements);
+        }
+        return announcements;
+    }
+
+    private List<ExchangeInfoPO> processAllAnnouncements(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside process wall messages method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<ExchangeInfoPO> announcements = new ArrayList<ExchangeInfoPO>();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ExchangeInfoPO epo = new ExchangeInfoPO();
+                epo.setAuthor(rs.getString(1));
+                epo.setContent(rs.getString(2));
+                epo.setPostedAt(rs.getString(3));
+
+                announcements.add(epo);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(announcements);
+        }
+        return announcements;
+    }
+
 }
