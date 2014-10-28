@@ -83,4 +83,11 @@ public interface IUserDAO {
      * @return - all chat pairs of UserPO.
      */
     List<List<UserPO>> loadChatBuddiesByTime(String startTime, String endTime);
+
+    /**
+     * This method will update the information of the user profile into the database.
+     * @param userPO;
+     *            - User information to be updated.
+     */
+    void updateUserProfile(UserPO userPO);
 }

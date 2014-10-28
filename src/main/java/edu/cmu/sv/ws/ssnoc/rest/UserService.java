@@ -162,5 +162,72 @@ public class UserService extends BaseService {
 		return user;
 	}
 
+    /**
+     * Update a certain user profile. Created by Tangnet on 10/24/14.
+     *
+     * @param updatedUser, oldUserName
+     *            - User
+     * @return - Details of the User
+     */
+    @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/changeProfile")
+    public Response administerUserProfile(User updatedUser, String oldUserName) {
+        Log.enter(updatedUser);
+        User resp = new User();
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            UserPO existingUserPO = dao.findByName(oldUserName);
+
+            if (existingUserPO == null) {
+                return null;
+            }
+
+            UserPO updatedPO = ConverterUtils.convert(updatedUser);
+
+            if (updatedPO.getUserName() != existingUserPO.getUserName() ){} //changing user name is special case, need to discuss.
+            else {
+                existingUserPO.setPassword(updatedPO.getPassword()); //remember to check the rule of password, though it should be front end work.
+                existingUserPO = SSNCipher.encryptPassword(existingUserPO);
+
+                existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
+                existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
+            }
+
+            dao.updateUserProfile(existingUserPO);
+            resp = ConverterUtils.convert(updatedPO); //convert to dto
+
+            /*if (existingUser != null) {
+                Log.trace("User name provided already exists. Validating if it is same password ...");
+                if (!validateUserPassword(user.getPassword(), existingUser)) {
+                    Log.warn("Password is different for the existing user name.");
+                    throw new ValidationException("User name already taken");
+                } else {
+                    Log.debug("Yay!! Password is same for the existing user name.");
+
+                    resp.setUserName(existingUser.getUserName());
+                    return ok(resp);
+                }
+            }
+
+            UserPO po = ConverterUtils.convert(user);
+            po = SSNCipher.encryptPassword(po);
+
+            dao.save(po);
+            resp = ConverterUtils.convert(po);*/
+        }
+        catch (Exception e){
+            handleException(e);
+        }
+        finally {
+            Log.exit();
+        }
+
+        return created(resp);
+
+    }
+
 
 }

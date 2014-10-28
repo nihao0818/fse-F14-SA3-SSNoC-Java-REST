@@ -33,7 +33,8 @@ public class SQL {
 			+ " user_name VARCHAR(100)," + " password VARCHAR(512),"
             +" created_date VARCHAR(100)," + " modifiedAt VARCHAR(100),"
             +" last_status_code VARCHAR(100),"+" last_status_date VARCHAR(100),"
-			+ " salt VARCHAR(512) )";
+			+ " salt VARCHAR(512),"
+            + " account_status VARCHAR(15)," + "privilege_level VARCHAR(20) )";
 
 	/**
 	 * Query to load all users in the system.

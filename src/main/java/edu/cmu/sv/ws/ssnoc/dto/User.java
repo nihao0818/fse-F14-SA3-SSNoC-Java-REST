@@ -1,6 +1,7 @@
 package edu.cmu.sv.ws.ssnoc.dto;
 
 import com.google.gson.Gson;
+import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
 
 /**
  * This object contains user information that is responded as part of the REST
@@ -12,6 +13,8 @@ public class User {
 	private String password;
     private String statusCode;
     private String statusDate;
+    private String accountStatus;
+    private String privilegeLevel;
 
 	public String getUserName() {
 		return userName;
@@ -36,6 +39,14 @@ public class User {
     public String getStatusDate(){return statusDate;}
 
     public void setStatusDate(String statusDate){this.statusDate = statusDate;}
+
+    public String getAccountStatus() { return accountStatus; }
+
+    public void setAccountStatus(String accountStatus) { this.accountStatus = accountStatus;}
+
+    public String getPrivilegeLevel() { return privilegeLevel;}
+
+    public void setPrivilegeLevel(String privilegeLevel) { this.privilegeLevel = privilegeLevel; }
 
     @Override
 	public String toString() {

@@ -363,4 +363,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return chatBuddies;
     }
 
+    @Override
+    public void updateUserProfile (UserPO userPO) {
+
+    }
+
 }
