@@ -1,5 +1,6 @@
 package edu.cmu.sv.ws.ssnoc.common.utils;
 
+import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.po.*;
 import edu.cmu.sv.ws.ssnoc.dto.*;
 
@@ -25,6 +26,7 @@ public class ConverterUtils {
 		}
 
 		User dto = new User();
+        dto.setUserid(po.getUserId());
 		dto.setUserName(po.getUserName());
         dto.setStatusCode(po.getStatusCode());
         dto.setStatusDate(po.getStatusDate());
@@ -65,6 +67,7 @@ public class ConverterUtils {
         }
 
         Status sdto = new Status();
+        sdto.setCrumbID(spo.getCrumbID());
         sdto.setUserName(spo.getUserName());
         sdto.setStatusCode(spo.getStatusCode());
         sdto.setCreatedDate(spo.getCreatedDate());
@@ -133,16 +136,5 @@ public class ConverterUtils {
         memstats.setCreatedAt(memdto.getCreatedAt());
 
         return memstats;
-    }
-
-    public static final Performance convert(PerformancePO po){
-        if (po==null){
-            return null;
-        }
-        Performance pdto = new Performance();
-        pdto.setPostsPerSecond(po.getPostsPerSecond());
-        pdto.setGetPerSecond(po.getGetPerSecond());
-
-        return pdto;
     }
 }

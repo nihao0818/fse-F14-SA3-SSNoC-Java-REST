@@ -6,160 +6,145 @@ package edu.cmu.sv.ws.ssnoc.data;
  * 
  */
 public class SQL {
-	/*
-	 * List the USERS table name, and list all queries related to this table
-	 * here.
-	 */
-	public static final String SSN_USERS = "SSN_USERS";
-    public static final String SSN_STATUS_CRUMB="SSN_STATUS_CRUMB";
+    /*
+     * List the USERS table name, and list all queries related to this table
+     * here.
+     */
+    public static final String SSN_USERS = "SSN_USERS";
+    public static final String SSN_STATUS_CRUMB="SSN_STATUS";
     public static final String SSN_CHAT="SSN_MESSAGE";
-    public static final String SSN_MEMORY_CRUMB="SSN_MEMORY_CRUMB";
-    public static final String SSN_PERFORMANCE_CRUMB="SSN_PERFORMANCE_CRUMB";
-	/**
-	 * Query to check if a given table exists in the H2 database.
-	 */
-	public static final String CHECK_TABLE_EXISTS_IN_DB = "SELECT count(1) as rowCount "
-			+ " FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA() "
-			+ " AND UPPER(TABLE_NAME) = UPPER(?)";
-
-	// ****************************************************************
-	// All queries related to USERS
-	// ****************************************************************
-	/**
-	 * Query to create the USERS table.
-	 */
-	public static final String CREATE_USERS = "create table IF NOT EXISTS "
-			+ SSN_USERS + " ( user_id IDENTITY PRIMARY KEY,"
-			+ " user_name VARCHAR(100)," + " password VARCHAR(512),"
-            +" created_date VARCHAR(100)," + " modifiedAt VARCHAR(100),"
-            +" last_status_code VARCHAR(100),"+" last_status_date VARCHAR(100),"
-			+ " salt VARCHAR(512),"
-            + " account_status VARCHAR(15)," + "privilege_level VARCHAR(20) )";
-
-	/**
-	 * Query to load all users in the system.
-	 */
-	public static final String FIND_ALL_USERS = "select user_id, user_name, password, last_status_code, last_status_date, "
-			+ " salt " + " from " + SSN_USERS + " order by user_name";
-
-	/**
-	 * Query to find a user details depending on his name. Note that this query
-	 * does a case insensitive search with the user name.
-	 */
-	public static final String FIND_USER_BY_NAME = "select user_id, user_name, password, last_status_code, last_status_date, "
-			+ " salt "
-			+ " from "
-			+ SSN_USERS
-			+ " where UPPER(user_name) = UPPER(?)";
-
-	/**
-	 * Query to insert a row into the users table.
-	 */
-	public static final String INSERT_USER = "insert into " + SSN_USERS
-			+ " (user_name, password , created_date, salt) values (?, ?, ?, ?)";
-
+    public static final String SSN_MEMORY_CRUMB="SSN_MEMORY";
     /**
-     * Query to update status of a user in User table.
+     * Query to check if a given table exists in the H2 database.
      */
-    public static final String UPDATE_STATUS = "update "+SSN_USERS+
-            " SET last_status_code = ? , last_status_date =? where UPPER(user_name) = UPPER(?)";
+    public static final String CHECK_TABLE_EXISTS_IN_DB = "SELECT count(1) as rowCount "
+            + " FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA() "
+            + " AND UPPER(TABLE_NAME) = UPPER(?)";
 
-    //***********************************************************************
-    // All queries related to USERS STATUS
-    //***********************************************************************
-    /**
-     *Query to create the STATUS_CRUMB Table
-     */
+    /*****************************************************
+     All queries related to CREATIONS
+     *****************************************************/
+    //USERS table
+    public static final String CREATE_USERS = "create table IF NOT EXISTS "
+            + SSN_USERS + " ( user_id IDENTITY PRIMARY KEY,"
+            + " user_name VARCHAR(100)," + " password VARCHAR(512),"
+            +" created_date VARCHAR(100)," + " modifiedAt VARCHAR(100)," +
+            " last_status_code VARCHAR(50)," +
+            " last_status_date VARCHAR(50),"
+            + " salt VARCHAR(512)),"
+            + " account_status VARCHAR(15)," + " privilege_level VARCHAR(20) )"; //Tangent added, 10/28/2014
+    //STATUS table
     public static final String CREATE_STATUS_CRUMB = "create table IF NOT EXISTS "
-            + SSN_STATUS_CRUMB +" ( user_name VARCHAR(100) REFERENCES SSN_USERS(user_name),"
-            +" status_code VARCHAR(15),"+" created_date VARCHAR(100),"
-            +" crumb_ID IDENTITY PRIMARY KEY)";
-    /**
-     * Query to get user STATUS depending on his name. Note that this query
-     * does a case insensitive search with the user name
-     */
-    public static final String FIND_STATUS_BY_CRUMB = "select user_name, status_code, created_date"
-            +" from "
-            + SSN_STATUS_CRUMB
-            +" where UPPER(crumb_ID) = UPPER(?)";
-    /**
-     * Query to insert a row into the STATUS_CRUMB table
-     */
-    public static final String INSERT_STATUS = "insert into "+ SSN_STATUS_CRUMB
-            +" (user_name,status_code,created_Date) values (?,?,?)";
-
-
-    public static final String FIND_ALL_USER_STATUSES = "select user_name, status_code, created_date,crumb_ID "
-            + " from " + SSN_STATUS_CRUMB
-            +" where UPPER(user_name) = UPPER(?)"
-            + " order by created_date";
-
-    // ****************************************************************
-    // All queries related to CHAT
-    // ****************************************************************
-    /**
-     * Query to create the CHAT table.
-     */
+            + SSN_STATUS_CRUMB +
+            " (status_id IDENTITY PRIMARY KEY, " +
+            "user_id long REFERENCES SSN_USERS(user_id), " +
+            "status_code VARCHAR(15), " +
+            "status_date VARCHAR(50))";
+    //CHAT table
     public static final String CREATE_CHAT = "create table IF NOT EXISTS "
-            + SSN_CHAT +" ( messageID IDENTITY PRIMARY KEY, author VARCHAR(100), message_type VARCHAR(20),target varchar(100), " +
+            + SSN_CHAT +" ( message_id IDENTITY PRIMARY KEY, " +
+            "author_id long, " +
+            "message_type VARCHAR(20), " +
+            "target_id long, " +
             "postedAt VARCHAR(100), location varchar(100), content varchar(1000))";
-
-    public static final String INSERT_CHAT = "insert into "+ SSN_CHAT
-            +" (author, message_type, target,postedAT,content) values (?,?,?,?,?)";
-
-    public static final String FIND_ALL_WALL_MESSAGES = "select author, target, content, postedAt"
-            +" from "
-            + SSN_CHAT
-            +" where UPPER(message_type)='WALL' "
-            +"order by postedAt";
-
-    public static final String FIND_CHAT_MESSAGES = "select author, target, content, postedAt"
-            +" from "
-            + SSN_CHAT
-            +" where UPPER(message_type)='CHAT' "
-            +"and ((UPPER(author) = UPPER(?) and UPPER(target) = UPPER(?)) OR (UPPER(target) = UPPER(?) and UPPER(author) = UPPER(?)))"
-            +" order by postedAt";
-
-    public static final String FIND_CHAT_BUDDIES = "select distinct target" +" from " + SSN_CHAT
-            +" where UPPER(message_type)='CHAT' "
-            +"and UPPER(author)=UPPER(?)";
-
-    //***********************************************************************
-    // All queries related to Social Network Analysis, added by YHWH
-    //***********************************************************************
-    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select messageID, author, target" +" from " + SSN_CHAT + " a"
-            +" where a.messageID=(SELECT MIN(b.messageID)" +" from " + SSN_CHAT + " b"
-            +" where least(a.author, a.target)= least(b.author, b.target) "
-            +"and greatest(a.author, a.target)= greatest(b.author, b.target) "
-            +"and UPPER(message_type)='CHAT' "
-            +"and UPPER(postedAt) between UPPER(?) and UPPER(?))";
-
-
-    // ****************************************************************
-    // All queries related to MemoryCrumb
-    // ****************************************************************
+    //Memory table
     public static final String CREATE_MEMORY_CRUMB = "create table IF NOT EXISTS "
-            + SSN_MEMORY_CRUMB +" ( crumbID IDENTITY PRIMARY KEY, usedVMemory long, remainingVMemory long,usedPersistent long, " +
+            + SSN_MEMORY_CRUMB +
+            " ( memory_id IDENTITY PRIMARY KEY, usedVMemory long, remainingVMemory long,usedPersistent long, " +
             "remainingPersistent long, createdAt varchar(20))";
 
+    /****************************************************
+     All SELECT queries
+     ****************************************************/
+    //USERS table
+    public static final String FIND_ALL_USERS = "select user_id, " +
+            "user_name, password, last_status_code, last_status_date, "
+            + " salt " + " from "
+            + SSN_USERS+
+            " order by user_name";
+
+    public static final String FIND_USER_BY_NAME = "select user_id, " +
+            " user_name, password, last_status_code, last_status_date, "
+            + " salt "
+            + " from "
+            + SSN_USERS
+            + " where UPPER(user_name) = UPPER(?)";
+    //STATUS table
+    public static final String FIND_STATUS_BY_CRUMB = "select status_id,user_name, status_code, status_date"
+            +" from "
+            + SSN_STATUS_CRUMB+","+SSN_USERS
+            +" where "+SSN_STATUS_CRUMB+".user_id="+SSN_USERS+".user_id and "+
+            "UPPER(status_id) = UPPER(?)";
+    public static final String FIND_ALL_USER_STATUSES = "select status_id,user_name, status_code, status_date "
+            + " from " + SSN_STATUS_CRUMB+","+SSN_USERS
+            +" where " +SSN_STATUS_CRUMB+".user_id="+SSN_USERS+".user_id and "+
+            "UPPER("+SSN_USERS+".user_id) = UPPER(?)"
+            + " order by status_date";
+    //CHAT table
+    public static final String FIND_ALL_WALL_MESSAGES = "select u1.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"
+            +" where author_id=u1.user_id and "+
+            "UPPER(message_type)='WALL' "
+            +"order by postedAt";
+
+    public static final String FIND_CHAT_MESSAGES = "select u1.user_name, u2.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"+","+SSN_USERS+" u2"
+            +" where author_id=u1.user_id and target_id=u2.user_id and " +
+            "UPPER(message_type)='CHAT' "
+            +"and ((UPPER(author_id) = UPPER(?) and UPPER(target_id) = UPPER(?)) OR (UPPER(target_id) = UPPER(?) and UPPER(author_id) = UPPER(?)))"
+            +" order by postedAt";
+
+    public static final String FIND_CHAT_BUDDIES = "select distinct user_name" +" from " + SSN_CHAT+","+SSN_USERS
+            +" where target_id=user_id and UPPER(message_type)='CHAT' "
+            +"and UPPER(author_id)=UPPER(?)";
+    //Social Network Analysis
+    public static final String FIND_CHAT_BUDDIES_BY_TIME_PERIOD = "select message_id, u1.user_name, u2.user_name" +" from " + SSN_CHAT + " a" +
+            ","+SSN_USERS+" u1"+","+SSN_USERS+" u2"
+            +" where author_id=u1.user_id and target_id=u2.user_id and  " +
+            "a.message_id=(SELECT MIN(b.message_id)" +" from " + SSN_CHAT + " b"
+            +" where least(a.author_id, a.target_id)= least(b.author_id, b.target_id) "
+            +"and greatest(a.author_id, a.target_id)= greatest(b.author_id, b.target_id) "
+            +"and UPPER(message_type)='CHAT' "
+            +"and UPPER(postedAt) between UPPER(?) and UPPER(?))";
+    //MEMORY table
+    public static final String GET_MEMORY_STATS = "select usedVMemory, remainingVMemory, usedPersistent, remainingPersistent, " +
+            "createdAt from "+SSN_MEMORY_CRUMB+" where createdAt between (?) and (?)"+" order by createdAt DESC";
+    //ANNOUNCEMENTS table
+    public static final String FIND_ALL_ANNOUNCEMENTS = "select u1.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"
+            +" where author_id=u1.user_id and "+
+            "UPPER(message_type)='ANNOUNCEMENT' "
+            +"order by postedAt";
+
+    /********************************************************
+     All Insert queries
+     ********************************************************/
+    //USERS table
+    public static final String INSERT_USER = "insert into " + SSN_USERS
+            + " (user_name, password , created_date, salt) values (?, ?, ?, ?)";
+    //STATUS table
+    public static final String INSERT_STATUS = "insert into "+ SSN_STATUS_CRUMB
+            +" (user_id,status_code,status_date) values (?,?,?)";
+    //CHAT table
+    public static final String INSERT_CHAT = "insert into "+ SSN_CHAT
+            +" (author_id, message_type, target_id,postedAT,content) values (?,?,?,?,?)";
+    //MEMORY table
     public static final String INSERT_MEMORY_STATS = "insert into "+ SSN_MEMORY_CRUMB
             +" (usedVMemory, remainingVMemory, usedPersistent,remainingPersistent,createdAt) values (?,?,?,?,?)";
 
+    /*********************************************************
+     UPDATE queries
+     *********************************************************/
+    //USERS table
+    public static final String UPDATE_STATUS = "update "+SSN_USERS+
+            " SET last_status_code = ? , last_status_date =? where UPPER(user_id) = UPPER(?)";
+
+    /*******************************************************
+     All DELETE/TRUNCATE
+     *******************************************************/
+    //MEMORY table
     public static final String DELETE_MEMORY_STATS = "Truncate table "+SSN_MEMORY_CRUMB;
-
-    public static final String GET_MEMORY_STATS = "select usedVMemory, remainingVMemory, usedPersistent, remainingPersistent, " +
-            "createdAt from "+SSN_MEMORY_CRUMB+" where createdAt between (?) and (?)"+" order by createdAt DESC";
-    // ****************************************************************
-    // All queries related to PerformanceCrumb
-    // ****************************************************************
-    public static final String CREATE_PERFORMANCE_CRUMB = "create table IF NOT EXISTS "
-            + SSN_PERFORMANCE_CRUMB +" ( postsPerSecond double, getsPerSecond double)";
-
-    public static final String INSERT_PERFORMANCE_STATS = "insert into "+SSN_PERFORMANCE_CRUMB
-            +"( postsPerSecond, getsPerSecond) values (?,?)";
-
-    public static final String GET_PERFORMANCE_STATS = "select postsPerSecond, getsPerSecond" +
-            " from "+SSN_PERFORMANCE_CRUMB;
-
-    public static final String RESET_PERFORMANCE_STATS ="TRUNCATE TABLE " +SSN_PERFORMANCE_CRUMB ;
 }

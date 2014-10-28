@@ -58,8 +58,9 @@ public class UsersService extends BaseService {
         Log.enter();
 
         List<ExchangeInfo> buddies = null;
+        UserPO po = loadExistingUser(userName);
         try{
-            List<ExchangeInfoPO> buddiesPOs = DAOFactory.getInstance().getMessageDAO().loadChatBuddies(userName);
+            List<ExchangeInfoPO> buddiesPOs = DAOFactory.getInstance().getMessageDAO().loadChatBuddies(po);
 
             buddies = new ArrayList<ExchangeInfo>();
             for (ExchangeInfoPO exchangeInfoPO : buddiesPOs ){

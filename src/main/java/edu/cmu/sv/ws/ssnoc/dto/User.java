@@ -9,6 +9,7 @@ import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
  * 
  */
 public class User {
+    private long userid;
 	private String userName;
 	private String password;
     private String statusCode;
@@ -16,7 +17,15 @@ public class User {
     private String accountStatus;
     private String privilegeLevel;
 
-	public String getUserName() {
+    public long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+
+    public String getUserName() {
 		return userName;
 	}
 

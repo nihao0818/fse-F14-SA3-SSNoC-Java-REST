@@ -4,6 +4,7 @@ import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
+import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.dto.Status;
 
 import javax.ws.rs.GET;
@@ -35,7 +36,8 @@ public List<Status> loadUsersStatuses(@PathParam("userName") String userName) {
     List<Status> statuses = null;
 
     try {
-        List<StatusPO> statusPOs = DAOFactory.getInstance().getUserDAO().loadStatuses(userName);
+        UserPO po = loadExistingUser(userName);
+        List<StatusPO> statusPOs = DAOFactory.getInstance().getUserDAO().loadStatuses(po.getUserId());
 
         statuses = new ArrayList<Status>();
         for (StatusPO spo : statusPOs) {

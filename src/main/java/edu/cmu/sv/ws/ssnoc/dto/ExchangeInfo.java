@@ -30,5 +30,4 @@ public class ExchangeInfo {
 
     public void setContent(String content){this.content=content;}
 
-    //pub
 }

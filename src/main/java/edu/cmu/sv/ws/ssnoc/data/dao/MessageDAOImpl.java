@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,17 +20,6 @@ import java.util.List;
  *
  */
 public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
-    static long postWallRequests = 0;
-    static long getWallRequests = 0;
-
-
-
-    @Override
-    public void resetRequestsCount(){
-        postWallRequests = 0;
-        getWallRequests = 0;
-    }
-
 
     @Override
     public List<ExchangeInfoPO> loadWallMessages(){
@@ -43,7 +35,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             handleException(e);
             Log.exit(wallMessages);
         }
-        getWallRequests+=1;
         return wallMessages;
     }
 
@@ -61,9 +52,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             while (rs.next()) {
                 ExchangeInfoPO epo = new ExchangeInfoPO();
                 epo.setAuthor(rs.getString(1));
-                epo.setTarget(rs.getString(2));
-                epo.setContent(rs.getString(3));
-                epo.setPostedAt(rs.getString(4));
+                epo.setContent(rs.getString(2));
+                epo.setPostedAt(rs.getString(3));
 
                 wallMessages.add(epo);
             }
@@ -83,13 +73,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             Log.warn("Inside save method for wall message with einfoPO == NULL");
             return;
         }
-
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
-            stmt.setString(1, userPO.getUserName());
+            stmt.setLong(1, userPO.getUserId());
             stmt.setString(2, "Wall");
             stmt.setString(3,null);
-            stmt.setString(4,einfoPO.getPostedAt());
+            stmt.setString(4,df.format(dateobj));
             stmt.setString(5, einfoPO.getContent());
 
             int rowCount = stmt.executeUpdate();
@@ -99,21 +90,20 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         } finally {
             Log.exit();
         }
-        postWallRequests+=1;
     }
 
     @Override
-    public List<ExchangeInfoPO> loadChatMessages(String userName1, String userName2){
+    public List<ExchangeInfoPO> loadChatMessages(UserPO po1, UserPO po2){
         Log.enter();
 
         List<ExchangeInfoPO> chatMessages = new ArrayList<>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
                 .prepareStatement(SQL.FIND_CHAT_MESSAGES)) {
-            stmt.setString(1, userName1.toUpperCase());
-            stmt.setString(2, userName2.toUpperCase());
-            stmt.setString(3, userName1.toUpperCase());
-            stmt.setString(4, userName2.toUpperCase());
+            stmt.setLong(1, po1.getUserId());
+            stmt.setLong(2, po2.getUserId());
+            stmt.setLong(3, po1.getUserId());
+            stmt.setLong(4, po2.getUserId());
             chatMessages = processChatMessages(stmt);
         } catch (SQLException e) {
             handleException(e);
@@ -158,13 +148,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             Log.warn("Inside save method for wall message with einfoPO == NULL");
             return;
         }
-
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
-            stmt.setString(1, userPO1.getUserName());
+            stmt.setLong(1, userPO1.getUserId());
             stmt.setString(2, "Chat");
-            stmt.setString(3,userPO2.getUserName());
-            stmt.setString(4,einfoPO.getPostedAt());
+            stmt.setLong(3,userPO2.getUserId());
+            stmt.setString(4,df.format(dateobj));
             stmt.setString(5, einfoPO.getContent());
 
             int rowCount = stmt.executeUpdate();
@@ -177,14 +168,14 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
     }
 
     @Override
-    public List<ExchangeInfoPO> loadChatBuddies(String userName){
+    public List<ExchangeInfoPO> loadChatBuddies(UserPO po){
         Log.enter();
 
         List<ExchangeInfoPO> chatBuddies = new ArrayList<>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
                     .prepareStatement(SQL.FIND_CHAT_BUDDIES)) {
-            stmt.setString(1, userName.toUpperCase());
+            stmt.setLong(1, po.getUserId());
             chatBuddies = processChatBuddies(stmt);
         } catch (SQLException e) {
             handleException(e);
@@ -219,14 +210,73 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
     }
 
     @Override
-    public long getGetWallRequestsCount(){
-        return getWallRequests;
+    public void saveAnnouncement(UserPO userPO, ExchangeInfoPO einfoPO){
+        Log.enter(einfoPO);
+        if (einfoPO == null) {
+            Log.warn("Inside save method for wall message with einfoPO == NULL");
+            return;
+        }
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_CHAT)) {
+            stmt.setLong(1, userPO.getUserId());
+            stmt.setString(2, "Announcement");
+            stmt.setString(3,null);
+            stmt.setString(4,df.format(dateobj));
+            stmt.setString(5, einfoPO.getContent());
+
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
     }
 
     @Override
-    public long getPostWallRequestCount(){
-        return postWallRequests;
+    public List<ExchangeInfoPO> loadAllAnnouncements(){
+        Log.enter();
+
+        String query = SQL.FIND_ALL_ANNOUNCEMENTS;
+
+        List<ExchangeInfoPO> announcements = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            announcements = processAllAnnouncements(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(announcements);
+        }
+        return announcements;
     }
 
+    private List<ExchangeInfoPO> processAllAnnouncements(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside process announcements method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<ExchangeInfoPO> announcements = new ArrayList<ExchangeInfoPO>();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ExchangeInfoPO epo = new ExchangeInfoPO();
+                epo.setAuthor(rs.getString(1));
+                epo.setContent(rs.getString(2));
+                epo.setPostedAt(rs.getString(3));
+
+                announcements.add(epo);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(announcements);
+        }
+        return announcements;
+    }
 
 }

@@ -24,18 +24,17 @@ public interface IMessageDAO {
      */
     void saveWallMessage(UserPO userPO, ExchangeInfoPO einfoPO);
 
+    void saveAnnouncement(UserPO userPO, ExchangeInfoPO einfoPO);
+
     void saveChatMessage(UserPO po1, UserPO po2, ExchangeInfoPO einfopo);
 
     List<ExchangeInfoPO> loadWallMessages();
 
-    List<ExchangeInfoPO> loadChatMessages(String userName1, String userName2);
+    List<ExchangeInfoPO> loadAllAnnouncements();
 
-    List<ExchangeInfoPO> loadChatBuddies(String userName);
+    List<ExchangeInfoPO> loadChatMessages(UserPO po1, UserPO po2);
 
-    long getGetWallRequestsCount();
+    List<ExchangeInfoPO> loadChatBuddies(UserPO po);
 
-    long getPostWallRequestCount();
-
-    void resetRequestsCount();
 
 }

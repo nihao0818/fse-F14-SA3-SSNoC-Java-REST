@@ -32,7 +32,6 @@ public class StatusService extends BaseService{
      */
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-   // @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/{userName}")
    public void updateStatus(@PathParam("userName") String userName, Status userStatus) {
         Log.enter(userName, userStatus);
@@ -45,7 +44,6 @@ public class StatusService extends BaseService{
             dao.loadLastStatusCode(po,spo);
             //Status update on Wall Message
             ExchangeInfoPO msg = new ExchangeInfoPO();
-            msg.setAuthor(po.getUserName());
             String content = null;
             switch (spo.getStatusCode()){
                 case "OK":
@@ -61,7 +59,6 @@ public class StatusService extends BaseService{
                     content = "The user has not been providing his/her status yet";
             }
             msg.setContent(content);
-            msg.setPostedAt(spo.getCreatedDate());
 
             IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
             mdao.saveWallMessage(po,msg);
@@ -78,7 +75,7 @@ public class StatusService extends BaseService{
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/{crumbID}")
-    public Status loadWithCrumbID(@PathParam("crumbID") String crumbID){
+    public Status loadWithCrumbID(@PathParam("crumbID") long crumbID){
         Log.enter(crumbID);
         Status sto = null;
         try{

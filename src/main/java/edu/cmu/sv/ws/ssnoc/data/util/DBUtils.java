@@ -25,7 +25,6 @@ public class DBUtils {
         CREATE_TABLE_LST.add(SQL.CREATE_STATUS_CRUMB);
         CREATE_TABLE_LST.add(SQL.CREATE_CHAT);
         CREATE_TABLE_LST.add(SQL.CREATE_MEMORY_CRUMB);
-        CREATE_TABLE_LST.add(SQL.CREATE_PERFORMANCE_CRUMB);
 	}
 
     /**
@@ -42,7 +41,10 @@ public class DBUtils {
         DB_TABLES_EXIST = false;
         Log.trace("Performace Test enabled");
         initializeDatabase();
+    }
 
+    public static boolean isPerformaceRunning(){
+        return performaceRunning;
     }
 
     public static void stopPerformanceRunning() throws SQLException{
@@ -66,7 +68,7 @@ public class DBUtils {
 		}
 
 
-        final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT,SQL.SSN_MEMORY_CRUMB,SQL.SSN_PERFORMANCE_CRUMB);
+        final List<String> CORE_TABLE_LST= Arrays.asList(SQL.SSN_USERS,SQL.SSN_STATUS_CRUMB,SQL.SSN_CHAT,SQL.SSN_MEMORY_CRUMB);
 
         for (String CORE_TABLE_NAME : CORE_TABLE_LST){
         try (Connection conn = getConnection();
