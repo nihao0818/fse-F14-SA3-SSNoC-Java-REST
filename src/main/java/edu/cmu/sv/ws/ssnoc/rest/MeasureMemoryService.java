@@ -8,12 +8,17 @@ import edu.cmu.sv.ws.ssnoc.data.po.MemoryPO;
 import edu.cmu.sv.ws.ssnoc.dto.Memory;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
+import java.nio.file.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.*;
 
 import javax.ws.rs.*;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -38,26 +43,41 @@ public class MeasureMemoryService extends BaseService{
 
              @Override
              public void run() {
-                 Runtime rt=Runtime.getRuntime();
+                 /*Runtime rt=Runtime.getRuntime();
                  long freeVMemory = rt.freeMemory()/1024;
                  long totalVMemory = rt.totalMemory()/1024;
-                 long usedVMemory = totalVMemory-freeVMemory;
+                 long usedVMemory = totalVMemory-freeVMemory;*/
+
+                 OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+                 long maxMemory = bean.getTotalPhysicalMemorySize()/1024;
+                 long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
+
+                 long usedVMemory = maxMemory-freeVMemory;
 
                  long freeSpace = 0;
                  long usedSpace = 0;
 
-                 File[] roots = File.listRoots();
-                 for (File root : roots){
-                     freeSpace += root.getFreeSpace()/1024;
-                     usedSpace += ((root.getTotalSpace()/1024)-(root.getFreeSpace()/1024));
+                 for(java.nio.file.Path root : FileSystems.getDefault().getRootDirectories())
+                 {
+                     try{
+                    FileStore store = Files.getFileStore(root);
+                     freeSpace = store.getUnallocatedSpace()/1024;
+                     usedSpace = ((store.getTotalSpace()/1024)-(store.getUnallocatedSpace()/1024));
+                     }catch (FileSystemException e){
+                         Log.trace(e.toString());
+                     }catch (IOException e){
+                         Log.trace(e.toString());
+                     }
+
                  }
-                 memDetails.setUsedVolatile(usedVMemory);
-                 memDetails.setRemainingVolatile(freeVMemory);
-                 memDetails.setUsedPersistent(usedSpace);
-                 memDetails.setRemainingPersistent(freeSpace);
-                 Calendar calendar = Calendar.getInstance();
-                 memDetails.setCreatedAt(df.format(calendar.getTime()));
-                mdao.insertMemoryStats(memDetails);
+                    memDetails.setUsedVolatile(usedVMemory);
+                    memDetails.setRemainingVolatile(freeVMemory);
+                    memDetails.setUsedPersistent(usedSpace);
+                    memDetails.setRemainingPersistent(freeSpace);
+                    Calendar calendar = Calendar.getInstance();
+                    memDetails.setCreatedAt(df.format(calendar.getTime()));
+                    mdao.insertMemoryStats(memDetails);
 
              }
 

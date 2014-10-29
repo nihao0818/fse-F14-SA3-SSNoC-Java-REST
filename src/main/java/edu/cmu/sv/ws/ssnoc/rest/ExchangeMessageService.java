@@ -2,6 +2,7 @@ package edu.cmu.sv.ws.ssnoc.rest;
 /**
  * Created by vignan on 10/8/14.
  */
+import com.sun.management.OperatingSystemMXBean;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
@@ -15,6 +16,7 @@ import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.management.ManagementFactory;
 
 
 @Path("/message")
@@ -71,8 +73,10 @@ public class ExchangeMessageService extends BaseService {
             Log.exit();
         }
         Log.trace("Checking Memory Space after the message insertion");
-        Runtime rt=Runtime.getRuntime();
-        long freeVMemory = rt.freeMemory()/1024;
+
+        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+        long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
 
         if(freeVMemory<2048)
         {
@@ -97,7 +101,7 @@ public class ExchangeMessageService extends BaseService {
 
             ExchangeInfoPO einfopo = ConverterUtils.convert(message);
 
-            Log.trace("Inserting message on public wall from.....:"+sendingUserName + "to.."+receivingUserName);
+            Log.trace("Inserting chat message from.....:"+sendingUserName + "to.."+receivingUserName);
 
             mdao.saveChatMessage(po1,po2, einfopo);
             resp = ConverterUtils.convert(einfopo);
