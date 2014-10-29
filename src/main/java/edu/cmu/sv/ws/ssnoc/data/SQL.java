@@ -31,7 +31,7 @@ public class SQL {
             +" created_date VARCHAR(100)," + " modifiedAt VARCHAR(100)," +
             " last_status_code VARCHAR(50)," +
             " last_status_date VARCHAR(50),"
-            + " salt VARCHAR(512)),"
+            + " salt VARCHAR(512),"
             + " account_status VARCHAR(15)," + " privilege_level VARCHAR(20) )"; //Tangent added, 10/28/2014
     //STATUS table
     public static final String CREATE_STATUS_CRUMB = "create table IF NOT EXISTS "
@@ -58,17 +58,29 @@ public class SQL {
      ****************************************************/
     //USERS table
     public static final String FIND_ALL_USERS = "select user_id, " +
-            "user_name, password, last_status_code, last_status_date, "
-            + " salt " + " from "
+            "user_name, password, last_status_code, last_status_date,"
+            + " salt,"
+            + " account_status, privilege_level"
+            + " from "
             + SSN_USERS+
             " order by user_name";
 
     public static final String FIND_USER_BY_NAME = "select user_id, " +
             " user_name, password, last_status_code, last_status_date, "
-            + " salt "
+            + " salt,"
+            + " account_status, privilege_level"
             + " from "
             + SSN_USERS
             + " where UPPER(user_name) = UPPER(?)";
+
+    public static final String FIND_USER_BY_ID = "select user_id, " +    //Tangent added, 10/28/2014
+            " user_name, password, last_status_code, last_status_date, "
+            + " salt,"
+            + " account_status," + " privilege_level"
+            + " from "
+            + SSN_USERS
+            + " where UPPER(user_id) = UPPER(?)";
+
     //STATUS table
     public static final String FIND_STATUS_BY_CRUMB = "select status_id,user_name, status_code, status_date"
             +" from "
@@ -141,6 +153,9 @@ public class SQL {
     //USERS table
     public static final String UPDATE_STATUS = "update "+SSN_USERS+
             " SET last_status_code = ? , last_status_date =? where UPPER(user_id) = UPPER(?)";
+    public static final String UPDATE_USER_PROFILE = "update "+SSN_USERS+
+            " SET user_name = ? , password = ? , modifiedAt = ? , salt = ? , account_status = ? , privilege_level = ?"
+            +" where UPPER(user_id) = UPPER(?)";
 
     /*******************************************************
      All DELETE/TRUNCATE

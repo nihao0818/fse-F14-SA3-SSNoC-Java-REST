@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
@@ -63,6 +64,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setStatusCode(rs.getString(4));
                 po.setStatusDate(rs.getString(5));
 				po.setSalt(rs.getString(6));
+                po.setAccountStatus(rs.getString(7));  //Tangent added, 10/28/2014
+                po.setPrivilegeLevel(rs.getString(8));
 
 				users.add(po);
 			}
@@ -362,7 +365,61 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 
     @Override
     public void updateUserProfile (UserPO userPO) {
+        Log.enter(userPO);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
+        if (userPO == null) {
+            Log.warn("Inside updateUserProfile method with userPO == NULL");
+            return;
+        }
 
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_USER_PROFILE)) {
+            stmt.setString(1, userPO.getUserName());
+            stmt.setString(2, userPO.getPassword());
+            stmt.setString(3,df.format(dateobj)); //modified date
+            stmt.setString(4, userPO.getSalt());
+            stmt.setString(5, userPO.getAccountStatus());
+            stmt.setString(6, userPO.getPrivilegeLevel());
+
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+    }
+
+    @Override
+    public UserPO findByUserID(long userId) {
+        Log.enter(userId);
+
+        if (userId == 0) {
+            Log.warn("Inside findByUserID method with NULL userId.");
+            return null;
+        }
+
+        UserPO po = null;
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.FIND_USER_BY_ID)) {
+            stmt.setLong(1, userId);
+
+            List<UserPO> users = processResults(stmt);
+
+            if (users.size() == 0) {
+                Log.debug("No user account exists with userId = " + userId);
+            } else {
+                po = users.get(0);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(po);
+        }
+
+        return po;
     }
 
 }

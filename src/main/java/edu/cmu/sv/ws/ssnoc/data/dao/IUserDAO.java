@@ -90,4 +90,13 @@ public interface IUserDAO {
      *            - User information to be updated.
      */
     void updateUserProfile(UserPO userPO);
+
+    /**
+     * This method with search for a user by his userId in the database. The
+     * search performed is a case insensitive search to allow case mismatch
+     * situations.
+     * @param userId;
+     *            - User ID to search for.
+     */
+    UserPO findByUserID(long userId);
 }

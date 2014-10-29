@@ -30,6 +30,8 @@ public class ConverterUtils {
 		dto.setUserName(po.getUserName());
         dto.setStatusCode(po.getStatusCode());
         dto.setStatusDate(po.getStatusDate());
+        dto.setAccountStatus(po.getAccountStatus());
+        dto.setPrivilegeLevel(po.getPrivilegeLevel());
 
 		return dto;
 	}
@@ -50,6 +52,10 @@ public class ConverterUtils {
 		UserPO po = new UserPO();
 		po.setUserName(dto.getUserName());
 		po.setPassword(dto.getPassword());
+        /*po.setStatusCode(dto.getStatusCode());
+        po.setStatusDate(dto.getStatusDate());
+        po.setAccountStatus(dto.getAccountStatus());
+        po.setPrivilegeLevel(dto.getPrivilegeLevel());*/
 
 		return po;
 	}

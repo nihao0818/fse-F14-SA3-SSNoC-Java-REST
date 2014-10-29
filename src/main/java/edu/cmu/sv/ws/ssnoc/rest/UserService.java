@@ -173,13 +173,14 @@ public class UserService extends BaseService {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/changeProfile")
-    public Response administerUserProfile(User updatedUser, String oldUserName) {
+    public User administerUserProfile(User updatedUser) {
+    //public Response administerUserProfile(User updatedUser) {
         Log.enter(updatedUser);
         User resp = new User();
 
         try {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
-            UserPO existingUserPO = dao.findByName(oldUserName);
+            UserPO existingUserPO = dao.findByUserID(updatedUser.getUserid());
 
             if (existingUserPO == null) {
                 return null;
@@ -187,36 +188,15 @@ public class UserService extends BaseService {
 
             UserPO updatedPO = ConverterUtils.convert(updatedUser);
 
-            if (updatedPO.getUserName() != existingUserPO.getUserName() ){} //changing user name is special case, need to discuss.
-            else {
-                existingUserPO.setPassword(updatedPO.getPassword()); //remember to check the rule of password, though it should be front end work.
-                existingUserPO = SSNCipher.encryptPassword(existingUserPO);
-
-                existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
-                existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
-            }
+            existingUserPO.setUserName(updatedPO.getUserName());
+            existingUserPO.setPassword(updatedPO.getPassword()); //remember to check the rule of password, though it should be front end work.
+            existingUserPO = SSNCipher.encryptPassword(existingUserPO);
+            existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
+            existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
 
             dao.updateUserProfile(existingUserPO);
             resp = ConverterUtils.convert(updatedPO); //convert to dto
 
-            /*if (existingUser != null) {
-                Log.trace("User name provided already exists. Validating if it is same password ...");
-                if (!validateUserPassword(user.getPassword(), existingUser)) {
-                    Log.warn("Password is different for the existing user name.");
-                    throw new ValidationException("User name already taken");
-                } else {
-                    Log.debug("Yay!! Password is same for the existing user name.");
-
-                    resp.setUserName(existingUser.getUserName());
-                    return ok(resp);
-                }
-            }
-
-            UserPO po = ConverterUtils.convert(user);
-            po = SSNCipher.encryptPassword(po);
-
-            dao.save(po);
-            resp = ConverterUtils.convert(po);*/
         }
         catch (Exception e){
             handleException(e);
@@ -225,7 +205,8 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        return created(resp);
+        //return created(resp);
+        return resp;
 
     }
 
