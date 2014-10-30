@@ -156,4 +156,27 @@ public class ConverterUtils {
 
         return memstats;
     }
+
+
+    public static final SearchPO convert(Search s) {
+        if (s == null){
+            return null;
+        }
+        SearchPO SearchPO = new SearchPO();
+        SearchPO.setContent(s.getContent());
+        SearchPO.setType(s.getType());
+
+        return SearchPO;
+    }
+    
+    public static final Search convert(SearchPO spo) {
+        if (spo == null){
+            return null;
+        }
+        Search Search = new Search();
+        Search.setContent(spo.getContent());
+        Search.setType(spo.getType());
+
+        return Search;
+    }
 }
