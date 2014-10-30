@@ -24,7 +24,7 @@ public class AdministerServiceTest {
         testUpdatedOne.setUserName("newName");
         testUpdatedOne.setPassword("newPassword");
         testUpdatedOne.setAccountStatus("1");
-        testUpdatedOne.setPrivilegeLevel("Citizen");
+        testUpdatedOne.setPrivilegeLevel("Administrator");
 
     }
 

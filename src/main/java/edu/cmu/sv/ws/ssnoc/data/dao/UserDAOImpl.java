@@ -63,6 +63,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setStatusCode(rs.getString(4));
                 po.setStatusDate(rs.getString(5));
 				po.setSalt(rs.getString(6));
+                po.setAccountStatus(rs.getString(7));  //Tangent edited, 10/30/2014
+                po.setPrivilegeLevel(rs.getString(8)); //Tangent edited, 10/30/2014
 
 				users.add(po);
 			}
@@ -137,8 +139,11 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 			stmt.setString(2, userPO.getPassword());
             stmt.setString(3,df.format(dateobj));
 			stmt.setString(4, userPO.getSalt());
+            stmt.setString(5, userPO.getAccountStatus());//accountStatus
+            stmt.setString(6, userPO.getPrivilegeLevel());//privilegeLevel
 
-			int rowCount = stmt.executeUpdate();
+
+            int rowCount = stmt.executeUpdate();
 			Log.trace("Statement executed, and " + rowCount + " rows inserted.");
 		} catch (SQLException e) {
 			handleException(e);
@@ -406,7 +411,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                      .prepareStatement(SQL.FIND_USER_BY_ID)) {
             stmt.setLong(1, userId);
 
-            List<UserPO> users = processUpdateResults(stmt);
+            //List<UserPO> users = processUpdateResults(stmt);
+            List<UserPO> users = processResults(stmt);
+
 
             if (users.size() == 0) {
                 Log.debug("No user account exists with userId = " + userId);
@@ -440,6 +447,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setStatusCode(rs.getString(4));
                 po.setStatusDate(rs.getString(5));
                 po.setSalt(rs.getString(6));
+                po.setAccountStatus(rs.getString(7));
+                po.setPrivilegeLevel(rs.getString(8));
 
                 users.add(po);
             }

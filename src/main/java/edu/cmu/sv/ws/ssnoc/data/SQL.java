@@ -31,7 +31,7 @@ public class SQL {    /*
             " last_status_code VARCHAR(50)," +
             " last_status_date VARCHAR(50),"
             + " salt VARCHAR(512),"
-            + " account_status VARCHAR(15)," + " privilege_level VARCHAR(20) )"; //Tangent added, 10/28/2014
+            + " account_status VARCHAR(15)," + " privilege_level VARCHAR(20) )"; //Tangent edited, 10/28/2014
     //STATUS table
     public static final String CREATE_STATUS_CRUMB = "create table IF NOT EXISTS "
             + SSN_STATUS_CRUMB +
@@ -58,16 +58,19 @@ public class SQL {    /*
     //USERS table
     public static final String FIND_ALL_USERS = "select user_id, " +
             "user_name, password, last_status_code, last_status_date, "
-            + " salt " + " from "
+            + " salt,"
+            + " account_status," + " privilege_level"
+            + " from "
             + SSN_USERS+
-            " order by user_name";
+            " order by user_name";  //Tangent edited, 10/30/2014
 
     public static final String FIND_USER_BY_NAME = "select user_id, " +
             " user_name, password, last_status_code, last_status_date, "
-            + " salt "
+            + " salt,"
+            + " account_status," + " privilege_level"
             + " from "
             + SSN_USERS
-            + " where UPPER(user_name) = UPPER(?)";
+            + " where UPPER(user_name) = UPPER(?)";  //Tangent edited, 10/30/2014
 
     public static final String FIND_USER_BY_ID = "select user_id, " +
             " user_name, password, last_status_code, last_status_date, "
@@ -132,7 +135,7 @@ public class SQL {    /*
      ********************************************************/
     //USERS table
     public static final String INSERT_USER = "insert into " + SSN_USERS
-            + " (user_name, password , created_date, salt) values (?, ?, ?, ?)";
+            + " (user_name, password , created_date, salt, account_status, privilege_level) values (?, ?, ?, ?, ?, ?)"; //Tangent edited, 10/30/2014
     //STATUS table
     public static final String INSERT_STATUS = "insert into "+ SSN_STATUS_CRUMB
             +" (user_id,status_code,status_date) values (?,?,?)";

@@ -64,6 +64,8 @@ public class UserService extends BaseService {
 
 			UserPO po = ConverterUtils.convert(user);
 			po = SSNCipher.encryptPassword(po);
+            po.setAccountStatus("1"); //default value, Tangent edited, 10/30/2014
+            po.setPrivilegeLevel("Citizen"); //default value, Tangent edited, 10/30/2014
 
 			dao.save(po);
 			resp = ConverterUtils.convert(po);
@@ -165,7 +167,7 @@ public class UserService extends BaseService {
     /**
      * Update a certain user profile. Created by Tangnet on 10/24/14.
      *
-     * @param updatedUser, oldUserName
+     * @param updatedUser
      *            - User
      * @return - Details of the User
      */
@@ -174,8 +176,9 @@ public class UserService extends BaseService {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/changeProfile")
     public Response administerUserProfile(User updatedUser) {
+    //public String administerUserProfile(User updatedUser) {
+
         Log.enter(updatedUser);
-        User resp = new User();
 
         try {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
@@ -185,16 +188,17 @@ public class UserService extends BaseService {
                 return null;
             }
 
-            UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
+            //UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
+            UserPO updatedPO = ConverterUtils.convert(updatedUser);
+
 
             existingUserPO.setUserName(updatedPO.getUserName());
-            existingUserPO.setPassword(updatedPO.getPassword()); //remember to check the rule of password, though it should be front end work.
+            existingUserPO.setPassword(updatedPO.getPassword());
             existingUserPO = SSNCipher.encryptPassword(existingUserPO);
             existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
             existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
 
             dao.updateUserProfile(existingUserPO);
-            resp = ConverterUtils.convert(updatedPO); //convert to dto
 
         } catch (Exception e) {
             handleException(e);
@@ -202,7 +206,7 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        return created(resp);
+        return ok();
         //return "ok";
     }
 
