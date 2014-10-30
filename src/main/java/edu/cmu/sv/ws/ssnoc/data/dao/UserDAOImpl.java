@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.po.StatusPO;
@@ -64,8 +63,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setStatusCode(rs.getString(4));
                 po.setStatusDate(rs.getString(5));
 				po.setSalt(rs.getString(6));
-                po.setAccountStatus(rs.getString(7));  //Tangent added, 10/28/2014
-                po.setPrivilegeLevel(rs.getString(8));
 
 				users.add(po);
 			}
@@ -381,6 +378,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             stmt.setString(4, userPO.getSalt());
             stmt.setString(5, userPO.getAccountStatus());
             stmt.setString(6, userPO.getPrivilegeLevel());
+            stmt.setLong(7, userPO.getUserId());
+
 
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");
@@ -407,7 +406,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                      .prepareStatement(SQL.FIND_USER_BY_ID)) {
             stmt.setLong(1, userId);
 
-            List<UserPO> users = processResults(stmt);
+            List<UserPO> users = processUpdateResults(stmt);
 
             if (users.size() == 0) {
                 Log.debug("No user account exists with userId = " + userId);
@@ -420,6 +419,37 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         return po;
+    }
+
+    private List<UserPO> processUpdateResults(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processResults method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<UserPO> users = new ArrayList<UserPO>();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                UserPO po = new UserPO();
+                po.setUserId(rs.getLong(1));
+                po.setUserName(rs.getString(2));
+                po.setPassword(rs.getString(3));
+                po.setStatusCode(rs.getString(4));
+                po.setStatusDate(rs.getString(5));
+                po.setSalt(rs.getString(6));
+
+                users.add(po);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(users);
+        }
+
+        return users;
     }
 
 }

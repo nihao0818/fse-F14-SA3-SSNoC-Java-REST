@@ -52,13 +52,26 @@ public class ConverterUtils {
 		UserPO po = new UserPO();
 		po.setUserName(dto.getUserName());
 		po.setPassword(dto.getPassword());
-        /*po.setStatusCode(dto.getStatusCode());
-        po.setStatusDate(dto.getStatusDate());
-        po.setAccountStatus(dto.getAccountStatus());
-        po.setPrivilegeLevel(dto.getPrivilegeLevel());*/
+
 
 		return po;
 	}
+
+    public static final UserPO convertOnlyForUpdate(User dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        UserPO po = new UserPO();
+        po.setUserName(dto.getUserName());
+        po.setPassword(dto.getPassword());
+        po.setStatusCode(dto.getStatusCode());
+        po.setStatusDate(dto.getStatusDate());
+        po.setAccountStatus(dto.getAccountStatus());
+        po.setPrivilegeLevel(dto.getPrivilegeLevel());
+
+        return po;
+    }
 
     /** Convert StatusPO to Status DTO object.
     *

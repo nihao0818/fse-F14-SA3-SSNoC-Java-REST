@@ -18,6 +18,7 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -65,27 +66,27 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         stmtInsertUser.execute();
 
         PreparedStatement stmtInsertChat = conn.prepareStatement(SQL.INSERT_CHAT);
-        stmtInsertChat.setString(1, "D");
+        stmtInsertChat.setString(1, "4");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "E");
+        stmtInsertChat.setString(3, "5");
         stmtInsertChat.setString(4, "2014-10-01 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
-        stmtInsertChat.setString(1, "B");
+        stmtInsertChat.setString(1, "2");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "D");
+        stmtInsertChat.setString(3, "4");
         stmtInsertChat.setString(4, "2014-10-05 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
-        stmtInsertChat.setString(1, "A");
+        stmtInsertChat.setString(1, "1");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "C");
+        stmtInsertChat.setString(3, "3");
         stmtInsertChat.setString(4, "2014-10-10 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
-        stmtInsertChat.setString(1, "C");
+        stmtInsertChat.setString(1, "3");
         stmtInsertChat.setString(2, "CHAT");
-        stmtInsertChat.setString(3, "A");
+        stmtInsertChat.setString(3, "1");
         stmtInsertChat.setString(4, "2014-10-15 14:33");
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
@@ -194,10 +195,10 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         clusters.add(cluster5);
         clusters.add(cluster6);
 
-        //List<List<String>> result = analysisTest.analyzeSocialNetwork(startTime, endTime);
+        List<List<String>> result = analysisTest.analyzeSocialNetwork(startTime, endTime);
 
 
-        //assertTrue(clusters.containsAll(result)&&result.containsAll(clusters));
+        assertTrue(clusters.containsAll(result)&&result.containsAll(clusters));
     }
 
     @After

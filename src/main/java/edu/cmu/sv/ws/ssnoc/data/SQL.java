@@ -5,8 +5,7 @@ package edu.cmu.sv.ws.ssnoc.data;
  * easy maintenance.
  * 
  */
-public class SQL {
-    /*
+public class SQL {    /*
      * List the USERS table name, and list all queries related to this table
      * here.
      */
@@ -58,28 +57,25 @@ public class SQL {
      ****************************************************/
     //USERS table
     public static final String FIND_ALL_USERS = "select user_id, " +
-            "user_name, password, last_status_code, last_status_date,"
-            + " salt,"
-            + " account_status, privilege_level"
-            + " from "
+            "user_name, password, last_status_code, last_status_date, "
+            + " salt " + " from "
             + SSN_USERS+
             " order by user_name";
 
     public static final String FIND_USER_BY_NAME = "select user_id, " +
             " user_name, password, last_status_code, last_status_date, "
-            + " salt,"
-            + " account_status, privilege_level"
+            + " salt "
             + " from "
             + SSN_USERS
             + " where UPPER(user_name) = UPPER(?)";
 
-    public static final String FIND_USER_BY_ID = "select user_id, " +    //Tangent added, 10/28/2014
+    public static final String FIND_USER_BY_ID = "select user_id, " +
             " user_name, password, last_status_code, last_status_date, "
             + " salt,"
             + " account_status," + " privilege_level"
             + " from "
             + SSN_USERS
-            + " where UPPER(user_id) = UPPER(?)";
+            + " where UPPER(user_id) = UPPER(?)";  //Tangent added, 10/28/2014
 
     //STATUS table
     public static final String FIND_STATUS_BY_CRUMB = "select status_id,user_name, status_code, status_date"
@@ -153,9 +149,10 @@ public class SQL {
     //USERS table
     public static final String UPDATE_STATUS = "update "+SSN_USERS+
             " SET last_status_code = ? , last_status_date =? where UPPER(user_id) = UPPER(?)";
+
     public static final String UPDATE_USER_PROFILE = "update "+SSN_USERS+
             " SET user_name = ? , password = ? , modifiedAt = ? , salt = ? , account_status = ? , privilege_level = ?"
-            +" where UPPER(user_id) = UPPER(?)";
+            +" where UPPER(user_id) = UPPER(?)"; //Tangent added, 10/28/2014
 
     /*******************************************************
      All DELETE/TRUNCATE

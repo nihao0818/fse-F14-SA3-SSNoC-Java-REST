@@ -173,8 +173,7 @@ public class UserService extends BaseService {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/changeProfile")
-    public User administerUserProfile(User updatedUser) {
-    //public Response administerUserProfile(User updatedUser) {
+    public Response administerUserProfile(User updatedUser) {
         Log.enter(updatedUser);
         User resp = new User();
 
@@ -186,7 +185,7 @@ public class UserService extends BaseService {
                 return null;
             }
 
-            UserPO updatedPO = ConverterUtils.convert(updatedUser);
+            UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
 
             existingUserPO.setUserName(updatedPO.getUserName());
             existingUserPO.setPassword(updatedPO.getPassword()); //remember to check the rule of password, though it should be front end work.
@@ -197,17 +196,14 @@ public class UserService extends BaseService {
             dao.updateUserProfile(existingUserPO);
             resp = ConverterUtils.convert(updatedPO); //convert to dto
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             handleException(e);
-        }
-        finally {
+        } finally {
             Log.exit();
         }
 
-        //return created(resp);
-        return resp;
-
+        return created(resp);
+        //return "ok";
     }
 
 

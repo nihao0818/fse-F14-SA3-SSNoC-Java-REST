@@ -1,7 +1,6 @@
 package edu.cmu.sv.ws.ssnoc.dto;
 
 import com.google.gson.Gson;
-import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
 
 /**
  * This object contains user information that is responded as part of the REST
