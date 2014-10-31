@@ -72,7 +72,7 @@ public class SearchDAOImpl extends BaseDAOImpl implements ISearchDAO {
             Log.exit(res);
         }
         res = res.substring(0, res.length()-1);
-        res = res + "]";
+        if(!res.equals("")){res = res + "]";}
         return res;
     }
     
