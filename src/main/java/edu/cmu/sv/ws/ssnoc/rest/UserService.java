@@ -179,6 +179,7 @@ public class UserService extends BaseService {
     //public String administerUserProfile(User updatedUser) {
 
         Log.enter(updatedUser);
+        User resp = new User();
 
         try {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
@@ -191,14 +192,22 @@ public class UserService extends BaseService {
             //UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
             UserPO updatedPO = ConverterUtils.convert(updatedUser);
 
-
-            existingUserPO.setUserName(updatedPO.getUserName());
             existingUserPO.setPassword(updatedPO.getPassword());
             existingUserPO = SSNCipher.encryptPassword(existingUserPO);
             existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
             existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
 
-            dao.updateUserProfile(existingUserPO);
+            if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
+                existingUserPO.setUserName(updatedPO.getUserName());
+                dao.updateUserProfile(existingUserPO);
+                resp = ConverterUtils.convert(updatedPO);
+                return created(resp);
+            }
+            else{
+                dao.updateUserProfile(existingUserPO);
+                resp = ConverterUtils.convert(updatedPO);
+            }
+
 
         } catch (Exception e) {
             handleException(e);
@@ -206,9 +215,11 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        return ok();
+        return ok(resp);
         //return "ok";
     }
+
+
 
 
 }

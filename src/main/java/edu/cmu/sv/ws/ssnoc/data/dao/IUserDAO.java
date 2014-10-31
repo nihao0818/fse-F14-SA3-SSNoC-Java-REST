@@ -100,5 +100,13 @@ public interface IUserDAO {
      */
     UserPO findByUserID(long userId);
 
+    /**
+     * This method will load all active users in the
+     * database.
+     *
+     * @return - List of all active users.
+     */
+    public List<UserPO> loadActiveUsers();
+
 
 }

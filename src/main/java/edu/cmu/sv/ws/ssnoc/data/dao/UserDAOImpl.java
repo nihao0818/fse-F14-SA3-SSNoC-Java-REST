@@ -461,4 +461,23 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return users;
     }
 
+    public List<UserPO> loadActiveUsers() {
+        Log.enter();
+
+        String query = SQL.FIND_ACTIVE_USERS;
+
+        List<UserPO> activeUsers = new ArrayList<UserPO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "1".toUpperCase()); //1 for active, 0 for inactive
+            activeUsers = processResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(activeUsers);
+        }
+
+        return activeUsers;
+
+    }
+
 }

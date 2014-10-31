@@ -80,6 +80,15 @@ public class SQL {    /*
             + SSN_USERS
             + " where UPPER(user_id) = UPPER(?)";  //Tangent added, 10/28/2014
 
+    public static final String FIND_ACTIVE_USERS = "select user_id, " +
+            "user_name, password, last_status_code, last_status_date, "
+            + " salt,"
+            + " account_status," + " privilege_level"
+            + " from "
+            + SSN_USERS
+            + " where UPPER(account_status) = UPPER(?)"+
+            " order by user_name";  //Tangent added, 10/30/2014
+
     //STATUS table
     public static final String FIND_STATUS_BY_CRUMB = "select status_id,user_name, status_code, status_date"
             +" from "
@@ -99,11 +108,28 @@ public class SQL {    /*
             "UPPER(message_type)='WALL' "
             +"order by postedAt";
 
+    public static final String FIND_VISIBLE_WALL_MESSAGES = "select u1.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"
+            +" where author_id=u1.user_id and "+
+            "UPPER(message_type)='WALL' and "+
+            "UPPER(account_status)='1' "
+            +"order by postedAt";  //Tangent added, 10/30/2014
+
     public static final String FIND_CHAT_MESSAGES = "select u1.user_name, u2.user_name, content, postedAt"
             +" from "
             + SSN_CHAT+","+SSN_USERS+" u1"+","+SSN_USERS+" u2"
             +" where author_id=u1.user_id and target_id=u2.user_id and " +
             "UPPER(message_type)='CHAT' "
+            +"and ((UPPER(author_id) = UPPER(?) and UPPER(target_id) = UPPER(?)) OR (UPPER(target_id) = UPPER(?) and UPPER(author_id) = UPPER(?)))"
+            +" order by postedAt";
+
+    public static final String FIND_VISIBLE_CHAT_MESSAGES = "select u1.user_name, u2.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"+","+SSN_USERS+" u2"
+            +" where author_id=u1.user_id and target_id=u2.user_id and " +
+            "UPPER(message_type)='CHAT' "
+            +"and UPPER(u1.account_status)='1' and UPPER(u2.account_status)='1' "
             +"and ((UPPER(author_id) = UPPER(?) and UPPER(target_id) = UPPER(?)) OR (UPPER(target_id) = UPPER(?) and UPPER(author_id) = UPPER(?)))"
             +" order by postedAt";
 
@@ -128,6 +154,14 @@ public class SQL {    /*
             + SSN_CHAT+","+SSN_USERS+" u1"
             +" where author_id=u1.user_id and "+
             "UPPER(message_type)='ANNOUNCEMENT' "
+            +"order by postedAt";
+    //ANNOUNCEMENTS table
+    public static final String FIND_VISIBLE_ANNOUNCEMENTS = "select u1.user_name, content, postedAt"
+            +" from "
+            + SSN_CHAT+","+SSN_USERS+" u1"
+            +" where author_id=u1.user_id and "+
+            "UPPER(message_type)='ANNOUNCEMENT' and "+
+            "UPPER(account_status)='1' "
             +"order by postedAt";
 
     /********************************************************
