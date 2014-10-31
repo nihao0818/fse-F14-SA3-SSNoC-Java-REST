@@ -20,8 +20,8 @@ public class AdministerServiceTest {
     @Before
     public void setUpUserData(){
 
-        testUpdatedOne.setUserid(1);
-        testUpdatedOne.setUserName("newName");
+        //testUpdatedOne.setUserid(1);
+        testUpdatedOne.setUserName("ahaha");
         testUpdatedOne.setPassword("newPassword");
         testUpdatedOne.setAccountStatus("1");
         testUpdatedOne.setPrivilegeLevel("Administrator");
@@ -32,8 +32,8 @@ public class AdministerServiceTest {
     public void administerUserProfile(){
 
         UserService administerTest = new UserService();
-        //String result = administerTest.administerUserProfile(testUpdatedOne);
-        //assertTrue(result.equals("ok"));
+        String result = administerTest.administerUserProfile("HelloBaby", testUpdatedOne);
+        assertTrue(result.equals("created"));
 
     }
 

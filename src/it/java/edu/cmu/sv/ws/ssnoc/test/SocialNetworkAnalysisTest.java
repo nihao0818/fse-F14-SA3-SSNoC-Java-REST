@@ -15,11 +15,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import com.google.gson.Gson;
+
+
 
 
 
@@ -195,10 +199,28 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         clusters.add(cluster5);
         clusters.add(cluster6);
 
-        //List<List<String>> result = analysisTest.analyzeSocialNetwork(startTime, endTime);
+
+        Response result = analysisTest.analyzeSocialNetwork(startTime, endTime);
+        String res = result.getEntity().toString();
+        System.out.println(res);
+
+        String ans = "[";
+        for(int i= 0; i < clusters.size();i++){
+            ans += "[";
+            for(int j=0; j < clusters.get(i).size(); j++){
+                ans += "\"";
+                ans += clusters.get(i).get(j);
+                ans += "\", ";
+            }
+            ans.substring(0,ans.length()-2);
+            ans += "], ";
+        }
+        ans.substring(0,ans.length()-2);
+        ans += "]";
 
 
-        //assertTrue(clusters.containsAll(result)&&result.containsAll(clusters));
+//        assertTrue(clusters.containsAll(result) && result.containsAll(clusters));
+        assertEquals(res,ans);
     }
 
     @After

@@ -174,16 +174,16 @@ public class UserService extends BaseService {
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @Path("/changeProfile")
-    public Response administerUserProfile(User updatedUser) {
-    //public String administerUserProfile(User updatedUser) {
+    @Path("/{userName}")
+    //public Response administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
+    public String administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
 
         Log.enter(updatedUser);
         User resp = new User();
 
         try {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
-            UserPO existingUserPO = dao.findByUserID(updatedUser.getUserid());
+            UserPO existingUserPO = dao.findByName(userName);
 
             if (existingUserPO == null) {
                 return null;
@@ -201,7 +201,8 @@ public class UserService extends BaseService {
                 existingUserPO.setUserName(updatedPO.getUserName());
                 dao.updateUserProfile(existingUserPO);
                 resp = ConverterUtils.convert(updatedPO);
-                return created(resp);
+                //return created(resp);
+                return "created";
             }
             else{
                 dao.updateUserProfile(existingUserPO);
@@ -215,8 +216,8 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        return ok(resp);
-        //return "ok";
+        //return ok(resp);
+        return "ok";
     }
 
 
