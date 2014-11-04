@@ -366,7 +366,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
 
     @Override
-    public void updateUserProfile (UserPO userPO) {
+    public void updateUserProfile (UserPO oldUserDetail, UserPO userPO) {
         Log.enter(userPO);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date dateobj = new Date();
@@ -383,7 +383,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             stmt.setString(4, userPO.getSalt());
             stmt.setString(5, userPO.getAccountStatus());
             stmt.setString(6, userPO.getPrivilegeLevel());
-            stmt.setLong(7, userPO.getUserId());
+            stmt.setLong(7, oldUserDetail.getUserId());
 
 
             int rowCount = stmt.executeUpdate();

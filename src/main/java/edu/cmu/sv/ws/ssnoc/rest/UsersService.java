@@ -35,6 +35,7 @@ public class UsersService extends BaseService {
 		List<User> users = null;
 		try {
 			List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
+            System.out.println(userPOs);
 
 			users = new ArrayList<User>();
 			for (UserPO po : userPOs) {

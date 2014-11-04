@@ -165,7 +165,7 @@ public class UserService extends BaseService {
 	}
 
     /**
-     * Update a certain user profile. Created by Tangnet on 10/24/14.
+     * Update a certain user profile. Created by Tangent on 10/24/14.
      *
      * @param updatedUser
      *            - User
@@ -182,33 +182,58 @@ public class UserService extends BaseService {
         User resp = new User();
 
         try {
-            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
-            UserPO existingUserPO = dao.findByName(userName);
+            //getting current details of user
+            UserPO po = loadExistingUser(userName);
 
-            if (existingUserPO == null) {
+            if (po == null) {
                 Log.warn("No existing user.");
                 return null;
             }
 
-            //UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
-            UserPO updatedPO = ConverterUtils.convert(updatedUser);
 
-            existingUserPO.setPassword(updatedPO.getPassword());
-            existingUserPO = SSNCipher.encryptPassword(existingUserPO);
-            existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
-            existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
+            //checking if all user details are updated or else fill them with existing user details
+            if(updatedUser.getUserName()==""){
+                updatedUser.setUserName(po.getUserName());
+            }
+            if(updatedUser.getPassword()==""){
+                SecretKey key = SSNCipher.getKey(StringUtils.convertHexToBytes(po
+                        .getSalt()));
+                updatedUser.setPassword(SSNCipher.decrypt(
+                        StringUtils.convertHexToBytes(po.getPassword()), key));
+            }
+            if(updatedUser.getAccountStatus()==""){
+                updatedUser.setAccountStatus(po.getAccountStatus());
+            }
+            if(updatedUser.getPrivilegeLevel()==""){
+                updatedUser.setPrivilegeLevel(po.getPrivilegeLevel());
+            }
+            //converting the dto to po
+            UserPO newUserDetails = ConverterUtils.convert(updatedUser);
 
-            if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
-                existingUserPO.setUserName(updatedPO.getUserName());
-                dao.updateUserProfile(existingUserPO);
-                resp = ConverterUtils.convert(updatedPO);
-                return created(resp);
-                //return "created";
-            }
-            else{
-                dao.updateUserProfile(existingUserPO);
-                resp = ConverterUtils.convert(updatedPO);
-            }
+            //encrypting the password
+            newUserDetails = SSNCipher.encryptPassword(newUserDetails);
+
+            //updating the details
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.updateUserProfile(po,newUserDetails);
+
+                            //UserPO updatedPO = ConverterUtils.convert(updatedUser);
+
+                            //existingUserPO.setPassword(updatedPO.getPassword());
+                            //existingUserPO = SSNCipher.encryptPassword(existingUserPO);
+                            //existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
+                            //existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
+
+                            /*if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
+                                existingUserPO.setUserName(updatedPO.getUserName());
+                                dao.updateUserProfile(existingUserPO);
+                                resp = ConverterUtils.convert(updatedPO);
+                                return created(resp);
+                            }
+                            else{
+                                dao.updateUserProfile(existingUserPO);
+                                resp = ConverterUtils.convert(updatedPO);
+                            }*/
 
 
         } catch (Exception e) {
@@ -217,8 +242,14 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        return ok(resp);
-        //return "ok";
+        if(updatedUser.getUserName()==userName){
+            return ok(updatedUser);
+            //return "ok";
+        }
+        else{
+            return created(updatedUser);
+        }
+
     }
 
 
