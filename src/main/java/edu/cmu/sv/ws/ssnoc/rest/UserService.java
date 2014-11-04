@@ -190,7 +190,6 @@ public class UserService extends BaseService {
                 return null;
             }
 
-
             //checking if all user details are updated or else fill them with existing user details
             if(updatedUser.getUserName()==""){
                 updatedUser.setUserName(po.getUserName());
@@ -216,25 +215,6 @@ public class UserService extends BaseService {
             //updating the details
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
             dao.updateUserProfile(po,newUserDetails);
-
-                            //UserPO updatedPO = ConverterUtils.convert(updatedUser);
-
-                            //existingUserPO.setPassword(updatedPO.getPassword());
-                            //existingUserPO = SSNCipher.encryptPassword(existingUserPO);
-                            //existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
-                            //existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
-
-                            /*if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
-                                existingUserPO.setUserName(updatedPO.getUserName());
-                                dao.updateUserProfile(existingUserPO);
-                                resp = ConverterUtils.convert(updatedPO);
-                                return created(resp);
-                            }
-                            else{
-                                dao.updateUserProfile(existingUserPO);
-                                resp = ConverterUtils.convert(updatedPO);
-                            }*/
-
 
         } catch (Exception e) {
             handleException(e);
