@@ -177,11 +177,11 @@ public class UserService extends BaseService {
     @Path("/{userName}")
     public Response administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
 
+
         Log.enter(updatedUser);
         User resp = new User();
 
         try {
-
             //getting current details of user
             UserPO po = loadExistingUser(userName);
 
@@ -192,27 +192,20 @@ public class UserService extends BaseService {
                             }*/
 
             //checking if all user details are updated or else fill them with existing user details
-            System.out.println("old"+updatedUser.getUserName());
-            System.out.println("old"+updatedUser.getAccountStatus());
-            System.out.println("old"+updatedUser.getPrivilegeLevel());
-
 
             if(updatedUser.getUserName()==""){
                 updatedUser.setUserName(po.getUserName());
             }
             if(updatedUser.getPassword()==""){
-                System.out.println("old"+updatedUser.getPassword());
                 SecretKey key = SSNCipher.getKey(StringUtils.convertHexToBytes(po
                         .getSalt()));
                 updatedUser.setPassword(SSNCipher.decrypt(
                         StringUtils.convertHexToBytes(po.getPassword()), key));
             }
             if(updatedUser.getAccountStatus()==""){
-                System.out.println("old"+updatedUser.getAccountStatus());
                 updatedUser.setAccountStatus(po.getAccountStatus());
             }
             if(updatedUser.getPrivilegeLevel()==""){
-                System.out.println("old"+updatedUser.getPrivilegeLevel());
                 updatedUser.setPrivilegeLevel(po.getPrivilegeLevel());
             }
             //converting the dto to po
@@ -251,6 +244,7 @@ public class UserService extends BaseService {
         }
 
         return ok(resp);
+
     }
 
 
