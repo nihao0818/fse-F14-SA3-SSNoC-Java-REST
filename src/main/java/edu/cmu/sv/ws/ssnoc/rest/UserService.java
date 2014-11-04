@@ -64,6 +64,8 @@ public class UserService extends BaseService {
 
 			UserPO po = ConverterUtils.convert(user);
 			po = SSNCipher.encryptPassword(po);
+            po.setAccountStatus("1"); //default value, Tangent edited, 10/30/2014
+            po.setPrivilegeLevel("Citizen"); //default value, Tangent edited, 10/30/2014
 
 			dao.save(po);
 			resp = ConverterUtils.convert(po);
@@ -161,6 +163,97 @@ public class UserService extends BaseService {
 
 		return user;
 	}
+
+    /**
+     * Update a certain user profile. Created by Tangent on 10/24/14.
+     *
+     * @param updatedUser
+     *            - User
+     * @return - Details of the User
+     */
+    @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/{userName}")
+    public Response administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
+
+        Log.enter(updatedUser);
+        User resp = new User();
+
+        try {
+
+            //getting current details of user
+            UserPO po = loadExistingUser(userName);
+
+                            /*UserPO existingUserPO = dao.findByUserID(updatedUser.getUserid());
+
+                            if (existingUserPO == null) {
+                                return null;
+                            }*/
+
+            //checking if all user details are updated or else fill them with existing user details
+            System.out.println("old"+updatedUser.getUserName());
+            System.out.println("old"+updatedUser.getAccountStatus());
+            System.out.println("old"+updatedUser.getPrivilegeLevel());
+
+
+            if(updatedUser.getUserName()==""){
+                updatedUser.setUserName(po.getUserName());
+            }
+            if(updatedUser.getPassword()==""){
+                System.out.println("old"+updatedUser.getPassword());
+                SecretKey key = SSNCipher.getKey(StringUtils.convertHexToBytes(po
+                        .getSalt()));
+                updatedUser.setPassword(SSNCipher.decrypt(
+                        StringUtils.convertHexToBytes(po.getPassword()), key));
+            }
+            if(updatedUser.getAccountStatus()==""){
+                System.out.println("old"+updatedUser.getAccountStatus());
+                updatedUser.setAccountStatus(po.getAccountStatus());
+            }
+            if(updatedUser.getPrivilegeLevel()==""){
+                System.out.println("old"+updatedUser.getPrivilegeLevel());
+                updatedUser.setPrivilegeLevel(po.getPrivilegeLevel());
+            }
+            //converting the dto to po
+            UserPO newUserDetails = ConverterUtils.convert(updatedUser);
+
+            //encrypting the password
+            newUserDetails = SSNCipher.encryptPassword(newUserDetails);
+
+            //updating the details
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.updateUserProfile(po,newUserDetails);
+
+                            //UserPO updatedPO = ConverterUtils.convert(updatedUser);
+
+                            //existingUserPO.setPassword(updatedPO.getPassword());
+                            //existingUserPO = SSNCipher.encryptPassword(existingUserPO);
+                            //existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
+                            //existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
+
+                            /*if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
+                                existingUserPO.setUserName(updatedPO.getUserName());
+                                dao.updateUserProfile(existingUserPO);
+                                resp = ConverterUtils.convert(updatedPO);
+                                return created(resp);
+                            }
+                            else{
+                                dao.updateUserProfile(existingUserPO);
+                                resp = ConverterUtils.convert(updatedPO);
+                            }*/
+
+
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+        return ok(resp);
+    }
+
+
 
 
 }

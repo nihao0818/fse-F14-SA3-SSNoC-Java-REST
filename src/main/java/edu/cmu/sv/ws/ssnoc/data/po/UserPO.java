@@ -16,6 +16,8 @@ public class UserPO {
     private String statusCode;
     private String statusDate;
     private String salt;
+    private String accountStatus;
+    private String privilegeLevel;
 
 	public long getUserId() {
 		return userId;
@@ -56,6 +58,14 @@ public class UserPO {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
+
+    public String getAccountStatus() { return accountStatus; }
+
+    public void setAccountStatus(String accountStatus) { this.accountStatus = accountStatus;}
+
+    public String getPrivilegeLevel() { return privilegeLevel;}
+
+    public void setPrivilegeLevel(String privilegeLevel) { this.privilegeLevel = privilegeLevel; }
 
 	@Override
 	public String toString() {

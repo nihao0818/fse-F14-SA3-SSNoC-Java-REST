@@ -279,4 +279,58 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         return announcements;
     }
 
+    @Override
+    public List<ExchangeInfoPO> loadVisibleWallMessages(){
+        Log.enter();
+
+        String query = SQL.FIND_VISIBLE_WALL_MESSAGES;
+
+        List<ExchangeInfoPO> wallMessages = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            wallMessages = processWallMessages(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(wallMessages);
+        }
+        return wallMessages;
+    }
+
+    @Override
+    public List<ExchangeInfoPO> loadVisibleAnnouncements(){
+        Log.enter();
+
+        String query = SQL.FIND_VISIBLE_ANNOUNCEMENTS;
+
+        List<ExchangeInfoPO> announcements = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            announcements = processAllAnnouncements(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(announcements);
+        }
+        return announcements;
+    }
+
+    @Override
+    public List<ExchangeInfoPO> loadVisibleChatMessages(UserPO po1, UserPO po2){
+        Log.enter();
+
+        List<ExchangeInfoPO> visibleChatMessages = new ArrayList<>();
+        try(Connection conn= getConnection();
+            PreparedStatement stmt = conn
+                    .prepareStatement(SQL.FIND_VISIBLE_CHAT_MESSAGES)) {
+            stmt.setLong(1, po1.getUserId());
+            stmt.setLong(2, po2.getUserId());
+            stmt.setLong(3, po1.getUserId());
+            stmt.setLong(4, po2.getUserId());
+            visibleChatMessages = processChatMessages(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(visibleChatMessages);
+        }
+        return visibleChatMessages;
+    }
+
 }

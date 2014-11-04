@@ -36,5 +36,10 @@ public interface IMessageDAO {
 
     List<ExchangeInfoPO> loadChatBuddies(UserPO po);
 
+    List<ExchangeInfoPO> loadVisibleWallMessages();
+
+    List<ExchangeInfoPO> loadVisibleAnnouncements();
+
+    List<ExchangeInfoPO> loadVisibleChatMessages(UserPO po1, UserPO po2);
 
 }

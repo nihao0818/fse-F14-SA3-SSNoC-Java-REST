@@ -30,7 +30,9 @@ public class  SocialNetworkAnalysis extends BaseService{
 	@Produces({ MediaType.APPLICATION_JSON })
     @Path("/unconnected/{startTime}/{endTime}")
     public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
-        Log.enter();
+    //public List<List<String>> analyzeSocialNetwork(String startTime, String endTime){
+
+            Log.enter();
 
         List<List<String>> clusters = new ArrayList<List<String>>();
         List<String> allUsers = loadAllUsers();
