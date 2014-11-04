@@ -33,8 +33,8 @@ public class AdministerServiceTest {
     public void administerUserProfile(){
 
         UserService administerTest = new UserService();
-        //String result = administerTest.administerUserProfile("ahaha", testUpdatedOne);
-        //assertTrue(result.equals("ok"));
+        String result = administerTest.administerUserProfile("HelloBaby", testUpdatedOne);
+        assertTrue(result.equals("created"));
 
     }
 

@@ -222,12 +222,13 @@ public class UserService extends BaseService {
             Log.exit();
         }
 
-        if(updatedUser.getUserName()==userName){
+        if(updatedUser.getUserName().equals(userName)){
             return ok(updatedUser);
             //return "ok";
         }
         else{
             return created(updatedUser);
+            //return "created";
         }
 
     }
