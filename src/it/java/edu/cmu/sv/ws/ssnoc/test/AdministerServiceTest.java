@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class AdministerServiceTest {
     User testUpdatedOne = new User();
+    User testUpdatedTwo = new User();
 
     @Before
     public void setUpUserData(){
@@ -32,11 +33,18 @@ public class AdministerServiceTest {
     public void administerUserProfile(){
 
         UserService administerTest = new UserService();
-        String result = administerTest.administerUserProfile("HelloBaby", testUpdatedOne);
-        assertTrue(result.equals("created"));
+        //String result = administerTest.administerUserProfile("ahaha", testUpdatedOne);
+        //assertTrue(result.equals("ok"));
 
     }
 
-   /*@After
-    public void clearTestData(){}*/
+   @After
+    public void recoverTestData(){
+       UserService administerTest = new UserService();
+       testUpdatedTwo.setUserName("HelloBaby");
+       testUpdatedTwo.setPassword("oldone");
+       testUpdatedTwo.setAccountStatus("1");
+       testUpdatedTwo.setPrivilegeLevel("Citizen");
+       administerTest.administerUserProfile("ahaha", testUpdatedTwo);
+   }
 }
