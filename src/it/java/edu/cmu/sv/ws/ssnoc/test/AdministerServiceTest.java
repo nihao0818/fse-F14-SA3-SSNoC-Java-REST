@@ -7,7 +7,6 @@ import edu.cmu.sv.ws.ssnoc.rest.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sun.jvm.hotspot.memory.StringTable;
 
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
