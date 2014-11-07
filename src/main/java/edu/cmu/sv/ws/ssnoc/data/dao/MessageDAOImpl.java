@@ -99,7 +99,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         List<ExchangeInfoPO> chatMessages = new ArrayList<>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
-                .prepareStatement(SQL.FIND_CHAT_MESSAGES)) {
+                    .prepareStatement(SQL.FIND_CHAT_MESSAGES)) {
             stmt.setLong(1, po1.getUserId());
             stmt.setLong(2, po2.getUserId());
             stmt.setLong(3, po1.getUserId());
@@ -138,7 +138,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
         } finally {
             Log.exit(chatMessages);
         }
-    return chatMessages;
+        return chatMessages;
     }
 
     @Override

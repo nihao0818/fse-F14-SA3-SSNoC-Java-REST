@@ -28,14 +28,14 @@ public class AdministerServiceTest {
 
     }
 
-    @Test
-    public void administerUserProfile(){
-
-        UserService administerTest = new UserService();
-        String result = administerTest.administerUserProfile("HelloBaby", testUpdatedOne);
-        assertTrue(result.equals("created"));
-
-    }
+//    @Test
+//    public void administerUserProfile(){
+//
+//        UserService administerTest = new UserService();
+//        String result = administerTest.administerUserProfile("HelloBaby", testUpdatedOne);
+//        assertTrue(result.equals("created"));
+//
+//    }
 
    /*@After
     public void clearTestData(){}*/
