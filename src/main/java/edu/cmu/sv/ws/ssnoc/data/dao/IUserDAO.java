@@ -83,4 +83,30 @@ public interface IUserDAO {
      * @return - all chat pairs of UserPO.
      */
     List<List<UserPO>> loadChatBuddiesByTime(String startTime, String endTime);
+
+    /**
+     * This method will update the information of the user profile into the database.
+     * @param userPO;
+     *            - User information to be updated.
+     */
+    void updateUserProfile(UserPO userPO);
+
+    /**
+     * This method with search for a user by his userId in the database. The
+     * search performed is a case insensitive search to allow case mismatch
+     * situations.
+     * @param userId;
+     *            - User ID to search for.
+     */
+    UserPO findByUserID(long userId);
+
+    /**
+     * This method will load all active users in the
+     * database.
+     *
+     * @return - List of all active users.
+     */
+    public List<UserPO> loadActiveUsers();
+
+
 }

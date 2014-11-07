@@ -33,13 +33,14 @@ public class ExchangeMessageService extends BaseService {
     @Path("/{userName}")
     public Response addWallMessage(@PathParam("userName") String userName, ExchangeInfo message ){
         Log.enter(userName, message);
-
-        ExchangeInfo resp = new ExchangeInfo();
+        final int memoryCheckValue = 2048;//in kb
+        String returnMessage = null;
+      //  ExchangeInfo resp = new ExchangeInfo();
         try {
             UserPO po = null;
-            UserPO performancePO = new UserPO();
 
             if(DBUtils.isPerformaceRunning()){
+                UserPO performancePO = new UserPO();
                 performancePO.setUserName(userName);
                performancePO.setUserId(1);
 
@@ -50,7 +51,7 @@ public class ExchangeMessageService extends BaseService {
                 Log.trace("Inserting message on public wall from.....:"+userName);
 
                 mdao.saveWallMessage(performancePO, einfopo);
-                resp = ConverterUtils.convert(einfopo);
+               // resp = ConverterUtils.convert(einfopo);
             }else{
                 IUserDAO udao = DAOFactory.getInstance().getUserDAO();
                 po = udao.findByName(userName);
@@ -62,7 +63,7 @@ public class ExchangeMessageService extends BaseService {
                 Log.trace("Inserting message on public wall from.....:"+userName);
 
                 mdao.saveWallMessage(po, einfopo);
-                resp = ConverterUtils.convert(einfopo);
+               // resp = ConverterUtils.convert(einfopo);
             }
 
         }
@@ -78,14 +79,21 @@ public class ExchangeMessageService extends BaseService {
 
         long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
 
-        if(freeVMemory<2048)
+        if(freeVMemory<memoryCheckValue)
         {
             Log.trace("freeVMemory working");
-            return ok("Free Memory<2MB");
+            returnMessage="Free Memory<2MB";
+            //return ok("Free Memory<2MB");
+        }else{
+            returnMessage="wall message saved";
+            //return ok("wall message saved");
         }
-        return ok("wall message saved");
+        return ok(returnMessage);
     }
 
+    /**
+     *Exchange Information service to add the Private chat message to the database
+     */
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -116,13 +124,19 @@ public class ExchangeMessageService extends BaseService {
         return created(resp);
     }
 
+    /**
+     * Exchange information service to add announcement to database
+     * @param userName
+     * @param message
+     * @return ok(announcement saved)
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("/announcement/{userName}")
     public Response addAnnouncement(@PathParam("userName") String userName, ExchangeInfo message){
         Log.enter(userName, message);
 
-        ExchangeInfo resp = new ExchangeInfo();
+        //ExchangeInfo resp = new ExchangeInfo();
         try {
             UserPO po = loadExistingUser(userName);
             IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
@@ -132,7 +146,7 @@ public class ExchangeMessageService extends BaseService {
             Log.trace("Inserting announcement from.....:"+userName);
 
             mdao.saveAnnouncement(po, einfopo);
-            resp = ConverterUtils.convert(einfopo);
+            //resp = ConverterUtils.convert(einfopo);
         }catch (Exception e ){
             handleException(e);
         }finally {

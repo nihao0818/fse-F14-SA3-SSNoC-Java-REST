@@ -21,20 +21,21 @@ import edu.cmu.sv.ws.ssnoc.dto.User;
 @Path("/users")
 public class UsersService extends BaseService {
 	/**
-	 * This method loads all active users in the system.
+	 * This method loads all users in the system.
 	 * 
-	 * @return - List of all active users.
+	 * @return - List of all users.
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@XmlElementWrapper(name = "users")
-   @Path("/")
+    @Path("/")
 	public List<User> loadUsers() {
 		Log.enter();
 
 		List<User> users = null;
 		try {
 			List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
+            System.out.println(userPOs);
 
 			users = new ArrayList<User>();
 			for (UserPO po : userPOs) {
@@ -74,6 +75,36 @@ public class UsersService extends BaseService {
             Log.exit(buddies);
         }
         return buddies;
+    }
+
+    /**
+     * This method loads all active users in the system.
+     *
+     * @return - List of all active users.
+     */
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @XmlElementWrapper(name = "activeUsers")
+    @Path("/active")
+    public List<User> loadActiveUsers(){
+        Log.enter();
+
+        List<User> activeUsers = null;
+        try {
+            List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadActiveUsers();
+
+            activeUsers = new ArrayList<User>();
+            for (UserPO po : userPOs) {
+                User dto = ConverterUtils.convert(po);
+                activeUsers.add(dto);
+            }
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+            Log.exit(activeUsers);
+        }
+
+        return activeUsers;
     }
 
 }

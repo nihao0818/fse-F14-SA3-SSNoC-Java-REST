@@ -63,6 +63,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setStatusCode(rs.getString(4));
                 po.setStatusDate(rs.getString(5));
 				po.setSalt(rs.getString(6));
+                po.setAccountStatus(rs.getString(7));  //Tangent edited, 10/30/2014
+                po.setPrivilegeLevel(rs.getString(8)); //Tangent edited, 10/30/2014
 
 				users.add(po);
 			}
@@ -137,8 +139,11 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 			stmt.setString(2, userPO.getPassword());
             stmt.setString(3,df.format(dateobj));
 			stmt.setString(4, userPO.getSalt());
+            stmt.setString(5, userPO.getAccountStatus());//accountStatus
+            stmt.setString(6, userPO.getPrivilegeLevel());//privilegeLevel
 
-			int rowCount = stmt.executeUpdate();
+
+            int rowCount = stmt.executeUpdate();
 			Log.trace("Statement executed, and " + rowCount + " rows inserted.");
 		} catch (SQLException e) {
 			handleException(e);
@@ -358,6 +363,121 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             Log.exit(chatBuddies);
         }
         return chatBuddies;
+    }
+
+    @Override
+    public void updateUserProfile (UserPO userPO) {
+        Log.enter(userPO);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dateobj = new Date();
+        if (userPO == null) {
+            Log.warn("Inside updateUserProfile method with userPO == NULL");
+            return;
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_USER_PROFILE)) {
+            stmt.setString(1, userPO.getUserName());
+            stmt.setString(2, userPO.getPassword());
+            stmt.setString(3,df.format(dateobj)); //modified date
+            stmt.setString(4, userPO.getSalt());
+            stmt.setString(5, userPO.getAccountStatus());
+            stmt.setString(6, userPO.getPrivilegeLevel());
+            stmt.setLong(7, userPO.getUserId());
+
+
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+    }
+
+    @Override
+    public UserPO findByUserID(long userId) {
+        Log.enter(userId);
+
+        if (userId == 0) {
+            Log.warn("Inside findByUserID method with NULL userId.");
+            return null;
+        }
+
+        UserPO po = null;
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.FIND_USER_BY_ID)) {
+            stmt.setLong(1, userId);
+
+            //List<UserPO> users = processUpdateResults(stmt);
+            List<UserPO> users = processResults(stmt);
+
+
+            if (users.size() == 0) {
+                Log.debug("No user account exists with userId = " + userId);
+            } else {
+                po = users.get(0);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(po);
+        }
+
+        return po;
+    }
+
+    private List<UserPO> processUpdateResults(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processResults method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<UserPO> users = new ArrayList<UserPO>();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                UserPO po = new UserPO();
+                po.setUserId(rs.getLong(1));
+                po.setUserName(rs.getString(2));
+                po.setPassword(rs.getString(3));
+                po.setStatusCode(rs.getString(4));
+                po.setStatusDate(rs.getString(5));
+                po.setSalt(rs.getString(6));
+                po.setAccountStatus(rs.getString(7));
+                po.setPrivilegeLevel(rs.getString(8));
+
+                users.add(po);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(users);
+        }
+
+        return users;
+    }
+
+    public List<UserPO> loadActiveUsers() {
+        Log.enter();
+
+        String query = SQL.FIND_ACTIVE_USERS;
+
+        List<UserPO> activeUsers = new ArrayList<UserPO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "1".toUpperCase()); //1 for active, 0 for inactive
+            activeUsers = processResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(activeUsers);
+        }
+
+        return activeUsers;
+
     }
 
 }

@@ -64,6 +64,8 @@ public class UserService extends BaseService {
 
 			UserPO po = ConverterUtils.convert(user);
 			po = SSNCipher.encryptPassword(po);
+            po.setAccountStatus("1"); //default value, Tangent edited, 10/30/2014
+            po.setPrivilegeLevel("Citizen"); //default value, Tangent edited, 10/30/2014
 
 			dao.save(po);
 			resp = ConverterUtils.convert(po);
@@ -161,6 +163,62 @@ public class UserService extends BaseService {
 
 		return user;
 	}
+
+    /**
+     * Update a certain user profile. Created by Tangnet on 10/24/14.
+     *
+     * @param updatedUser
+     *            - User
+     * @return - Details of the User
+     */
+    @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/changeProfile")
+    public Response administerUserProfile(User updatedUser) {
+
+        Log.enter(updatedUser);
+        User resp = new User();
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            UserPO existingUserPO = dao.findByUserID(updatedUser.getUserid());
+
+            if (existingUserPO == null) {
+                return null;
+            }
+
+            //UserPO updatedPO = ConverterUtils.convertOnlyForUpdate(updatedUser);
+            UserPO updatedPO = ConverterUtils.convert(updatedUser);
+
+            existingUserPO.setPassword(updatedPO.getPassword());
+            existingUserPO = SSNCipher.encryptPassword(existingUserPO);
+            existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
+            existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
+
+            if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
+                existingUserPO.setUserName(updatedPO.getUserName());
+                dao.updateUserProfile(existingUserPO);
+                resp = ConverterUtils.convert(updatedPO);
+                return created(resp);
+            }
+            else{
+                dao.updateUserProfile(existingUserPO);
+                resp = ConverterUtils.convert(updatedPO);
+            }
+
+
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+        return ok(resp);
+        //return "ok";
+    }
+
+
 
 
 }

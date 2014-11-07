@@ -13,6 +13,8 @@ public class User {
 	private String password;
     private String statusCode;
     private String statusDate;
+    private String accountStatus;
+    private String privilegeLevel;
 
     public long getUserid() {
         return userid;
@@ -45,6 +47,14 @@ public class User {
     public String getStatusDate(){return statusDate;}
 
     public void setStatusDate(String statusDate){this.statusDate = statusDate;}
+
+    public String getAccountStatus() { return accountStatus; }
+
+    public void setAccountStatus(String accountStatus) { this.accountStatus = accountStatus;}
+
+    public String getPrivilegeLevel() { return privilegeLevel;}
+
+    public void setPrivilegeLevel(String privilegeLevel) { this.privilegeLevel = privilegeLevel; }
 
     @Override
 	public String toString() {

@@ -43,6 +43,33 @@ public class ExchangeInfoService extends BaseService{
         return wallMessages;
 
     }
+   /**
+    * Tangent added, 10/30/2014
+    */
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @XmlElementWrapper(name = "visibleWallMessages")
+    @Path("/wall/visible")
+    public List<ExchangeInfo> loadVisibleWallMessages(){
+        Log.enter();
+
+        List<ExchangeInfo> wallVisibleMessages= null;
+        try{
+            List<ExchangeInfoPO> eInfoPO = DAOFactory.getInstance().getMessageDAO().loadVisibleWallMessages();
+
+            wallVisibleMessages = new ArrayList<>();
+            for(ExchangeInfoPO epo : eInfoPO){
+                ExchangeInfo einfodto = ConverterUtils.convert(epo);
+                wallVisibleMessages.add(einfodto);
+            }
+        } catch (Exception e){
+            handleException(e);
+        } finally {
+            Log.exit(wallVisibleMessages);
+        }
+        return wallVisibleMessages;
+
+    }
 
     @GET
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -99,8 +126,59 @@ public class ExchangeInfoService extends BaseService{
 
     }
 
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @XmlElementWrapper(name = "visibleAnnouncements")
+    @Path("/announcement/visible")
+    public List<ExchangeInfo> loadVisibleAnnouncements(){
+        Log.enter();
+
+        List<ExchangeInfo> visibleAnnouncements= null;
+        try{
+            List<ExchangeInfoPO> eInfoPO = DAOFactory.getInstance().getMessageDAO().loadVisibleAnnouncements();
+
+            visibleAnnouncements = new ArrayList<>();
+            for(ExchangeInfoPO epo : eInfoPO){
+                ExchangeInfo einfodto = ConverterUtils.convert(epo);
+                visibleAnnouncements.add(einfodto);
+            }
+        } catch (Exception e){
+            handleException(e);
+        } finally {
+            Log.exit(visibleAnnouncements);
+        }
+        return visibleAnnouncements;
+
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @XmlElementWrapper(name = "visibleChatMessages")
+    @Path("/{userName1}/{userName2}/visible")
+    public List<ExchangeInfo> loadVisibleChatMessages(@PathParam("userName1") String userName1, @PathParam("userName2") String userName2){
+        Log.enter();
+
+        List<ExchangeInfo> visibleChatMessages = null;
+        UserPO po1 = loadExistingUser(userName1);
+        UserPO po2 = loadExistingUser(userName2);
 
 
+        try{
+            List<ExchangeInfoPO> eInfoPO = DAOFactory.getInstance().getMessageDAO().loadVisibleChatMessages(po1, po2);
 
+            visibleChatMessages = new ArrayList<>();
+            for (ExchangeInfoPO epo: eInfoPO){
+                ExchangeInfo einfodto = ConverterUtils.convert(epo);
+                visibleChatMessages.add(einfodto);
+            }
+
+        } catch (Exception e){
+            handleException(e);
+        } finally {
+            Log.exit(visibleChatMessages);
+        }
+
+        return visibleChatMessages;
+    }
 
 }
