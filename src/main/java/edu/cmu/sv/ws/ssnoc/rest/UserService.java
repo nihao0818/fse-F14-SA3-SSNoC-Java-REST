@@ -6,6 +6,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.h2.util.StringUtils;
+import com.google.gson.Gson;
+
 
 import edu.cmu.sv.ws.ssnoc.common.exceptions.ServiceException;
 import edu.cmu.sv.ws.ssnoc.common.exceptions.UnauthorizedUserException;
@@ -176,7 +178,7 @@ public class UserService extends BaseService {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/{userName}")
     public Response administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
-
+    //public String administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
 
         Log.enter(updatedUser);
         User resp = new User();
@@ -185,14 +187,12 @@ public class UserService extends BaseService {
             //getting current details of user
             UserPO po = loadExistingUser(userName);
 
-                            /*UserPO existingUserPO = dao.findByUserID(updatedUser.getUserid());
-
-                            if (existingUserPO == null) {
-                                return null;
-                            }*/
+            if (po == null) {
+                Log.warn("No existing user.");
+                return null;
+            }
 
             //checking if all user details are updated or else fill them with existing user details
-
             if(updatedUser.getUserName()==""){
                 updatedUser.setUserName(po.getUserName());
             }
@@ -218,32 +218,20 @@ public class UserService extends BaseService {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
             dao.updateUserProfile(po,newUserDetails);
 
-                            //UserPO updatedPO = ConverterUtils.convert(updatedUser);
-
-                            //existingUserPO.setPassword(updatedPO.getPassword());
-                            //existingUserPO = SSNCipher.encryptPassword(existingUserPO);
-                            //existingUserPO.setAccountStatus(updatedPO.getAccountStatus());
-                            //existingUserPO.setPrivilegeLevel(updatedPO.getPrivilegeLevel());
-
-                            /*if(!existingUserPO.getUserName().equals(updatedPO.getUserName())){
-                                existingUserPO.setUserName(updatedPO.getUserName());
-                                dao.updateUserProfile(existingUserPO);
-                                resp = ConverterUtils.convert(updatedPO);
-                                return created(resp);
-                            }
-                            else{
-                                dao.updateUserProfile(existingUserPO);
-                                resp = ConverterUtils.convert(updatedPO);
-                            }*/
-
-
         } catch (Exception e) {
             handleException(e);
         } finally {
             Log.exit();
         }
 
-        return ok(resp);
+        if(updatedUser.getUserName().equals(userName)){
+            return ok(updatedUser);
+            //return "ok";
+        }
+        else{
+            return created(updatedUser);
+            //return "created";
+        }
 
     }
 

@@ -20,6 +20,12 @@ public class SQL {    /*
             + " FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA() "
             + " AND UPPER(TABLE_NAME) = UPPER(?)";
 
+    /**
+     * Query to initialize an Administrator in DB.
+     */
+    public static final String CREATE_INITIAL_ADMINISTRATOR = "insert into " + SSN_USERS
+            + " (user_name, password , created_date, salt, account_status, privilege_level) values ('SSNAdmin', ?, ?, ?, ?, ?)"; //Tangent edited, 10/30/2014
+
     /*****************************************************
      All queries related to CREATIONS
      *****************************************************/

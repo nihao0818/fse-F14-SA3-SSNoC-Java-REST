@@ -1,7 +1,6 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 
@@ -21,11 +20,6 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-
-
-
-
 
 /**
  * Created by YHWH on 10/10/14.
@@ -38,35 +32,42 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     public void setUpTestData() throws Exception{
 
         Connection conn= getConnection();
-        PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
-        stmtCreateUsers.execute();
-        PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
-        stmtCreateChat.execute();
+
         PreparedStatement stmtInsertUser = conn.prepareStatement(SQL.INSERT_USER);
         stmtInsertUser.setString(1, "A");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
         stmtInsertUser.setString(1, "B");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
         stmtInsertUser.setString(1, "C");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
         stmtInsertUser.setString(1, "D");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
         stmtInsertUser.setString(1, "E");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
 
         PreparedStatement stmtInsertChat = conn.prepareStatement(SQL.INSERT_CHAT);
@@ -95,12 +96,6 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         stmtInsertChat.setString(5, "test");
         stmtInsertChat.execute();
 
-
-
-        //result = processResult(stmtCreateUser);
-
-
-
     }
 
     @Test
@@ -118,9 +113,8 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         testData.add(data3);
         testData.add(data4);
         testData.add(data5);
-        //List<User> result = analysisTest.loadAllUsers();
+
         assertEquals(testData, analysisTest.loadAllUsers());
-        //assertTrue(testData.contains(analysisTest.loadAllUsers()));
 
     }
 
@@ -192,17 +186,15 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
             cluster6.add(userC);
             cluster6.add(userE);
 
-        clusters.add(cluster1);
-        clusters.add(cluster2);
-        clusters.add(cluster3);
-        clusters.add(cluster4);
-        clusters.add(cluster5);
         clusters.add(cluster6);
-
+        clusters.add(cluster5);
+        clusters.add(cluster4);
+        clusters.add(cluster3);
+        clusters.add(cluster2);
+        clusters.add(cluster1);
 
         Response result = analysisTest.analyzeSocialNetwork(startTime, endTime);
         String res = result.getEntity().toString();
-        System.out.println(res);
 
         String ans = "[";
         for(int i= 0; i < clusters.size();i++){
@@ -210,25 +202,29 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
             for(int j=0; j < clusters.get(i).size(); j++){
                 ans += "\"";
                 ans += clusters.get(i).get(j);
-                ans += "\", ";
+                ans += "\",";
             }
-            ans.substring(0,ans.length()-2);
-            ans += "], ";
+            ans = ans.substring(0,ans.length()-1);
+            ans += "],";
         }
-        ans.substring(0,ans.length()-2);
+        ans = ans.substring(0,ans.length()-1);
         ans += "]";
 
-
-//        assertTrue(clusters.containsAll(result) && result.containsAll(clusters));
-        assertEquals(res,ans);
+        //assertTrue(clusters.containsAll(result) && result.containsAll(clusters));
+        assertEquals(ans, res);
     }
 
     @After
     public void clearTestData() throws Exception{
         Connection conn= getConnection();
-        String dropTable = "drop table SSN_MESSAGE, SSN_USERS";
+        String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";
         PreparedStatement stmtDrop = conn.prepareStatement(dropTable);
         stmtDrop.execute();
+
+        PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
+        stmtCreateUsers.execute();
+        PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
+        stmtCreateChat.execute();
     }
 
 
