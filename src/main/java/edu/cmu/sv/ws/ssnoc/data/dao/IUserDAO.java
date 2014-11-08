@@ -89,7 +89,7 @@ public interface IUserDAO {
      * @param userPO;
      *            - User information to be updated.
      */
-    void updateUserProfile(UserPO userPO);
+    void updateUserProfile(UserPO oldUserDetail,UserPO userPO);
 
     /**
      * This method with search for a user by his userId in the database. The
