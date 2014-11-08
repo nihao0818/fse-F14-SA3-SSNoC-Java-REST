@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 
+import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
 import edu.cmu.sv.ws.ssnoc.rest.SocialNetworkAnalysis;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 import edu.cmu.sv.ws.ssnoc.dto.User;
@@ -31,6 +32,9 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Before
     public void setUpTestData() throws Exception{
 
+
+
+        DBUtils.setPerformaceRunning();
         Connection conn= getConnection();
 
         PreparedStatement stmtInsertUser = conn.prepareStatement(SQL.INSERT_USER);
@@ -154,8 +158,8 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void analyzeSocialNetworkTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        String startTime = "2014-10-01 00:00";
-        String endTime = "2014-10-31 23:59";
+        String startTime = "1900-10-01 00:5";
+        String endTime = "2014-10-31 23:5";
 
         List<List<String>> clusters = new ArrayList<List<String>>();
 
@@ -216,7 +220,10 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
 
     @After
     public void clearTestData() throws Exception{
-        Connection conn= getConnection();
+
+        //DBUtils.stopPerformanceRunning();
+
+        /*Connection conn= getConnection();
         String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";
         PreparedStatement stmtDrop = conn.prepareStatement(dropTable);
         stmtDrop.execute();
@@ -224,10 +231,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
         stmtCreateUsers.execute();
         PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
-        stmtCreateChat.execute();
+        stmtCreateChat.execute();*/
     }
-
-
-
 
 }
