@@ -19,7 +19,7 @@ import com.eclipsesource.restfuse.annotation.HttpTest;
 public class UserServiceIT {
 	@Rule
 	public Destination destination = new Destination(this,
-			"http://localhost:4321/ssnoc/rest/users");
+			"http://localhost:1234/ssnoc/users");
 
 	@Context
 	public Response response;
@@ -29,11 +29,11 @@ public class UserServiceIT {
 		assertOk(response);
 	}
 
-	@HttpTest(method = Method.POST, path = "/login", type = MediaType.APPLICATION_JSON, 
-			content = "{\"userName\":\"Surya\",\"password\":\"Kiran\"}")
-	public void testInvalidLogin() {
-		assertBadRequest(response);
-		String messg = response.getBody();
-		Assert.assertEquals("Invalid username: Surya", messg);
-	}
+//	@HttpTest(method = Method.POST, path = "/login", type = MediaType.APPLICATION_JSON,
+//			content = "{\"userName\":\"hakan1\",\"password\":\"12345\"}")
+//	public void testInvalidLogin() {
+//		assertBadRequest(response);
+//		String messg = response.getBody();
+//		Assert.assertEquals("Invalid username: Surya", messg);
+//	}
 }
