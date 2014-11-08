@@ -31,9 +31,7 @@ public class  SocialNetworkAnalysis extends BaseService{
     @Path("/unconnected/{startTime}/{endTime}")
     public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
     //public List<List<String>> analyzeSocialNetwork(String startTime, String endTime){
-
             Log.enter();
-
         List<List<String>> clusters = new ArrayList<List<String>>();
         List<String> allUsers = loadAllUsers();
         List<List<String>> buddies = loadChatBuddies(startTime, endTime);
@@ -71,7 +69,7 @@ public class  SocialNetworkAnalysis extends BaseService{
         }
 
         //return clusters;
-
+        Log.trace("helo'",ok(new Gson().toJson(clusters)));
         return ok(new Gson().toJson(clusters));
     }
 

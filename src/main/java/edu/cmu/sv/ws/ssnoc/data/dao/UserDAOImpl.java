@@ -317,7 +317,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     @Override
     public List<List<UserPO>> loadChatBuddiesByTime(String startTime, String endTime){
         Log.enter();
-
         List<List<UserPO>> chatBuddies = new ArrayList<List<UserPO>>();
         try(Connection conn= getConnection();
             PreparedStatement stmt = conn
@@ -333,7 +332,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
     private List<List<UserPO>> processChatBuddiesByTime (PreparedStatement stmt) {
         Log.enter(stmt);
-
         if (stmt == null) {
             Log.warn("Inside processStatuses method with NULL statement object.");
             return null;
@@ -344,6 +342,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         List<List<UserPO>> chatBuddies = new ArrayList<List<UserPO>>();
 
         try (ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 List<UserPO> chatPair = new ArrayList<UserPO>();
 
@@ -351,11 +350,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 UserPO upo2 = new UserPO();
                 upo1.setUserName(rs.getString(2));
                 upo2.setUserName(rs.getString(3));
-
                 chatPair.add(upo1);
                 chatPair.add(upo2);
                 chatBuddies.add(chatPair);
-
             }
         } catch (SQLException e) {
             handleException(e);

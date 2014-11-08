@@ -13,7 +13,6 @@ import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
  * This is the base class for all DAO implementation classes. Common methods
  * like getting a database connection, and closing ResultSets are available in
  * this class.
- * 
  */
 public class BaseDAOImpl {
 	/**

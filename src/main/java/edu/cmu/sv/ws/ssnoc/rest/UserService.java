@@ -178,7 +178,6 @@ public class UserService extends BaseService {
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/{userName}")
     public Response administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
-    //public String administerUserProfile(@PathParam("userName") String userName, User updatedUser) {
 
         Log.enter(updatedUser);
         User resp = new User();
@@ -226,11 +225,9 @@ public class UserService extends BaseService {
 
         if(updatedUser.getUserName().equals(userName)){
             return ok(updatedUser);
-            //return "ok";
         }
         else{
             return created(updatedUser);
-            //return "created";
         }
 
     }
