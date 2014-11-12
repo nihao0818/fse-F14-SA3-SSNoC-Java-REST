@@ -53,13 +53,6 @@ public class PropertyUtils {
 
     public static String PERF_DB_CONN_URL;
 
-    public static String PERF_DB_USERNAME;
-
-    public static String PERF_DB_PASSWORD;
-
-    public static int PERF_DB_CONNECTION_POOL_SIZE;
-
-    public static String PERF_ADMIN_CODE;
 
 	static {
 		Log.trace("Loading properties files ...");
@@ -107,6 +100,10 @@ public class PropertyUtils {
 	 * reason.
 	 */
 	private static void initializeWithDefaultValuesIfNeeded() {
+        if(PERF_DB_CONN_URL == null){
+            Log.warn("Initializing PERF_DB_CONN_URL to system default values ...");
+            PERF_DB_CONN_URL = "jdbc:h2:file:~/h2dbPerf";
+        }
 		if (DB_CONN_URL == null) {
 			Log.warn("Initializing DB_CONN_URL to system default values ...");
 			DB_CONN_URL = "jdbc:h2:file:~/h2db";

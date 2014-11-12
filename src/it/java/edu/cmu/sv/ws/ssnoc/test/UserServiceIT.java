@@ -1,6 +1,7 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
 import static com.eclipsesource.restfuse.Assert.assertBadRequest;
+import static com.eclipsesource.restfuse.Assert.assertNotFound;
 import static com.eclipsesource.restfuse.Assert.assertOk;
 
 import org.junit.Assert;
@@ -19,21 +20,21 @@ import com.eclipsesource.restfuse.annotation.HttpTest;
 public class UserServiceIT {
 	@Rule
 	public Destination destination = new Destination(this,
-			"http://localhost:4321/ssnoc/rest/users");
+			"http://localhost:1234/ssnoc/");
 
 	@Context
 	public Response response;
 
-	@HttpTest(method = Method.GET, path = "/")
+	@HttpTest(method = Method.GET, path = "/users")
 	public void testUsersFound() {
 		assertOk(response);
 	}
 
-	@HttpTest(method = Method.POST, path = "/login", type = MediaType.APPLICATION_JSON, 
-			content = "{\"userName\":\"Surya\",\"password\":\"Kiran\"}")
+	@HttpTest(method = Method.GET, path = "/user/hakan1", type = MediaType.APPLICATION_JSON)
 	public void testInvalidLogin() {
-		assertBadRequest(response);
-		String messg = response.getBody();
-		Assert.assertEquals("Invalid username: Surya", messg);
+//		assertOk(response);
+        assertNotFound(response);
+		//String messg = response.getBody();
+		//Assert.assertEquals("User name not found", messg);
 	}
 }

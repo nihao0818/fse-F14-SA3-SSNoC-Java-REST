@@ -1,9 +1,5 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 
 import edu.cmu.sv.ws.ssnoc.data.dao.UserDAOImpl;
@@ -15,15 +11,15 @@ import edu.cmu.sv.ws.ssnoc.dto.User;
 import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
 
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -33,10 +29,10 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     ExchangeInfo message1, message2, message3, message4;
     User userA, userB, userC,userD, userE;
 
-    @Before
-    public void setUpTestData() throws Exception{
+    @BeforeClass
+    public static void setUpTestData() throws Exception{
 
-        //DBUtils.setPerformaceRunning();
+        DBUtils.setPerformaceRunning();
         Connection conn= getConnection();
 
         PreparedStatement stmtInsertUser = conn.prepareStatement(SQL.INSERT_USER);
@@ -187,13 +183,13 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     //only one available chat
     public void loadOneChatBuddiesTest() {
-        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
 
-        UserDAOImpl loadTest = new UserDAOImpl();
+        //UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-09-01 00:00";
         String endTime = "2014-10-01 23:59";
-        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
-        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+        List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertEquals(1, result.size());
     }
@@ -261,12 +257,12 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         assertEquals(ans, res);
     }
 
-    @After
-    public void clearTestData() throws Exception{
+    @AfterClass
+    public static void clearTestData() throws Exception{
 
-        //DBUtils.stopPerformanceRunning();
 
-        Connection conn= getConnection();
+
+        /*Connection conn= getConnection();
         String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";
         PreparedStatement stmtDrop = conn.prepareStatement(dropTable);
         stmtDrop.execute();
@@ -274,7 +270,8 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
         stmtCreateUsers.execute();
         PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
-        stmtCreateChat.execute();
+        stmtCreateChat.execute();*/
+        DBUtils.stopPerformanceRunning();
     }
 
 }
