@@ -1,6 +1,7 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
 import static com.eclipsesource.restfuse.Assert.assertBadRequest;
+import static com.eclipsesource.restfuse.Assert.assertNotFound;
 import static com.eclipsesource.restfuse.Assert.assertOk;
 
 import org.junit.Assert;
@@ -31,7 +32,8 @@ public class UserServiceIT {
 
 	@HttpTest(method = Method.GET, path = "/user/hakan1", type = MediaType.APPLICATION_JSON)
 	public void testInvalidLogin() {
-		assertOk(response);
+//		assertOk(response);
+        assertNotFound(response);
 		//String messg = response.getBody();
 		//Assert.assertEquals("User name not found", messg);
 	}
