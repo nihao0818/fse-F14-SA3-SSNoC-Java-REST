@@ -33,7 +33,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     public static void setUpTestData() throws Exception{
 
         DBUtils.setPerformaceRunning();
-        Connection conn= getConnection();
+        Connection conn= DBUtils.getConnection();
 
         PreparedStatement stmtInsertUser = conn.prepareStatement(SQL.INSERT_USER);
         stmtInsertUser.setString(1, "A");
@@ -183,13 +183,13 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     //only one available chat
     public void loadOneChatBuddiesTest() {
-        SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
 
-        //UserDAOImpl loadTest = new UserDAOImpl();
+        UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-09-01 00:00";
         String endTime = "2014-10-01 23:59";
-        List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
-        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertEquals(1, result.size());
     }
@@ -259,8 +259,6 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
 
     @AfterClass
     public static void clearTestData() throws Exception{
-
-
 
         /*Connection conn= getConnection();
         String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";

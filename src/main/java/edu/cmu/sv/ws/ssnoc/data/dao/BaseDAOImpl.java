@@ -39,7 +39,7 @@ public class BaseDAOImpl {
 	 * 
 	 * @throws SQLException
 	 */
-	protected static Connection getConnection() throws SQLException {
+	protected Connection getConnection() throws SQLException {
         return DBUtils.getConnection();
 	}
 
