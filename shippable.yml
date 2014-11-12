@@ -7,8 +7,3 @@ after_success:
    - mvn clean cobertura:cobertura
    - mvn test
    - mvn verify
-notifications:
-   email:
-      - Hao.ni@west.cmu.edu
-      - vignan.uppugandla@west.cmu.edu
-      - lucifer_john@yeah.net
