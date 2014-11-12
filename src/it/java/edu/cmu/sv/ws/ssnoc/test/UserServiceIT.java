@@ -24,7 +24,7 @@ public class UserServiceIT {
 	@Context
 	public Response response;
 
-	@HttpTest(method = Method.GET, path = "/")
+	@HttpTest(method = Method.GET, path = "/users")
 	public void testUsersFound() {
 		assertOk(response);
 	}
