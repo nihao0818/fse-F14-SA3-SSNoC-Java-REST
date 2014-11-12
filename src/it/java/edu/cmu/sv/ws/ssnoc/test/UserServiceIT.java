@@ -31,7 +31,7 @@ public class UserServiceIT {
 
 	@HttpTest(method = Method.GET, path = "/user/hakan1", type = MediaType.APPLICATION_JSON)
 	public void testInvalidLogin() {
-		assertOK(response);
+		assertOk(response);
 		//String messg = response.getBody();
 		//Assert.assertEquals("User name not found", messg);
 	}
