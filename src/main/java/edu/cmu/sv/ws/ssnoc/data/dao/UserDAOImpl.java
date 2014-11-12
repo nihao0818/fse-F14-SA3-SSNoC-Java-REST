@@ -408,7 +408,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                      .prepareStatement(SQL.FIND_USER_BY_ID)) {
             stmt.setLong(1, userId);
 
-            //List<UserPO> users = processUpdateResults(stmt);
             List<UserPO> users = processResults(stmt);
 
 
@@ -423,39 +422,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         return po;
-    }
-
-    private List<UserPO> processUpdateResults(PreparedStatement stmt) {
-        Log.enter(stmt);
-
-        if (stmt == null) {
-            Log.warn("Inside processResults method with NULL statement object.");
-            return null;
-        }
-
-        Log.debug("Executing stmt = " + stmt);
-        List<UserPO> users = new ArrayList<UserPO>();
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                UserPO po = new UserPO();
-                po.setUserId(rs.getLong(1));
-                po.setUserName(rs.getString(2));
-                po.setPassword(rs.getString(3));
-                po.setStatusCode(rs.getString(4));
-                po.setStatusDate(rs.getString(5));
-                po.setSalt(rs.getString(6));
-                po.setAccountStatus(rs.getString(7));
-                po.setPrivilegeLevel(rs.getString(8));
-
-                users.add(po);
-            }
-        } catch (SQLException e) {
-            handleException(e);
-        } finally {
-            Log.exit(users);
-        }
-
-        return users;
     }
 
     public List<UserPO> loadActiveUsers() {

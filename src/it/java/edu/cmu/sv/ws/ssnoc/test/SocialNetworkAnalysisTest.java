@@ -1,9 +1,13 @@
 package edu.cmu.sv.ws.ssnoc.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 
+import edu.cmu.sv.ws.ssnoc.data.dao.UserDAOImpl;
+import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
 import edu.cmu.sv.ws.ssnoc.rest.SocialNetworkAnalysis;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
@@ -32,9 +36,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Before
     public void setUpTestData() throws Exception{
 
-
-
-        DBUtils.setPerformaceRunning();
+        //DBUtils.setPerformaceRunning();
         Connection conn= getConnection();
 
         PreparedStatement stmtInsertUser = conn.prepareStatement(SQL.INSERT_USER);
@@ -125,9 +127,22 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void loadChatBuddiesTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        //UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-10-01 00:00";
         String endTime = "2014-10-31 23:59";
 
+        /*UserPO userA = new UserPO();
+        userA.setUserName("A");
+        UserPO userB = new UserPO();
+        userB.setUserName("B");
+        UserPO userC = new UserPO();
+        userC.setUserName("C");
+        UserPO userD = new UserPO();
+        userD.setUserName("D");
+        UserPO userE = new UserPO();
+        userE.setUserName("E");*/
+
+        //List<List<UserPO>> testData = new ArrayList<List<UserPO>>();
         List<List<String>> testData = new ArrayList<List<String>>();
         String userA = "A";
         String userB = "B";
@@ -150,9 +165,37 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         testData.add(data3);
 
         List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertEquals(testData, result);
 
+    }
+
+    @Test
+    //no available chat
+    public void loadNoChatBuddiesTest() {
+        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        UserDAOImpl loadTest = new UserDAOImpl();
+        String startTime = "2014-09-01 00:00";
+        String endTime = "2014-09-31 23:59";
+        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    //only one available chat
+    public void loadOneChatBuddiesTest() {
+        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+
+        UserDAOImpl loadTest = new UserDAOImpl();
+        String startTime = "2014-09-01 00:00";
+        String endTime = "2014-10-01 23:59";
+        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -223,7 +266,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
 
         //DBUtils.stopPerformanceRunning();
 
-        /*Connection conn= getConnection();
+        Connection conn= getConnection();
         String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";
         PreparedStatement stmtDrop = conn.prepareStatement(dropTable);
         stmtDrop.execute();
@@ -231,7 +274,7 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
         stmtCreateUsers.execute();
         PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
-        stmtCreateChat.execute();*/
+        stmtCreateChat.execute();
     }
 
 }

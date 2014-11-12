@@ -69,7 +69,6 @@ public class  SocialNetworkAnalysis extends BaseService{
         }
 
         //return clusters;
-        Log.trace("helo'",ok(new Gson().toJson(clusters)));
         return ok(new Gson().toJson(clusters));
     }
 
