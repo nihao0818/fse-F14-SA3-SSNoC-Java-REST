@@ -30,7 +30,6 @@ public class  SocialNetworkAnalysis extends BaseService{
 	@Produces({ MediaType.APPLICATION_JSON })
     @Path("/unconnected/{startTime}/{endTime}")
     public Response analyzeSocialNetwork(@PathParam("startTime") String startTime, @PathParam("endTime") String endTime){
-    //public List<List<String>> analyzeSocialNetwork(String startTime, String endTime){
             Log.enter();
         List<List<String>> clusters = new ArrayList<List<String>>();
         List<String> allUsers = loadAllUsers();
@@ -58,6 +57,7 @@ public class  SocialNetworkAnalysis extends BaseService{
                     clusters = temp;
                 }
             }
+
             if (clusters.isEmpty()){ return null;}
 
         }
@@ -72,6 +72,12 @@ public class  SocialNetworkAnalysis extends BaseService{
         return ok(new Gson().toJson(clusters));
     }
 
+    /**
+     * get the lists of users in list inside a list based on the startTime and endTime
+     * @param startTime
+     * @param endTime
+     * @return List inside a List with userNames
+     */
     public List<List<String>>loadChatBuddies(String startTime, String endTime) {
         List<String> pair = null;
         List<List<String>> buddies = null;
@@ -95,6 +101,11 @@ public class  SocialNetworkAnalysis extends BaseService{
 
         return buddies;
     }
+
+    /**
+     * get the details of all the Users in the SSNOC Application
+     * @return List of AllUsers in SSNOC
+     */
     public List<String> loadAllUsers() {
         List<String> allUsers = null;
 
