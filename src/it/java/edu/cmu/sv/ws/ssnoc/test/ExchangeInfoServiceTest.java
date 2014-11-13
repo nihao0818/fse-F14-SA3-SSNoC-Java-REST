@@ -31,123 +31,142 @@ public class ExchangeInfoServiceTest {
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
-        stmtInsertUser.setString(5, null);
+        stmtInsertUser.setString(5, "1");
         stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
         stmtInsertUser.setString(1, "B");
         stmtInsertUser.setString(2, null);
         stmtInsertUser.setString(3, null);
         stmtInsertUser.setString(4, null);
+        stmtInsertUser.setString(5, "1");
+        stmtInsertUser.setString(6, null);
+        stmtInsertUser.execute();
+        stmtInsertUser.setString(1, "C");
+        stmtInsertUser.setString(2, null);
+        stmtInsertUser.setString(3, null);
+        stmtInsertUser.setString(4, null);
         stmtInsertUser.setString(5, null);
         stmtInsertUser.setString(6, null);
         stmtInsertUser.execute();
+        
+        
+        ExchangeMessageService EMS = new ExchangeMessageService();
+        String username = "A";
+        ExchangeInfo message = new ExchangeInfo();
+        message.setAuthor("A");
+        message.setContent("wall message from A");
+        Response res = EMS.addWallMessage(username, message);
+        
+        EMS = new ExchangeMessageService();
+        username = "C";
+        message = new ExchangeInfo();
+        message.setAuthor("C");
+        message.setContent("wall message from C");
+        res = EMS.addWallMessage(username, message);
+        
+        EMS = new ExchangeMessageService();
+        username = "A";
+        message = new ExchangeInfo();
+        message.setAuthor("A");
+        message.setContent("announcement message from A");
+        res = EMS.addAnnouncement(username, message);
+        
+        EMS = new ExchangeMessageService();
+        username = "C";
+        message = new ExchangeInfo();
+        message.setAuthor("C");
+        message.setContent("announcement message from C");
+        res = EMS.addAnnouncement(username, message);
+       
+        
+        EMS = new ExchangeMessageService();
+        String username1 = "A";
+        String username2 = "B";
+        message = new ExchangeInfo();
+        message.setAuthor("A");
+        message.setContent("chat from A to B");
+        res = EMS.addChatMessage(username1,username2, message);
+        
+        EMS = new ExchangeMessageService();
+        username1 = "A";
+        username2 = "C";
+        message = new ExchangeInfo();
+        message.setAuthor("A");
+        message.setContent("chat from A to C");
+        res = EMS.addChatMessage(username1,username2, message);
 
 
     }
 
-
-
+    
     @Test
     public void testloadWallMessages() {
 
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username = "A";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addWallMessage(username, message);
-
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
         list = EIS.loadWallMessages();
-
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        
+        assertEquals(list.size(),2);
+        assertEquals(list.get(0).getContent(),"wall message from A");
+        assertEquals(list.get(1).getContent(),"wall message from C");
     }
 
+
+    
     @Test
     public void testloadVisibleWallMessages() {
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username = "A";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addWallMessage(username, message);
 
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
-        list = EIS.loadWallMessages();
+        list = EIS.loadVisibleWallMessages();
 
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        assertEquals(list.size(),2);
+        assertEquals(list.get(0).getContent(),"wall message from A");
     }
 
     @Test
     public void testloadChatMessages() {
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username1 = "A";
-        String username2 = "B";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addChatMessage(username1,username2, message);
 
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
-        list = EIS.loadChatMessages(username1,username2);
+        list = EIS.loadChatMessages("A","B");
 
         assertEquals(list.get(0).getAuthor(),"A");
         assertEquals(list.get(0).getTarget(),"B");
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        assertEquals(list.get(0).getContent(),"chat from A to B");
     }
 
     @Test
     public void testloadVisibleChatMessages() {
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username1 = "A";
-        String username2 = "B";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addChatMessage(username1,username2, message);
 
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
-        list = EIS.loadChatMessages(username1,username2);
+        list = EIS.loadVisibleChatMessages("A","C");
 
-        assertEquals(list.get(0).getAuthor(),"A");
-        assertEquals(list.get(0).getTarget(),"B");
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        assertTrue(list.isEmpty());
     }
 
     @Test
     public void testloadAllAnnouncements() {
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username = "A";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addAnnouncement(username, message);
 
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
         list = EIS.loadAllAnnouncements();
 
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        assertEquals(list.size(),2);
+        assertEquals(list.get(0).getContent(),"announcement message from A");
+        assertEquals(list.get(1).getContent(),"announcement message from C");
     }
 
     @Test
     public void testloadVisibleAnnouncements() {
-        ExchangeMessageService EMS = new ExchangeMessageService();
-        String username = "A";
-        ExchangeInfo message = new ExchangeInfo();
-        message.setAuthor("A");
-        message.setContent("Wallfortest");
-        Response res = EMS.addAnnouncement(username, message);
 
         ExchangeInfoService EIS = new ExchangeInfoService();
         List<ExchangeInfo> list;
-        list = EIS.loadAllAnnouncements();
+        list = EIS.loadVisibleAnnouncements();
 
-        assertEquals(list.get(0).getContent(),"Wallfortest");
+        assertEquals(list.size(),1);
+        assertEquals(list.get(0).getContent(),"announcement message from A");
     }
 
 
