@@ -2,14 +2,8 @@ package edu.cmu.sv.ws.ssnoc.test;
 
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 
-import edu.cmu.sv.ws.ssnoc.data.dao.UserDAOImpl;
-import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
 import edu.cmu.sv.ws.ssnoc.rest.SocialNetworkAnalysis;
-import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
-import edu.cmu.sv.ws.ssnoc.dto.User;
-import edu.cmu.sv.ws.ssnoc.data.dao.BaseDAOImpl;
-
 
 import org.junit.*;
 
