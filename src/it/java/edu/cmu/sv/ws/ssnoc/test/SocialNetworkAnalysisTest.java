@@ -170,27 +170,27 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     //no available chat
     public void loadNoChatBuddiesTest() {
-        SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        //UserDAOImpl loadTest = new UserDAOImpl();
+        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-09-01 00:00";
         String endTime = "2014-09-31 23:59";
-        List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
-        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertTrue(result.isEmpty());
-        assertNull(analysisTest.analyzeSocialNetwork(startTime, endTime));
+        //assertNull(analysisTest.analyzeSocialNetwork(startTime, endTime));
     }
 
     @Test
     //only one available chat
     public void loadOneChatBuddiesTest() {
-        SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
+        //SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
 
-        //UserDAOImpl loadTest = new UserDAOImpl();
+        UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-09-01 00:00";
         String endTime = "2014-10-01 23:59";
-        List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
-        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
+        //List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
+        List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertEquals(1, result.size());
     }
