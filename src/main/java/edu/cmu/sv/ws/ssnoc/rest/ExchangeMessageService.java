@@ -75,19 +75,19 @@ public class ExchangeMessageService extends BaseService {
         }
         Log.trace("Checking Memory Space after the message insertion");
 
-        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+//        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-        long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
+//        long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
 
-        if(freeVMemory<memoryCheckValue)
-        {
-            Log.trace("freeVMemory working");
-            returnMessage="Free Memory<2MB";
-            //return ok("Free Memory<2MB");
-        }else{
+//        if(freeVMemory<memoryCheckValue)
+//        {
+//            Log.trace("freeVMemory working");
+//            returnMessage="Free Memory<2MB";
+//            //return ok("Free Memory<2MB");
+//        }else{
             returnMessage="wall message saved";
             //return ok("wall message saved");
-        }
+//        }
         return ok(returnMessage);
     }
 
