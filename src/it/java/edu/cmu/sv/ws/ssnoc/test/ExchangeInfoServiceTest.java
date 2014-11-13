@@ -120,7 +120,7 @@ public class ExchangeInfoServiceTest {
         List<ExchangeInfo> list;
         list = EIS.loadVisibleWallMessages();
 
-        assertEquals(list.size(),2);
+        assertEquals(list.size(),1);
         assertEquals(list.get(0).getContent(),"wall message from A");
     }
 
