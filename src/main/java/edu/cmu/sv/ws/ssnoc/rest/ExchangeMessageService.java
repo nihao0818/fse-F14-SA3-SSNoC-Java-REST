@@ -39,20 +39,20 @@ public class ExchangeMessageService extends BaseService {
         try {
             UserPO po = null;
 
-            if(DBUtils.isPerformaceRunning()){
-                UserPO performancePO = new UserPO();
-                performancePO.setUserName(userName);
-               performancePO.setUserId(1);
-
-                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
-
-                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
-
-                Log.trace("Inserting message on public wall from.....:"+userName);
-
-                mdao.saveWallMessage(performancePO, einfopo);
-               // resp = ConverterUtils.convert(einfopo);
-            }else{
+//            if(DBUtils.isPerformaceRunning()){
+//                UserPO performancePO = new UserPO();
+//                performancePO.setUserName(userName);
+//               performancePO.setUserId(1);
+//
+//                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+//
+//                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
+//
+//                Log.trace("Inserting message on public wall from.....:"+userName);
+//
+//                mdao.saveWallMessage(performancePO, einfopo);
+//               // resp = ConverterUtils.convert(einfopo);
+//            }else{
                 IUserDAO udao = DAOFactory.getInstance().getUserDAO();
                 po = udao.findByName(userName);
 
@@ -64,7 +64,7 @@ public class ExchangeMessageService extends BaseService {
 
                 mdao.saveWallMessage(po, einfopo);
                // resp = ConverterUtils.convert(einfopo);
-            }
+//            }
 
         }
         catch (Exception e){
