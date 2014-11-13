@@ -102,7 +102,7 @@ public class PropertyUtils {
 	private static void initializeWithDefaultValuesIfNeeded() {
         if(PERF_DB_CONN_URL == null){
             Log.warn("Initializing PERF_DB_CONN_URL to system default values ...");
-            PERF_DB_CONN_URL = "jdbc:h2:file:~/h2dbPerf";
+            PERF_DB_CONN_URL = "jdbc:h2:file:~/h2dbPerf;DB_CLOSE_ON_EXIT=FALSE";
         }
 		if (DB_CONN_URL == null) {
 			Log.warn("Initializing DB_CONN_URL to system default values ...");

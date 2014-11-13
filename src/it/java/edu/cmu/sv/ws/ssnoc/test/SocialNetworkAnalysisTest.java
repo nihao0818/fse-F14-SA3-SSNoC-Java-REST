@@ -25,9 +25,7 @@ import static org.junit.Assert.*;
 /**
  * Created by YHWH on 10/10/14.
  */
-public class SocialNetworkAnalysisTest extends BaseDAOImpl{
-    ExchangeInfo message1, message2, message3, message4;
-    User userA, userB, userC,userD, userE;
+public class SocialNetworkAnalysisTest {
 
     @BeforeClass
     public static void setUpTestData() throws Exception{
@@ -123,22 +121,9 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @Test
     public void loadChatBuddiesTest() {
         SocialNetworkAnalysis analysisTest = new SocialNetworkAnalysis();
-        //UserDAOImpl loadTest = new UserDAOImpl();
         String startTime = "2014-10-01 00:00";
         String endTime = "2014-10-31 23:59";
 
-        /*UserPO userA = new UserPO();
-        userA.setUserName("A");
-        UserPO userB = new UserPO();
-        userB.setUserName("B");
-        UserPO userC = new UserPO();
-        userC.setUserName("C");
-        UserPO userD = new UserPO();
-        userD.setUserName("D");
-        UserPO userE = new UserPO();
-        userE.setUserName("E");*/
-
-        //List<List<UserPO>> testData = new ArrayList<List<UserPO>>();
         List<List<String>> testData = new ArrayList<List<String>>();
         String userA = "A";
         String userB = "B";
@@ -161,7 +146,6 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
         testData.add(data3);
 
         List<List<String>> result = analysisTest.loadChatBuddies(startTime, endTime);
-        //List<List<UserPO>> result = loadTest.loadChatBuddiesByTime(startTime, endTime);
 
         assertEquals(testData, result);
 
@@ -261,15 +245,6 @@ public class SocialNetworkAnalysisTest extends BaseDAOImpl{
     @AfterClass
     public static void clearTestData() throws Exception{
 
-        /*Connection conn= getConnection();
-        String dropTable = "DROP table SSN_USERS; DROP table SSN_MESSAGE";
-        PreparedStatement stmtDrop = conn.prepareStatement(dropTable);
-        stmtDrop.execute();
-
-        PreparedStatement stmtCreateUsers = conn.prepareStatement(SQL.CREATE_USERS);
-        stmtCreateUsers.execute();
-        PreparedStatement stmtCreateChat = conn.prepareStatement(SQL.CREATE_CHAT);
-        stmtCreateChat.execute();*/
         DBUtils.stopPerformanceRunning();
     }
 
