@@ -6,6 +6,7 @@ package edu.cmu.sv.ws.ssnoc.data.dao;
 
 import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
 
 import java.util.List;
 

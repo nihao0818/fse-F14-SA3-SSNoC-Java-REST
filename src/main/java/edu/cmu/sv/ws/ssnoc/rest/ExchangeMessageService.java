@@ -2,7 +2,6 @@ package edu.cmu.sv.ws.ssnoc.rest;
 /**
  * Created by vignan on 10/8/14.
  */
-import com.sun.management.OperatingSystemMXBean;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
@@ -12,11 +11,13 @@ import edu.cmu.sv.ws.ssnoc.data.po.ExchangeInfoPO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.data.util.DBUtils;
 import edu.cmu.sv.ws.ssnoc.dto.ExchangeInfo;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.management.ManagementFactory;
+import java.io.*;
 
 
 @Path("/message")
@@ -39,32 +40,16 @@ public class ExchangeMessageService extends BaseService {
         try {
             UserPO po = null;
 
-//            if(DBUtils.isPerformaceRunning()){
-//                UserPO performancePO = new UserPO();
-//                performancePO.setUserName(userName);
-//               performancePO.setUserId(1);
-//
-//                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
-//
-//                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
-//
-//                Log.trace("Inserting message on public wall from.....:"+userName);
-//
-//                mdao.saveWallMessage(performancePO, einfopo);
-//               // resp = ConverterUtils.convert(einfopo);
-//            }else{
-                IUserDAO udao = DAOFactory.getInstance().getUserDAO();
-                po = udao.findByName(userName);
+            IUserDAO udao = DAOFactory.getInstance().getUserDAO();
+            po = udao.findByName(userName);
 
-                IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+            IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
 
-                ExchangeInfoPO einfopo = ConverterUtils.convert(message);
+            ExchangeInfoPO einfopo = ConverterUtils.convert(message);
 
-                Log.trace("Inserting message on public wall from.....:"+userName);
+            Log.trace("Inserting message on public wall from.....:"+userName);
 
-                mdao.saveWallMessage(po, einfopo);
-               // resp = ConverterUtils.convert(einfopo);
-//            }
+            mdao.saveWallMessage(po, einfopo);
 
         }
         catch (Exception e){
@@ -75,19 +60,7 @@ public class ExchangeMessageService extends BaseService {
         }
         Log.trace("Checking Memory Space after the message insertion");
 
-//        OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-
-//        long freeVMemory = bean.getFreePhysicalMemorySize()/1024;
-
-//        if(freeVMemory<memoryCheckValue)
-//        {
-//            Log.trace("freeVMemory working");
-//            returnMessage="Free Memory<2MB";
-//            //return ok("Free Memory<2MB");
-//        }else{
-            returnMessage="wall message saved";
-            //return ok("wall message saved");
-//        }
+        returnMessage="wall message saved";
         return ok(returnMessage);
     }
 
@@ -153,6 +126,86 @@ public class ExchangeMessageService extends BaseService {
             Log.exit();
         }
         return ok("Announcement saved");
+    }
+
+    /**
+     * This method checks the validity of the user name and if it is valid, adds
+     * it to the database
+     *
+     * @FormDataParam file
+     *            - the file element in html
+     * @return - An result message with the status of the request
+     * added by Tangent on 11/24/2014.
+     */
+    @POST
+    @Path("/{userName}/upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response addWallImg( @PathParam("userName") String userName,
+                                @FormDataParam("thumbnail") InputStream uploadedInputStream,
+                                @FormDataParam("thumbnail") FormDataContentDisposition fileDetail) {
+
+        Log.enter(userName, "upload photo");
+        final int memoryCheckValue = 2048;//in kb
+        try {
+
+            IUserDAO udao = DAOFactory.getInstance().getUserDAO();
+            UserPO po = udao.findByName(userName);
+
+            IMessageDAO mdao = DAOFactory.getInstance().getMessageDAO();
+
+            ExchangeInfoPO einfopo = new ExchangeInfoPO();
+
+            Log.trace("Inserting message on public wall from.....:"+userName);
+
+            // Path format //10.217.14.97/Installables/uploaded/
+            //System.out.println("path::"+path);
+            String path = "\\tmp\\";
+            String uploadedFileLocation = path + fileDetail.getFileName();
+
+            // save it
+            writeToFile(uploadedInputStream, uploadedFileLocation);
+            einfopo.setAuthor(userName);
+            einfopo.setImgPath(uploadedFileLocation);
+
+            mdao.saveWallMessage(po, einfopo);
+
+        }
+        catch (Exception e){
+            handleException(e);
+        }
+        finally {
+            Log.exit();
+        }
+
+        //String output = "File uploaded to : " + uploadedFileLocation;
+
+        Log.trace("Checking Memory Space after the message insertion");
+
+        String returnMessage="wall message saved";
+        return ok(returnMessage);
+        //return created(fileDetail.getFileName());
+        //return Response.status(200).entity("uploadFile is called, Uploaded file name : " + fileName).build();
+
+    }
+
+    // save uploaded file
+    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
+
+        try {
+            OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
     }
 
 

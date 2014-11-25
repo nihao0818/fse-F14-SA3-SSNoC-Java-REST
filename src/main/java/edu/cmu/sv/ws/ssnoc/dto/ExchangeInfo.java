@@ -9,6 +9,7 @@ public class ExchangeInfo {
     private String postedAt;
     private String location;
     private String content;
+    private String imgPath;
 
     public String getAuthor(){return author;}
 
@@ -29,5 +30,9 @@ public class ExchangeInfo {
     public String getContent(){return content;}
 
     public void setContent(String content){this.content=content;}
+
+    public String getImgPath(){return imgPath;}
+
+    public String setImgPath(String imgPath){return this.imgPath=imgPath;}
 
 }

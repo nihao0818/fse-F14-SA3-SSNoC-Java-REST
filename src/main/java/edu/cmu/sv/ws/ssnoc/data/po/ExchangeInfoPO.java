@@ -10,6 +10,7 @@ public class ExchangeInfoPO {
     public String postedAt;
     public String location;
     public String content;
+    public String imgPath;
 
     public long getMessageID(){return messageID;}
 
@@ -34,5 +35,9 @@ public class ExchangeInfoPO {
     public String getContent(){return content;}
 
     public void setContent(String content){this.content=content;}
+
+    public String getImgPath(){return imgPath;}
+
+    public String setImgPath(String imgPath){return this.imgPath=imgPath;}
 
 }
