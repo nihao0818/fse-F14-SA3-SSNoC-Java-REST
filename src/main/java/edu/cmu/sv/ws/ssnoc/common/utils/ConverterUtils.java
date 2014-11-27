@@ -126,6 +126,7 @@ public class ConverterUtils {
       //  einfopo.setTarget(einfodto.getTarget());
         einfopo.setPostedAt(einfodto.getPostedAt());
         einfopo.setContent(einfodto.getContent());
+        einfopo.setImgPath(einfodto.getImgPath());
 
         return einfopo;
     }
