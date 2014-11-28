@@ -51,7 +51,8 @@ public class SQL {    /*
             "author_id long, " +
             "message_type VARCHAR(20), " +
             "target_id long, " +
-            "postedAt VARCHAR(100), location varchar(100), content varchar(1000), img_path VARCHAR(100))";
+            "postedAt VARCHAR(100), location varchar(100), content varchar(1000), img_path VARCHAR(100), " +
+            "latitude float, longitude float)";
     //Memory table
     public static final String CREATE_MEMORY_CRUMB = "create table IF NOT EXISTS "
             + SSN_MEMORY_CRUMB +
@@ -107,14 +108,14 @@ public class SQL {    /*
             "UPPER("+SSN_USERS+".user_id) = UPPER(?)"
             + " order by status_date";
     //CHAT table
-    public static final String FIND_ALL_WALL_MESSAGES = "select u1.user_name, content, postedAt, img_path"
+    public static final String FIND_ALL_WALL_MESSAGES = "select u1.user_name, content, postedAt, img_path, latitude, longitude"
             +" from "
             + SSN_CHAT+","+SSN_USERS+" u1"
             +" where author_id=u1.user_id and "+
             "UPPER(message_type)='WALL' "
             +"order by postedAt";
 
-    public static final String FIND_VISIBLE_WALL_MESSAGES = "select u1.user_name, content, postedAt, img_path"
+    public static final String FIND_VISIBLE_WALL_MESSAGES = "select u1.user_name, content, postedAt, img_path, latitude, longitude"
             +" from "
             + SSN_CHAT+","+SSN_USERS+" u1"
             +" where author_id=u1.user_id and "+
@@ -181,7 +182,7 @@ public class SQL {    /*
             +" (user_id,status_code,status_date) values (?,?,?)";
     //CHAT table
     public static final String INSERT_CHAT = "insert into "+ SSN_CHAT
-            +" (author_id, message_type, target_id,postedAT,content,img_path) values (?,?,?,?,?,?)";
+            +" (author_id, message_type, target_id,postedAT,content,img_path, latitude, longitude) values (?,?,?,?,?,?,?,?)";
     //MEMORY table
     public static final String INSERT_MEMORY_STATS = "insert into "+ SSN_MEMORY_CRUMB
             +" (usedVMemory, remainingVMemory, usedPersistent,remainingPersistent,createdAt) values (?,?,?,?,?)";

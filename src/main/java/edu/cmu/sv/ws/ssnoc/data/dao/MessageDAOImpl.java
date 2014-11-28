@@ -55,6 +55,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
                 epo.setContent(rs.getString(2));
                 epo.setPostedAt(rs.getString(3));
                 epo.setImgPath(rs.getString(4));
+                epo.setLatitude(rs.getFloat(5));
+                epo.setLongitude(rs.getFloat(6));
 
                 wallMessages.add(epo);
             }
@@ -84,6 +86,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO{
             stmt.setString(4,df.format(dateobj));
             stmt.setString(5, einfoPO.getContent());
             stmt.setString(6, einfoPO.getImgPath());
+            stmt.setFloat(7, einfoPO.getLatitude());
+            stmt.setFloat(8, einfoPO.getLongitude());
 
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");

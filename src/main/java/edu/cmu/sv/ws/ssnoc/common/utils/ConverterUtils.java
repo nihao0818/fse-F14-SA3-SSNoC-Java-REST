@@ -112,6 +112,8 @@ public class ConverterUtils {
         einfodto.setPostedAt(einfopo.getPostedAt());
         einfodto.setContent(einfopo.getContent());
         einfodto.setImgPath(einfopo.getImgPath());
+        einfodto.setLatitude(einfopo.getLatitude());
+        einfodto.setLongitude(einfopo.getLongitude());
 
         return einfodto;
     }
@@ -127,6 +129,8 @@ public class ConverterUtils {
         einfopo.setPostedAt(einfodto.getPostedAt());
         einfopo.setContent(einfodto.getContent());
         einfopo.setImgPath(einfodto.getImgPath());
+        einfopo.setLatitude(einfodto.getLatitude());
+        einfopo.setLongitude(einfodto.getLongitude());
 
         return einfopo;
     }

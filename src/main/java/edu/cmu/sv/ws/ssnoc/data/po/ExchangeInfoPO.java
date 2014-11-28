@@ -11,6 +11,8 @@ public class ExchangeInfoPO {
     public String location;
     public String content;
     public String imgPath;
+    public float latitude;
+    public float longitude;
 
     public long getMessageID(){return messageID;}
 
@@ -39,5 +41,13 @@ public class ExchangeInfoPO {
     public String getImgPath(){return imgPath;}
 
     public String setImgPath(String imgPath){return this.imgPath=imgPath;}
+
+    public float getLatitude(){return latitude;}
+
+    public void setLatitude(float latitude ){this.latitude=latitude;}
+
+    public float getLongitude(){return longitude;}
+
+    public void setLongitude(float longitude){this.longitude=longitude;}
 
 }
